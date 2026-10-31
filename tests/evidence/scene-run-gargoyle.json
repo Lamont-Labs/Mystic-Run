@@ -1,0 +1,40 @@
+{
+  "active_effects": 0,
+  "active_rows": 21,
+  "attacks": 3,
+  "captures": [
+    "game-0180-gargoyle",
+    "handoff-01-knight",
+    "game-0600-knight",
+    "game-1200-knight",
+    "game-1800-knight",
+    "handoff-02-witch",
+    "game-2400-witch",
+    "game-3000-witch",
+    "handoff-03-gargoyle"
+  ],
+  "damage_events": 0,
+  "deaths": 0,
+  "distance_m": 840.0,
+  "engine": "4.7.2-stable (official)",
+  "handoffs": 3,
+  "health": 3,
+  "incidents": [],
+  "jumps": 5,
+  "offscreen_character_ticks": 0,
+  "pairs": [
+    "gargoyle->knight",
+    "knight->witch",
+    "witch->gargoyle"
+  ],
+  "peak_jump_height_m": 1.69676327705383,
+  "phase": "running",
+  "powers": 4,
+  "scene_nodes": 185,
+  "scope": "Automated desktop/headless scene run; not an Android device test",
+  "score": 750,
+  "shards": 16,
+  "slides": 1,
+  "starting_character": "gargoyle",
+  "ticks": 3600
+}

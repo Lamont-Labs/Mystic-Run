@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "content_revision": "cathedral-handoffs-001",
+  "routes": [
+    {"id":"cathedral-fortified-ground","target":"knight","preview_m":48,"safe_corridor_m":32,"first_encounter_m":72,"max_speed_mps":20,"handoff_s":0.5,"recovery_s":1.0,"ability_optional":true},
+    {"id":"cathedral-upper-rooftops","target":"gargoyle","preview_m":48,"safe_corridor_m":32,"first_encounter_m":72,"max_speed_mps":20,"handoff_s":0.5,"recovery_s":1.0,"ability_optional":true},
+    {"id":"cathedral-fractured-rift","target":"witch","preview_m":48,"safe_corridor_m":32,"first_encounter_m":72,"max_speed_mps":20,"handoff_s":0.5,"recovery_s":1.0,"ability_optional":true}
+  ]
+}
