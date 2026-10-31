@@ -7,6 +7,7 @@ const MUTED := Color("a0aebd")
 const GOLD := Color("d5af76")
 const INK := Color("0a101b")
 const NAMES := ["knight", "gargoyle", "witch"]
+const ComicPresentation = preload("res://game/comic_presentation.gd")
 
 class ActionGlyph:
 	extends Control
@@ -38,7 +39,7 @@ class ActionGlyph:
 			draw_line(center+Vector2(-21,0),center+Vector2(21,0),color,2,true)
 			draw_circle(center,4,color)
 		var text := "STRIKE" if kind == "strike" else "POWER"
-		draw_string(font,Vector2(size.x*0.5-font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,12).x*0.5,size.y-15),text,HORIZONTAL_ALIGNMENT_LEFT,-1,12,Color("d9e1e8"))
+		draw_string(font,Vector2(size.x*0.5-font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,17).x*0.5,size.y-15),text,HORIZONTAL_ALIGNMENT_LEFT,-1,17,Color("d9e1e8"))
 
 var mode: String = "menu"
 var selected: String = "knight"
@@ -62,31 +63,44 @@ var route_distance: float = 0.0
 var shard_count: int = 0
 var credits: RichTextLabel
 var action_glyphs: Dictionary = {}
+var comic: RefCounted
+var comic_clock: float = 0.0
+var impact_left: float = 0.0
+var impact_text: String = ""
+var impact_color := Color("5de9f2")
 
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	var weight_axis := TextServerManager.get_primary_interface().name_to_tag("wght")
-	var title_variation := FontVariation.new()
-	title_variation.base_font = load("res://assets/fonts/cinzel.ttf")
-	title_variation.variation_opentype = {weight_axis:500.0}
-	title_font = title_variation
+	title_font = load("res://assets/fonts/bangers.ttf")
 	var ui_variation := FontVariation.new()
 	ui_variation.base_font = load("res://assets/fonts/manrope.ttf")
-	ui_variation.variation_opentype = {weight_axis:580.0}
+	ui_variation.variation_opentype = {weight_axis:650.0}
 	ui_font = ui_variation
+	comic = ComicPresentation.new()
 	menu_gradient = _gradient(true)
 	game_gradient = _gradient(false)
 	_label("brand", "L A M O N T   L A B S", 16, GOLD)
-	_label("title", "MYSTIC\nRUN", 64, IVORY, true)
+	_label("title", "MYSTIC\nRUN", 88, Color("f4f5ff"), true)
+	labels["title"].rotation = -0.045
+	labels["title"].add_theme_constant_override("outline_size",10)
+	labels["title"].add_theme_color_override("font_outline_color",Color("101129"))
+	labels["title"].add_theme_color_override("font_shadow_color",Color("6340a2"))
+	labels["title"].add_theme_constant_override("shadow_offset_x",5)
+	labels["title"].add_theme_constant_override("shadow_offset_y",6)
+	labels["title"].add_theme_constant_override("line_spacing",-12)
 	_label("eyebrow", "THREE SOULS. ONE ESCAPE.", 17, MUTED)
-	_label("hero", "THE KNIGHT", 34, IVORY, true)
+	_label("hero", "THE KNIGHT", 60, IVORY, true)
+	labels["hero"].add_theme_constant_override("outline_size",7)
+	labels["hero"].add_theme_color_override("font_outline_color",Color("090f22"))
 	_label("description", "STEEL, RESOLVE & RELENTLESS MOMENTUM", 17, MUTED)
+	_label("power_hint","Charge through the enemy line.",18,Color("d7d9e9"))
 	_label("help", "SWIPE TO MOVE  /  UP TO JUMP  /  DOWN TO SLIDE", 16, MUTED)
-	_label("distance", "0", 45, IVORY)
+	_label("distance", "0", 64, IVORY, true)
 	_label("distance_unit", "METRES", 12, MUTED)
-	_label("district", "CATHEDRAL APPROACH", 15, GOLD)
+	_label("district", "CATHEDRAL APPROACH", 20, GOLD, true)
 	_label("score", "0  /  SCORE", 16, IVORY)
 	_label("route_title", "CHOOSE THE NEXT RUNNER", 14, MUTED)
 	_label("message", "", 23, IVORY, true)
@@ -96,7 +110,9 @@ func _ready() -> void:
 	_label("result_score", "", 19, GOLD)
 	_label("best", "", 15, MUTED)
 	_label("version", "DEVELOPMENT BUILD  /  "+str(ProjectSettings.get_setting("application/config/version","0.1.2")), 12, MUTED)
-	_button("start", "ENTER THE FRACTURE", "start", "", true)
+	_button("start", "BEGIN RUN", "start", "", true)
+	buttons["start"].add_theme_font_override("font",title_font)
+	buttons["start"].add_theme_font_size_override("font_size",36)
 	_button("settings", "SETTINGS", "settings")
 	_button("pause", "II", "pause")
 	_button("attack", "STRIKE", "attack", "", false, true)
@@ -119,12 +135,19 @@ func _ready() -> void:
 	credits.add_theme_font_override("normal_font",ui_font)
 	credits.add_theme_font_size_override("normal_font_size",18)
 	credits.add_theme_color_override("default_color",IVORY)
-	credits.text = "MYSTIC RUN\nA Lamont Labs game\n\nOriginal procedural models, environment, gameplay, interface and synthesized audio: Lamont Labs.\n\nWorking development title.\n\nGodot Engine — MIT license\n\n" + FileAccess.get_file_as_string("res://assets/licenses/godot-LICENSE.txt") + "\n\nCinzel and Manrope fonts — SIL Open Font License 1.1. Font license files are included with the project and application.\n\n"
+	credits.text = "MYSTIC RUN\nA Lamont Labs game\n\nOriginal game design, code, procedural environment, interface and synthesized audio: Lamont Labs. Character illustrations generated for Mystic Run. Humanoid meshes and authored motion by Quaternius (CC0 1.0). Custom armor, wings and shaders by Lamont Labs.\n\nWorking development title.\n\nGodot Engine — MIT license\n\n" + FileAccess.get_file_as_string("res://assets/licenses/godot-LICENSE.txt") + "\n\nBangers, Cinzel and Manrope fonts — SIL Open Font License 1.1. Font license files are included with the project and application.\n\n"
 	credits.scroll_active = true
 	credits.mouse_filter = Control.MOUSE_FILTER_STOP
 	add_child(credits)
 	for kind in NAMES:
-		_button(kind, kind.to_upper(), "character", kind)
+		_button(kind, "", "character", kind)
+		var clear := StyleBoxFlat.new()
+		clear.bg_color = Color(0,0,0,0)
+		buttons[kind].add_theme_stylebox_override("normal",clear)
+		var hover := clear.duplicate()
+		hover.bg_color = Color(1,1,1,0.06)
+		buttons[kind].add_theme_stylebox_override("hover",hover)
+		buttons[kind].add_theme_stylebox_override("pressed",hover)
 	for setting in settings:
 		_button(setting, "", "setting", setting)
 	_layout()
@@ -161,16 +184,18 @@ func _button(id: String, text: String, action: String, value: String = "", prima
 	button.add_theme_color_override("font_color", INK if primary else IVORY)
 	button.add_theme_color_override("font_disabled_color", MUTED)
 	var style := StyleBoxFlat.new()
-	style.bg_color = GOLD if primary else Color(INK, 0.68)
-	style.border_color = GOLD if primary else Color("556071")
+	style.bg_color = Color("65e9ed") if primary else Color(INK, 0.82)
+	style.border_color = Color("2396aa") if primary else Color("556071")
 	style.set_border_width_all(1)
-	style.set_corner_radius_all(48 if circle else 3)
+	style.set_corner_radius_all(56 if circle else 2)
+	if primary:
+		style.border_width_bottom = 5
 	style.content_margin_left = 8
 	style.content_margin_right = 8
 	button.add_theme_stylebox_override("normal", style)
 	var hover := style.duplicate()
 	hover.border_color = IVORY
-	hover.bg_color = Color("eed3aa") if primary else Color("263447")
+	hover.bg_color = Color("b0ffff") if primary else Color("263447")
 	button.add_theme_stylebox_override("hover", hover)
 	button.add_theme_stylebox_override("pressed", hover)
 	var disabled := style.duplicate()
@@ -197,25 +222,26 @@ func _layout() -> void:
 		return
 	var w := size.x
 	var h := size.y
-	_place("brand", Vector2(42, 44), Vector2(w-200, 24))
-	_place("title", Vector2(38, 133), Vector2(w-76, 170))
-	_place("eyebrow", Vector2(42, 310), Vector2(w-84, 28))
-	_place("hero", Vector2(42, h-459), Vector2(w-84, 50))
-	_place("description", Vector2(44, h-400), Vector2(w-88, 30))
-	_place("help", Vector2(32, h-81), Vector2(w-64, 35), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("version", Vector2(32, h-38), Vector2(w-64, 22), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("start", Vector2(42, h-197), Vector2(w-84, 82), true)
-	_place("settings", Vector2(w-162, 34), Vector2(125, 44), true)
+	_place("brand", Vector2(36, 30), Vector2(w-240, 30))
+	_place("title", Vector2(32, 92), Vector2(w-64, 205))
+	_place("eyebrow", Vector2(36, 293), Vector2(w-72, 30))
+	_place("hero", Vector2(36, h-570), Vector2(w-72, 80))
+	_place("description", Vector2(38, h-493), Vector2(w-76, 30))
+	_place("power_hint", Vector2(38,h-454),Vector2(w-76,48))
+	_place("help", Vector2(32, h-61), Vector2(w-64, 30), false, HORIZONTAL_ALIGNMENT_CENTER)
+	_place("version", Vector2(32, h-28), Vector2(w-64, 22), false, HORIZONTAL_ALIGNMENT_CENTER)
+	_place("start", Vector2(36, h-164), Vector2(w-72, 96), true)
+	_place("settings", Vector2(w-190, 20), Vector2(154, 80), true)
 	for index in range(3):
-		var cell := (w-100)/3
-		_place(NAMES[index], Vector2(42+index*(cell+8), h-323), Vector2(cell, 78), true)
-	_place("distance", Vector2(w-230, 49), Vector2(185, 60), false, HORIZONTAL_ALIGNMENT_RIGHT)
-	_place("distance_unit", Vector2(w-230, 111), Vector2(185, 25), false, HORIZONTAL_ALIGNMENT_RIGHT)
-	_place("district", Vector2(38, 50), Vector2(w-230, 28))
-	_place("score", Vector2(38, 145), Vector2(w-76, 30))
-	_place("pause", Vector2(w-83, 165), Vector2(45, 45), true)
-	_place("attack", Vector2(w-139, h-171), Vector2(98, 98), true)
-	_place("power", Vector2(w-261, h-150), Vector2(83, 83), true)
+		var cell := (w-96)/3
+		_place(NAMES[index], Vector2(36+index*(cell+12), h-340), Vector2(cell, 150), true)
+	_place("distance", Vector2(w-230, 32), Vector2(192, 74), false, HORIZONTAL_ALIGNMENT_RIGHT)
+	_place("distance_unit", Vector2(w-230, 111), Vector2(192, 25), false, HORIZONTAL_ALIGNMENT_RIGHT)
+	_place("district", Vector2(138, 35), Vector2(w-365, 32))
+	_place("score", Vector2(138, 112), Vector2(w-300, 30))
+	_place("pause", Vector2(w-124, 162), Vector2(86, 86), true)
+	_place("attack", Vector2(w-150, h-190), Vector2(112, 112), true)
+	_place("power", Vector2(w-284, h-174), Vector2(108, 108), true)
 	_place("route_title", Vector2(30, 234), Vector2(w-60, 26), false, HORIZONTAL_ALIGNMENT_CENTER)
 	_place("message", Vector2(30, h-290), Vector2(w-60, 55), false, HORIZONTAL_ALIGNMENT_CENTER)
 	_place("overlay_title", Vector2(35, 280), Vector2(w-70, 70), false, HORIZONTAL_ALIGNMENT_CENTER)
@@ -252,21 +278,16 @@ func refresh() -> void:
 	labels["version"].visible = mode != "game"
 	match mode:
 		"menu":
-			for key in ["brand", "title", "eyebrow", "hero", "description", "help"]:
+			for key in ["brand", "title", "eyebrow", "hero", "description", "power_hint", "help"]:
 				labels[key].visible = true
 			for key in ["start", "settings", "knight", "gargoyle", "witch"]:
 				buttons[key].visible = true
 			labels["hero"].text = "THE " + selected.to_upper()
-			labels["description"].text = {"knight":"STEEL, RESOLVE & RELENTLESS MOMENTUM", "gargoyle":"STONE, SKY & UNBROKEN INSTINCT", "witch":"ARCANA, PRECISION & FRACTURED SPACE"}[selected]
+			labels["description"].text = {"knight":"VANGUARD  /  SHIELD CHARGE", "gargoyle":"SKYBREAKER  /  WING BURST", "witch":"RIFTWEAVER  /  ARCANE BLINK"}[selected]
+			labels["description"].add_theme_color_override("font_color",ComicPresentation.COLORS[selected])
+			labels["power_hint"].text = {"knight":"Charge through the enemy line.","gargoyle":"Ride the air. Tear through the skyline.","witch":"Blink to a clear path. Strike from the rift."}[selected]
 			for kind in NAMES:
-				var active: bool = kind == selected
 				buttons[kind].modulate = Color.WHITE
-				buttons[kind].add_theme_color_override("font_color",GOLD if active else IVORY)
-				var selection_style: StyleBoxFlat = buttons[kind].get_theme_stylebox("normal").duplicate()
-				selection_style.bg_color = Color("202938") if active else Color(INK,0.85)
-				selection_style.border_color = GOLD if active else Color("556071")
-				selection_style.set_border_width_all(2 if active else 1)
-				buttons[kind].add_theme_stylebox_override("normal",selection_style)
 		"game":
 			for key in ["distance", "distance_unit", "district", "score"]:
 				labels[key].visible = true
@@ -334,7 +355,20 @@ func message(text: String, duration: float = 1.8) -> void:
 	labels["message"].visible = true
 
 
+func impact(text: String, color: Color) -> void:
+	impact_text=text
+	impact_color=color
+	impact_left=.42
+	queue_redraw()
+
+
 func _process(delta: float) -> void:
+	if impact_left>0:
+		impact_left=maxf(0,impact_left-delta)
+		queue_redraw()
+	if mode == "menu":
+		comic_clock += delta
+		queue_redraw()
 	if message_time > 0.0:
 		message_time -= delta
 		labels["message"].modulate.a = minf(1.0, message_time * 3.0)
@@ -352,16 +386,34 @@ func _notification(what: int) -> void:
 func _draw() -> void:
 	if menu_gradient == null:
 		return
-	draw_texture_rect(menu_gradient if mode == "menu" else game_gradient, Rect2(Vector2.ZERO, size), false)
+	if mode == "menu" and comic != null:
+		comic.draw(self,selected,comic_clock,title_font)
+	else:
+		draw_texture_rect(game_gradient, Rect2(Vector2.ZERO, size), false)
 	if mode in ["pause", "settings", "results", "credits"]:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(INK, 0.89))
 		draw_line(Vector2(72, 420), Vector2(size.x-72, 420), Color(GOLD, 0.45), 1)
-	if mode == "menu":
-		draw_line(Vector2(42, 104), Vector2(135, 104), GOLD, 2)
-		draw_line(Vector2(42, size.y-350), Vector2(size.x-42, size.y-350), Color(GOLD, 0.4), 1)
 	if mode == "game":
+		var character: String=session.get("character",selected)
+		var accent: Color=ComicPresentation.COLORS[character]
+		var portrait_rect:=Rect2(26,27,92,104)
+		draw_rect(portrait_rect.grow(3),Color("0c1025",.88))
+		draw_texture_rect_region(comic.portraits[character],portrait_rect,Rect2(140,0,744,720))
+		draw_line(Vector2(26,134),Vector2(118,134),accent,3,true)
+		draw_line(Vector2(138,145),Vector2(size.x-38,145),Color(accent,.25),1,true)
+		if impact_left>0:
+			var center:=Vector2(size.x*.54,size.y*.48)
+			var burst:=PackedVector2Array()
+			for i in range(16):
+				var angle:=TAU*i/16-.14
+				burst.append(center+Vector2(cos(angle)*1.8,sin(angle))*(51 if i%2==0 else 25))
+			draw_colored_polygon(burst,Color(impact_color,minf(impact_left*4,.80)))
+			var length:=title_font.get_string_size(impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40).x
+			var at:=center+Vector2(-length/2,13)
+			draw_string_outline(title_font,at,impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40,7,Color("101125"))
+			draw_string(title_font,at,impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40,Color.WHITE)
 		for index in range(3):
-			var center := Vector2(49 + index * 29, 111)
+			var center := Vector2(149 + index * 30, 87)
 			var points := PackedVector2Array([center+Vector2(0,-8),center+Vector2(7,0),center+Vector2(0,8),center+Vector2(-7,0)])
 			draw_colored_polygon(points, GOLD if index < int(session.get("health",3)) else Color("30394a"))
 		if route_visible and str(session.get("phase", "")) not in ["handoff", "recovery"]:
@@ -372,6 +424,6 @@ func _draw() -> void:
 				if index == route_lane:
 					draw_line(rect.position+Vector2(8,49),rect.position+Vector2(width-8,49),GOLD,2)
 				var text: String = ["GARGOYLE", "KNIGHT", "WITCH"][index]
-				draw_string(ui_font, Vector2(rect.position.x+width*0.5-ui_font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,16).x*0.5,307), text, HORIZONTAL_ALIGNMENT_LEFT,-1,16,IVORY)
+				draw_string(title_font, Vector2(rect.position.x+width*0.5-title_font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,23).x*0.5,308), text, HORIZONTAL_ALIGNMENT_LEFT,-1,23,IVORY)
 	if flash > 0.0:
 		draw_rect(Rect2(Vector2.ZERO, size), Color(0.65,0.16,0.12,flash*0.21))

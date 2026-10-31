@@ -100,8 +100,8 @@ def main():
         if before_files!=after_files:
             raise RuntimeError('Signing unexpectedly changed packaged game files')
         libraries=verify_native(after)
-        notices=[n for n in after.namelist() if n.endswith(('godot-LICENSE.txt','godot-COPYRIGHT.txt','cinzel-OFL.txt','manrope-OFL.txt'))]
-        if len(notices)!=4:
+        notices=[n for n in after.namelist() if n.endswith(('godot-LICENSE.txt','godot-COPYRIGHT.txt','cinzel-OFL.txt','manrope-OFL.txt','bangers-OFL.txt','quaternius-CC0.txt'))]
+        if len(notices)!=6:
             raise RuntimeError('Required bundled notices are missing')
     signed=dict(manifest)
     signed.update({

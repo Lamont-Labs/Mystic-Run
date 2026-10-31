@@ -40,6 +40,7 @@ var total_handoffs: int = 0
 var handoff_pairs: Array[String] = []
 var clock: float = 0.0
 var foot_clock: float = 0.0
+var impact_shake: float = 0.0
 var profile := {"schema":1, "best":0.0, "settings":{"music":true,"sound":true,"vibration":true,"quality":true}}
 var sounds: Dictionary = {}
 var music: AudioStreamPlayer
@@ -123,20 +124,20 @@ func _setup_environment() -> void:
 	environment.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
 	var sky_material := ProceduralSkyMaterial.new()
-	sky_material.sky_top_color = Color("070e20")
-	sky_material.sky_horizon_color = Color("73838e")
+	sky_material.sky_top_color = Color("1c123b")
+	sky_material.sky_horizon_color = Color("645779")
 	sky_material.ground_bottom_color = Color("050b16")
-	sky_material.ground_horizon_color = Color("455466")
+	sky_material.ground_horizon_color = Color("342d51")
 	sky_material.sky_curve = 0.22
 	sky.sky_material = sky_material
 	environment.sky = sky
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color("94adc3")
-	environment.ambient_light_energy = 0.32
+	environment.ambient_light_color = Color("b8b8df")
+	environment.ambient_light_energy = 0.50
 	environment.fog_enabled = true
-	environment.fog_light_color = Color("24374e")
+	environment.fog_light_color = Color("373154")
 	environment.fog_light_energy = 0.55
-	environment.fog_density = 0.006
+	environment.fog_density = 0.0035
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	var node := WorldEnvironment.new()
 	node.environment = environment
@@ -163,14 +164,14 @@ func _setup_environment() -> void:
 	var hero_light := OmniLight3D.new()
 	hero_light.position = Vector3(2.6,3.5,3.0)
 	hero_light.omni_range = 8.0
-	hero_light.light_energy = 1.2
+	hero_light.light_energy = 0.5
 	hero_light.light_color = Color("e7ceb0")
 	add_child(hero_light)
 	var rim := OmniLight3D.new()
 	rim.position = Vector3(-2.5,3.2,-1.0)
 	rim.omni_range = 6.0
 	rim.light_color = Color("7ea6cf")
-	rim.light_energy = 1.7
+	rim.light_energy = 0.9
 	add_child(rim)
 
 
@@ -273,6 +274,8 @@ func _start_run() -> void:
 	total_handoffs = 0
 	handoff_pairs.clear()
 	ui.set_mode("game")
+	world.visible = true
+	motor.visible = true
 	_select_character(selected)
 	ui.message("THE CITY IS WAKING", 2.5)
 	_spawn_ahead()
@@ -283,12 +286,8 @@ func _physics_process(delta: float) -> void:
 		return
 	clock += delta
 	if ui.mode == "menu" or (ui.mode == "settings" and ui.previous_mode == "menu"):
-		world.update(clock * 0.55, delta)
-		var menu_view := Vector3(0.65,2.8,7.8) if selected == "gargoyle" else Vector3(1.3,2.65,5.4)
-		camera.position = camera.position.lerp(menu_view,0.10)
-		camera.look_at(Vector3(0, 1.25, 0))
-		heroes[selected].moving = false
-		heroes[selected].animate(delta)
+		world.visible = false
+		motor.visible = false
 		return
 	if ui.mode != "game":
 		anchor.visible = false
@@ -323,10 +322,13 @@ func _physics_process(delta: float) -> void:
 	active.sliding = sliding_left > 0.0
 	active.lean = motor.velocity.x * 0.05
 	active.animate(delta)
-	var view_target := Vector3(motor.position.x*0.92, 3.8 + clampf(motor.position.y,0,2)*0.20, 8.1)
+	var view_target := Vector3(motor.position.x*0.62, 3.8 + clampf(motor.position.y,0,2)*0.20, 8.1)
 	camera.position = camera.position.lerp(view_target, 0.09)
-	camera.position.x = motor.position.x*0.92
+	camera.position.x = motor.position.x*0.62
 	camera.look_at(Vector3(motor.position.x*0.72, 1.65, -15.0))
+	impact_shake=maxf(0,impact_shake-delta*3)
+	camera.h_offset=sin(clock*63)*impact_shake*.035
+	camera.v_offset=cos(clock*77)*impact_shake*.025
 	if qa:
 		var projected := camera.unproject_position(motor.position+Vector3(0,1.1,0))
 		if projected.x < 0 or projected.x > get_viewport().get_visible_rect().size.x:
@@ -400,6 +402,7 @@ func _update_rows(delta: float) -> void:
 			rows.remove_at(index)
 			continue
 		if kind == "gate":
+			world.update_labels(node)
 			_update_gate(row,-z)
 			continue
 		if bool(row["resolved"]):
@@ -410,6 +413,8 @@ func _update_rows(delta: float) -> void:
 		if kind == "shard":
 			node.rotation.y += delta*1.7
 			node.position.y = sin(clock*2.6+float(row["at"]))*0.08
+		if kind == "enemy" and z>-55 and z<8:
+			node.animate(delta)
 		if kind == "drone":
 			node.position.y = sin(clock*3+float(row["at"]))*0.12
 		var contact_width := 1.35 if kind in ["barrier","beam"] else 1.25 if kind == "gap" else 0.70 if kind == "shard" else 0.85
@@ -506,6 +511,8 @@ func _handle_transition(delta: float) -> void:
 
 
 func _destroy_row(row: Dictionary) -> void:
+	ui.impact("SHATTER" if selected=="knight" else "CRUSH" if selected=="gargoyle" else "HEX",heroes[selected].accent())
+	impact_shake=1.0
 	row["resolved"] = true
 	row["node"].visible = false
 	_burst(row["node"].position+Vector3(0,1,0),heroes[selected].accent())
@@ -894,3 +901,4 @@ func _stop_audio() -> void:
 func _exit_tree() -> void:
 	_stop_audio()
 	Geo.release_shared()
+	preload("res://game/rig_motion.gd").release_shared()

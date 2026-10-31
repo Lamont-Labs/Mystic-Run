@@ -23,8 +23,8 @@ def main():
     parser.add_argument('--sdk',type=Path,required=True)
     parser.add_argument('--keystore',type=Path)
     parser.add_argument('--unsigned',action='store_true',help='Compile without a key; output requires owner signing before installation')
-    parser.add_argument('--version-code',type=int,default=3)
-    parser.add_argument('--version-name',default='0.1.2')
+    parser.add_argument('--version-code',type=int,default=1004)
+    parser.add_argument('--version-name',default='0.2.0')
     parser.add_argument('--output',type=Path)
     args=parser.parse_args()
     root=Path(__file__).resolve().parents[1]

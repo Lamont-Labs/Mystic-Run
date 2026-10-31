@@ -1,0 +1,30 @@
+{
+  "project": "Mystic Run",
+  "created": "2026-10-30",
+  "method": "OpenAI image generation, original game assets",
+  "franchise_assets_used": false,
+  "files": [
+    {
+      "path": "assets/illustrations/gargoyle-comic-v1.png",
+      "sha256": "7405a8d224bb754eeeb495122995382620e55abc3921ae3edde7daea7bc3663d",
+      "role": "Transparent original character illustration"
+    },
+    {
+      "path": "assets/illustrations/knight-comic-v1.png",
+      "sha256": "b143c1900e8939a38153c0c5819c0fe563f546e42e81df576c6133eef98a6a50",
+      "role": "Transparent original character illustration"
+    },
+    {
+      "path": "assets/illustrations/witch-comic-v1.png",
+      "sha256": "4f32521adead418ed9bc8f1a0a2789b99328b3c1ddfef8e42aeb5a8a7628aeba",
+      "role": "Transparent original character illustration"
+    },
+    {
+      "path": "assets/environment/citadel-matte-v1.png",
+      "sha256": "d4b4441c6711db47b436658799b0e67059bb6b6dae1b08ce50528f9e86fce325",
+      "role": "Distant environment matte painting; foreground gameplay is rendered in 3D"
+    }
+  ],
+  "direction": "Original dark fantasy and future technology; midnight navy, violet, antique gold, cyan rim light; mature heroic proportions, polished comic illustration. Knight: closed angular helm, cyan visor, gold layered armor, violet cape, shield and energy sword. Gargoyle: blue-gray stone, horns, cyan fissures and violet bat wings. Witch: silver hair, armored violet clothing, gold crescent halo and crystal staff. Environment: floating gothic citadels over violet mist with gold windows and cyan conduits.",
+  "references": "Temple Run informs movement readability; Marvel Snap informs illustration finish and color hierarchy. No franchise characters, logos, assets, screenshots or card UI are copied."
+}

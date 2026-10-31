@@ -1,16 +1,23 @@
 # Mystic Run — Android Development Build
 
-**Lamont Labs · Working game title · Version 0.1.2**
+**Lamont Labs · Working game title · Version 0.2.0**
 
 A playable 3D endless runner combining dark fantasy and futuristic architecture. Knight, Gargoyle and Witch are separate teammates who hand the continuous run to one another through route choices. This is an early playable alpha; the owner's premium visual target remains an active development goal.
 
+## Actual rendered preview
+
+![Godot gameplay, software-rendered desktop capture](docs/previews/gameplay-0.2.0.png)
+
+The illustrations are original art assets; this preview is an actual game frame. This first art and animation pass remains below the final production quality target.
+
 ## Download and install
 
-[Download the signed Android APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.1.2-build1003/Mystic_Run_0.1.2_GitHub_Build1003.apk) or open [GitHub Releases](https://github.com/Lamont-Labs/Mystic-Run/releases/tag/v0.1.2-build1003). Open the APK on an arm64 Android phone to install this development alpha.
+Last published 0.1.2 alpha: [Download the signed Android APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.1.2-build1003/Mystic_Run_0.1.2_GitHub_Build1003.apk) or open [GitHub Releases](https://github.com/Lamont-Labs/Mystic-Run/releases/tag/v0.1.2-build1003). Open the APK on an arm64 Android phone to install this development alpha.
 
 ## Playable features
 
-- Three original articulated characters with separate silhouettes and powers.
+- Three weighted and animated characters, original comic illustrations, custom equipment and separate powers.
+- Painted distant city, comic shading, curving causeway, illustrated HUD and impact feedback.
 - Starting selection and route-driven handoffs between separate teammates.
 - Endless cathedral, rooftop and rift visual treatments.
 - Directional movement, jumping, sliding, melee/spell attacks and signature powers.
@@ -41,6 +48,7 @@ Open `project.godot` in **Godot 4.7.2 standard**, import assets, then run. The g
 godot --path .
 godot --headless --path . --script res://tests/run_tests.gd
 godot --headless --path . --script res://tests/scene_interactions.gd
+godot --headless --path . --script res://tests/rig_motion.gd
 godot --headless --path . -- --qa --qa-ticks=3600
 ```
 
@@ -54,24 +62,26 @@ The export preset defines the arm64 development package `com.lamontlabs.knightga
 
 The manual GitHub Android workflow expects `RELAY_DEVELOPMENT_KEYSTORE_BASE64` and `RELAY_DEVELOPMENT_KEY_PASSWORD`. The core workflow needs no secrets. The canonical source destination is https://github.com/Lamont-Labs/Mystic-Run, the owner's private organization repository covered by the connected GitHub app. Remote workflow outcomes are verified separately from local checks.
 
-`Compile Android APK` runs on game/build changes to `main` and creates an explicitly unsigned APK with GitHub run, source, package and byte-hash evidence. This job requires no signing secret. Its artifact requires owner signing before phone installation. `tools/sign_android.py` signs the downloaded compilation with the preserved key and verifies its source/run identity, unchanged packaged game files, certificate, package/version, ZIP integrity, 16 KB alignment and bundled notices. The final signed manifest preserves the original GitHub compilation metadata.
+`Compile Android APK` runs on game/build changes to `main` or a `quality/` branch and creates an explicitly unsigned APK with GitHub run, source, package and byte-hash evidence. This job requires no signing secret. Its artifact requires owner signing before phone installation. `tools/sign_android.py` signs the downloaded compilation with the preserved key and verifies its source/run identity, unchanged packaged game files, certificate, package/version, ZIP integrity, 16 KB alignment and bundled notices. The final signed manifest preserves the original GitHub compilation metadata.
 
 ## Verified scope
 
-- 427 core assertions and 37 scene/physics/menu/gesture assertions passed.
+- 427 core assertions, 37 scene/physics/menu/gesture assertions and 18 rig/motion checks passed.
 - Three automated 840 m runs completed with three handoffs each and zero damage/deaths, covering all six directed teammate pairs together.
 - Rendered frames were reviewed through several revisions. Jump cancellation, camera clipping, navigation and audio shutdown were corrected.
 - An initial signed APK exported successfully. The delivered APK manifest records the final artifact's exact verification.
 - Physical installation, touch comfort, graphics compatibility and sustained phone performance remain open.
 
-See `docs/BUILD_STATUS.md` for current status, `docs/MASTER_DEVELOPMENT_BLUEPRINT.md` for the design baseline and `tests/evidence/` for actual records. Core check counts include repeated assertions.
+See `docs/ART_DIRECTION.md` for the reference target, remaining gaps and asset provenance, `docs/BUILD_STATUS.md` for current status, `docs/MASTER_DEVELOPMENT_BLUEPRINT.md` for the design baseline and `tests/evidence/` for actual records. Core check counts include repeated assertions.
 
 ## Source map
 
 | Path | Responsibility |
 | --- | --- |
 | `game/main.gd` | Playable scene, movement, encounters, combat, handoffs |
-| `game/hero.gd` | Character geometry and joint animation |
+| `game/hero.gd` | Weighted characters, equipment and secondary motion |
+| `game/rig_motion.gd` | Authored pose retargeting and upper-body combat blending |
+| `game/comic_presentation.gd` | Illustrated character selection |
 | `game/world.gd` | Environment kit, track, horizon, encounter props |
 | `game/geometry.gd` | Geometry batching, armor, procedural materials |
 | `game/hud.gd` | Menus, settings, credits, HUD, controls |
@@ -83,4 +93,4 @@ See `docs/BUILD_STATUS.md` for current status, `docs/MASTER_DEVELOPMENT_BLUEPRIN
 
 ## Ownership
 
-Original game source, procedural art and audio: Copyright 2026 Lamont Labs. All rights reserved. Godot is separately MIT licensed. Cinzel and Manrope use the SIL Open Font License. Notices are bundled with the source and application. Private keys and owner credentials never belong in source commits.
+Original game source, custom procedural equipment and audio: Copyright 2026 Lamont Labs. All rights reserved. Godot is separately MIT licensed. Quaternius humanoid meshes and motion are CC0 1.0. Character illustrations and the city matte were generated for this game. Bangers, Cinzel and Manrope use the SIL Open Font License. Notices are bundled with the source and application. Private keys and owner credentials never belong in source commits.

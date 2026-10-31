@@ -110,7 +110,7 @@ func triangle(a: Vector3, b: Vector3, c: Vector3, mat: Material) -> void:
 
 
 func armor(at: Vector3, size: Vector3, mat: Material, taper: float = 0.82) -> void:
-	var chamfer := minf(size.x, size.z) * 0.18
+	var chamfer := minf(minf(size.x, size.z),size.y) * 0.18
 	var ring := [Vector2(-size.x*0.5+chamfer,-size.z*0.5),Vector2(size.x*0.5-chamfer,-size.z*0.5),Vector2(size.x*0.5,-size.z*0.5+chamfer),Vector2(size.x*0.5,size.z*0.5-chamfer),Vector2(size.x*0.5-chamfer,size.z*0.5),Vector2(-size.x*0.5+chamfer,size.z*0.5),Vector2(-size.x*0.5,size.z*0.5-chamfer),Vector2(-size.x*0.5,-size.z*0.5+chamfer)]
 	var ys := [-size.y*0.5,-size.y*0.5+chamfer,size.y*0.5-chamfer,size.y*0.5]
 	var scales := [taper*0.84,taper,1.0,0.86]
