@@ -236,7 +236,7 @@ def publish(records_directory, output_directory, sdk):
         command(['gh', 'run', 'download', run_id, '--repo', REPOSITORY, '--name', 'mystic-run-unsigned-android', '--dir', directory/'input'])
         apk = prepare(record, directory/'input', output_directory, sdk)
         notes = directory/'release-notes.md'
-        notes.write_text('Installable arm64 Android development alpha. Download the .apk under Assets and open it on your phone.\n\n'
+        notes.write_text(str(record.get('release_notes',''))+'\n\n'+'Installable arm64 Android development alpha. Download the .apk under Assets and open it on your phone.\n\n'
             f"GitHub compilation: {run['html_url']}\n\nSource commit: `{manifest['git_commit']}`.\n\n"
             'The APK preserves the existing signing identity. Signature, package/version, ZIP integrity, APK alignment and native 16 KB alignment were verified. Physical phone testing remains pending.\n')
         assets = [apk, output_directory/apk.with_suffix('.manifest.json').name, output_directory/'APK-SIGNATURE.txt', output_directory/'SHA256SUMS']

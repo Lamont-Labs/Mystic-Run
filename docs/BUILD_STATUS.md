@@ -44,6 +44,12 @@ audio feedback, and physical Android performance/touch testing remain necessary.
 Automated checks and attractive menu art do not establish the owner's visual bar.
 The owner's earlier quality rejection remains a valid constraint.
 
-The prior signed 0.1.2 build remains available under GitHub Releases. This revision
-is checked on `quality/comic-runner` before updating the default branch and signed
-release. Credentials and signing keys are never committed.
+GitHub compilation run 41161981800 succeeded at source commit
+`3c0a6afa7dffa2e0a5803d754cbd3e0508ebde13`. The owner-signed APK is
+`Mystic_Run_0.2.0_GitHub_Build1004.apk` (38,262,213 bytes), SHA-256
+`cdb173abc95d5dcec4d408416a51c97e35c69c2d205b2416a39175f6db4a6401`.
+Signature, preserved certificate, package/version, ZIP integrity, unchanged game
+payload, APK/native 16 KB alignment and six license notices were verified. The
+release job independently reconstructs and verifies these exact signed bytes.
+The prior signed 0.1.2 release remains available. Credentials and signing keys
+are never committed.

@@ -12,7 +12,7 @@ The illustrations are original art assets; this preview is an actual game frame.
 
 ## Download and install
 
-Last published 0.1.2 alpha: [Download the signed Android APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.1.2-build1003/Mystic_Run_0.1.2_GitHub_Build1003.apk) or open [GitHub Releases](https://github.com/Lamont-Labs/Mystic-Run/releases/tag/v0.1.2-build1003). Open the APK on an arm64 Android phone to install this development alpha.
+[Download the signed Android APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.2.0-build1004/Mystic_Run_0.2.0_GitHub_Build1004.apk) or open [GitHub Releases](https://github.com/Lamont-Labs/Mystic-Run/releases/tag/v0.2.0-build1004). Open the APK on an arm64 Android phone to install this development alpha.
 
 ## Playable features
 
