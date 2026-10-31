@@ -8,8 +8,7 @@ remains a development alpha below its final premium production target.
 
 ## Download
 
-The current published 0.2.0 build is under [GitHub Releases](https://github.com/Lamont-Labs/Mystic-Run/releases).
-The 0.3.0 build is verified on the quality branch before publication.
+[Download the signed Mystic Run 0.3.0 APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.3.0-build1006/Mystic_Run_0.3.0_GitHub_Build1006.apk) or open [the release page](https://github.com/Lamont-Labs/Mystic-Run/releases/tag/v0.3.0-build1006). It retains the previous package and signing identity.
 
 ## Actual rendered menus
 
