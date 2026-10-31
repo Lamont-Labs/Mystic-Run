@@ -1,5 +1,5 @@
 {
-  "verified_at_utc": "2026-10-31T00:00:28.710988+00:00",
+  "verified_at_utc": "2026-10-31T00:33:25.819807+00:00",
   "engine_version": "4.7.2.stable.official.ed1daf0bf",
   "scope": "Headless gameplay-core assertions and static handoff-route contracts",
   "checks": 427,
@@ -12,10 +12,11 @@
     "tests/scene_interactions.gd": "ebe9469d911cbfd6acf02b42483dc78a4845e32e95f40368864ebe40b3db25b4",
     "content/handoff_routes.json": "6ba0e70ed022c83437138d0f6b8656f248e2e090511f0828dbfee403a830b9f8",
     "tools/bootstrap_godot.py": "38a394048745e2b61b09fd0123b6065ed3955449a5fd01ee7ed90933611eec72",
-    "tools/build_android.py": "6bfaaddbf593cc7b96e4a9a751d0a580635c620c50542542d6b1e5140788bb5e",
+    "tools/build_android.py": "8c2dfd7089e9c4a82bf0d449bd374f25d83821ed5dea41c3826d1f45e67c5040",
     "tools/create_audio.py": "a20ea93b0d7e37a21d54ed9824fdcb9c087b5d5ee96702def51b1ad8067b9dd3",
     "tools/fetch_android_template.py": "7eb175f9af4ca5696d2aecb3271102e56f7f68577ca6cd7217f66d40d13d9892",
     "tools/render_preview.py": "83715b2e7e97e00b49e13ad7dcc65abfa573a992eecf9ae32feb5e6d8c8065b4",
+    "tools/sign_android.py": "1fe60f5fc7cd9b998eeb1a712e2eeadfd3d0e166fc2855d9dc94075205e99d1b",
     "tools/verify_core.py": "d9ec30add9f478b6ecceaf5bc4d5f453924bd859b58f6984090e8ca365ec0387"
   },
   "android_apk_built_by_this_check": false,

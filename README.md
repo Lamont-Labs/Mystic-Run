@@ -50,6 +50,8 @@ The export preset defines the arm64 development package `com.lamontlabs.knightga
 
 The manual GitHub Android workflow expects `RELAY_DEVELOPMENT_KEYSTORE_BASE64` and `RELAY_DEVELOPMENT_KEY_PASSWORD`. The core workflow needs no secrets. The canonical source destination is https://github.com/Lamont-Labs/Mystic-Run, the owner's private organization repository covered by the connected GitHub app. Remote workflow outcomes are verified separately from local checks.
 
+`Compile Android APK` runs on game/build changes to `main` and creates an explicitly unsigned APK with GitHub run, source, package and byte-hash evidence. This job requires no signing secret. Its artifact requires owner signing before phone installation. `tools/sign_android.py` signs the downloaded compilation with the preserved key and verifies its source/run identity, unchanged packaged game files, certificate, package/version, ZIP integrity, 16 KB alignment and bundled notices. The final signed manifest preserves the original GitHub compilation metadata.
+
 ## Verified scope
 
 - 427 core assertions and 37 scene/physics/menu/gesture assertions passed.
