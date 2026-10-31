@@ -1,0 +1,11 @@
+.godot/
+build/
+engine-tools/
+*.keystore
+*.jks
+*.apk
+*.aab
+tests/results.json
+__pycache__/
+*.pyc
+.signing/

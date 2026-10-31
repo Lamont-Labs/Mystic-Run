@@ -1,0 +1,30 @@
+{
+  "active_effects": 0,
+  "active_rows": 21,
+  "attacks": 4,
+  "captures": [],
+  "damage_events": 0,
+  "deaths": 0,
+  "distance_m": 840.0,
+  "engine": "4.7.2-stable (official)",
+  "handoffs": 3,
+  "health": 3,
+  "incidents": [],
+  "jumps": 3,
+  "offscreen_character_ticks": 0,
+  "pairs": [
+    "knight->gargoyle",
+    "gargoyle->witch",
+    "witch->knight"
+  ],
+  "peak_jump_height_m": 1.98168897628784,
+  "phase": "running",
+  "powers": 4,
+  "scene_nodes": 185,
+  "scope": "Automated desktop/headless scene run; not an Android device test",
+  "score": 750,
+  "shards": 12,
+  "slides": 2,
+  "starting_character": "knight",
+  "ticks": 3600
+}

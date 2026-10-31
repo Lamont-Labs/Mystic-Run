@@ -1,0 +1,6 @@
+{
+  "checks": 37,
+  "failed": 0,
+  "failures": [],
+  "scope": "Scene/physics/UI signal and gesture handling on desktop headless; not a phone touch-latency test"
+}
