@@ -1,0 +1,44 @@
+name: Gameplay core checks
+
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  core:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 10
+    steps:
+      - name: Check out source
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Run pinned Godot core checks
+        run: python3 tools/verify_core.py --cache "${RUNNER_TEMP}/runner-godot"
+      - name: Import playable assets
+        run: |
+          "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --editor --import --quit
+      - name: Verify scene controls and physics
+        run: |
+          "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/scene_interactions.gd
+      - name: Exercise all three starting teammates
+        run: |
+          python3 - <<'PY'
+          import os,subprocess
+          binary=os.path.join(os.environ['RUNNER_TEMP'],'runner-godot','Godot_v4.7.2-stable_linux.x86_64')
+          for character in ['knight','gargoyle','witch']:
+              subprocess.run([binary,'--headless','--path','.','--','--qa','--qa-ticks=3600','--character='+character],check=True,timeout=95)
+          PY
+      - name: Preserve verification evidence
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: gameplay-core-evidence
+          path: |
+            tests/results.json
+            docs/verification_actual.json
+            tests/evidence/*.json
+          retention-days: 14
+          if-no-files-found: warn
