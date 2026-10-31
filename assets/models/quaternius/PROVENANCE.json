@@ -136,16 +136,16 @@
   ],
   "derivations": [
     "Base and hair glTF material/image bindings removed; geometry, normals, weights, rigs and buffers retained. Original material assets are replaced by original runtime comic shaders.",
-    "Eight required animation clips extracted losslessly from the two free Standard GLBs with tools/bake_motion.gd. Source rest poses retained for character retargeting."
+    "Nine cached animation clips, including authored crouch locomotion, extracted losslessly from the two free Standard GLBs with tools/bake_motion.gd. Source rest poses retained for character retargeting."
   ],
   "derived_files": [
     {
       "path": "assets/models/quaternius/animations/runner-motion.res",
-      "sha256": "eff0cd07b40c38492b26f33479c45d0313f65d07e023924b912030ec2458bc69"
+      "sha256": "8f5d31ad7b4db269a5d45d54af530650e145cf92a0efa1d772ebed760ebef656"
     },
     {
       "path": "assets/models/quaternius/animations/source-rests.json",
-      "sha256": "4b435a71fe7f6ad31fc8d2376ffb52aa4b46702962f904501d2f228bada937e8"
+      "sha256": "2f3a4f27713cbf8759b0e554e342a8016002ae1c76af3b98129809a9cbdb41fd"
     },
     {
       "path": "assets/models/quaternius/base/Superhero_Female_FullBody.bin",

@@ -1,0 +1,6 @@
+{
+  "checks": 38,
+  "failed": 0,
+  "failures": [],
+  "scope": "Gesture ownership and intent, deterministic variable speed, synchronized handoffs, terminal completion, route pacing and encounter bounds"
+}

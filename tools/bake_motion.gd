@@ -1,8 +1,8 @@
 extends SceneTree
-## Run after importing the two free Standard animation GLBs. Saves only the eight
+## Run after importing the two free Standard animation GLBs. Saves only the nine
 ## used clips, so unused animations and mannequin geometry stay out of the APK.
 const SOURCES := ["res://assets/models/quaternius/animations/UAL1_Standard.glb","res://assets/models/quaternius/animations/UAL2_Standard.glb"]
-const REQUIRED := ["Idle","Sprint","Jump","Slide","Sword_Regular_A","Punch_Cross","Spell_Simple_Shoot","Shield_Dash"]
+const REQUIRED := ["Idle","Sprint","Jump","Slide","Crouch_Fwd","Sword_Regular_A","Punch_Cross","Spell_Simple_Shoot","Shield_Dash"]
 func _initialize() -> void:
 	var library:=AnimationLibrary.new()
 	var rests: Dictionary={}

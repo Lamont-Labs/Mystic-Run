@@ -1,429 +1,213 @@
 extends Control
+signal intent(action: String,value: String)
+const FrontEnd=preload("res://game/front_end.gd")
+const Comic=preload("res://game/comic_presentation.gd")
+const WHITE:=Color("f0f0ff")
+const MUTED:=Color("bcc5de")
+const ACCENTS:={"knight":Color("65e8ef"),"gargoyle":Color("76e1be"),"witch":Color("be91ff")}
 
-signal intent(action: String, value: String)
-
-const IVORY := Color("e9e5da")
-const MUTED := Color("a0aebd")
-const GOLD := Color("d5af76")
-const INK := Color("0a101b")
-const NAMES := ["knight", "gargoyle", "witch"]
-const ComicPresentation = preload("res://game/comic_presentation.gd")
-
-class ActionGlyph:
-	extends Control
-	var kind: String = "strike"
-	var hero: String = "knight"
-	var remaining: float = 0.0
+class ActionButton:
+	extends Button
+	var kind: String="attack"
+	var hero: String="knight"
+	var remaining: float=0
 	var font: Font
 	func _draw() -> void:
-		var center := size*Vector2(0.5,0.40)
-		var color := Color("ebd2a8")
-		if remaining > 0:
-			var value := "%.1f" % remaining
-			draw_string(font,center+Vector2(-font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,23).x*0.5,8),value,HORIZONTAL_ALIGNMENT_LEFT,-1,23,Color("aab7c6"))
-		elif kind == "strike":
-			draw_line(center+Vector2(-13,14),center+Vector2(12,-15),color,4,true)
-			draw_line(center+Vector2(-14,2),center+Vector2(-2,13),color,3,true)
-			draw_line(center+Vector2(-18,19),center+Vector2(-10,10),Color("a9bac8"),4,true)
-		elif hero == "knight":
-			var points := PackedVector2Array([center+Vector2(-13,-13),center+Vector2(13,-13),center+Vector2(12,5),center+Vector2(0,17),center+Vector2(-12,5),center+Vector2(-13,-13)])
-			draw_polyline(points,color,2,true)
-			draw_line(center+Vector2(0,-8),center+Vector2(0,10),color,2,true)
-		elif hero == "gargoyle":
-			draw_polyline(PackedVector2Array([center+Vector2(-23,-8),center+Vector2(-9,-2),center+Vector2(0,12),center+Vector2(9,-2),center+Vector2(23,-8)]),color,3,true)
-			draw_line(center+Vector2(-23,-8),center+Vector2(-10,12),color,2,true)
-			draw_line(center+Vector2(23,-8),center+Vector2(10,12),color,2,true)
+		var center:=size*Vector2(.5,.40)
+		var color:=Color("9debf2") if not disabled else Color("8794b0")
+		if remaining>0:
+			var value:="%.1f"%remaining
+			draw_string(font,center+Vector2(-font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,28).x*.5,9),value,HORIZONTAL_ALIGNMENT_LEFT,-1,28,color)
+		elif kind=="attack":
+			draw_line(center+Vector2(-16,16),center+Vector2(15,-19),color,4,true)
+			draw_line(center+Vector2(-16,2),center+Vector2(-2,15),color,4,true)
+		elif hero=="knight":
+			draw_polyline(PackedVector2Array([center+Vector2(-16,-18),center+Vector2(16,-18),center+Vector2(14,7),center+Vector2(0,22),center+Vector2(-14,7),center+Vector2(-16,-18)]),color,3,true)
+		elif hero=="gargoyle":
+			draw_polyline(PackedVector2Array([center+Vector2(-27,-11),center+Vector2(-12,-3),center+Vector2(0,17),center+Vector2(12,-3),center+Vector2(27,-11)]),color,4,true)
+			draw_line(center+Vector2(-27,-11),center+Vector2(-14,15),color,2,true);draw_line(center+Vector2(27,-11),center+Vector2(14,15),color,2,true)
 		else:
-			draw_arc(center,15,0,TAU,32,color,2,true)
-			draw_line(center+Vector2(0,-22),center+Vector2(0,22),color,2,true)
-			draw_line(center+Vector2(-21,0),center+Vector2(21,0),color,2,true)
-			draw_circle(center,4,color)
-		var text := "STRIKE" if kind == "strike" else "POWER"
-		draw_string(font,Vector2(size.x*0.5-font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,17).x*0.5,size.y-15),text,HORIZONTAL_ALIGNMENT_LEFT,-1,17,Color("d9e1e8"))
+			draw_arc(center,19,0,TAU,32,color,3,true);draw_line(center+Vector2(0,-26),center+Vector2(0,26),color,2,true);draw_circle(center,5,color)
+		var caption:="STRIKE" if kind=="attack" else "POWER"
+		var width:=font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,20).x
+		draw_string(font,Vector2((size.x-width)*.5,size.y-17),caption,HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
 
-var mode: String = "menu"
-var selected: String = "knight"
-var previous_mode: String = "menu"
-var session: Dictionary = {}
-var settings := {"music":true, "sound":true, "vibration":true, "quality":true}
-var buttons: Dictionary = {}
-var labels: Dictionary = {}
+var mode: String="home"
+var selected: String="knight"
+var course_id: String="citadel"
+var profile_data: Dictionary={}
+var result_data: Dictionary={}
+var navigation: Array[String]=["home"]
+var front: Control
+var game_buttons: Dictionary={}
+var buttons: Dictionary:
+	get:return front.buttons if is_instance_valid(front) and front.visible else game_buttons
+var labels: Dictionary={}
 var title_font: Font
 var ui_font: Font
-var menu_gradient: GradientTexture2D
-var game_gradient: GradientTexture2D
-var message_time: float = 0.0
-var flash: float = 0.0
-var end_distance: float = 0.0
-var end_score: int = 0
-var best: float = 0.0
-var route_visible: bool = false
-var route_lane: int = 1
-var route_distance: float = 0.0
-var shard_count: int = 0
-var credits: RichTextLabel
-var action_glyphs: Dictionary = {}
-var comic: RefCounted
-var comic_clock: float = 0.0
-var impact_left: float = 0.0
-var impact_text: String = ""
-var impact_color := Color("5de9f2")
-
+var portraits: Dictionary={}
+var session: Dictionary={}
+var settings: Dictionary={}
+var route_visible: bool=false
+var route_lane: int=1
+var route_distance: float=0
+var shard_count: int=0
+var flash: float=0
+var countdown_text: String="3"
+var guide_title: String=""
+var guide_detail: String=""
+var combat_ready: bool=false
+var message_left: float=0
+var impact_left: float=0
+var impact_text: String=""
+var impact_color:=Color("65e8ef")
+var fade: GradientTexture2D
+var top_pad: float=22
+var bottom_pad: float=16
 
 func _ready() -> void:
-	mouse_filter = Control.MOUSE_FILTER_IGNORE
+	mouse_filter=Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	var weight_axis := TextServerManager.get_primary_interface().name_to_tag("wght")
-	title_font = load("res://assets/fonts/bangers.ttf")
-	var ui_variation := FontVariation.new()
-	ui_variation.base_font = load("res://assets/fonts/manrope.ttf")
-	ui_variation.variation_opentype = {weight_axis:650.0}
-	ui_font = ui_variation
-	comic = ComicPresentation.new()
-	menu_gradient = _gradient(true)
-	game_gradient = _gradient(false)
-	_label("brand", "L A M O N T   L A B S", 16, GOLD)
-	_label("title", "MYSTIC\nRUN", 88, Color("f4f5ff"), true)
-	labels["title"].rotation = -0.045
-	labels["title"].add_theme_constant_override("outline_size",10)
-	labels["title"].add_theme_color_override("font_outline_color",Color("101129"))
-	labels["title"].add_theme_color_override("font_shadow_color",Color("6340a2"))
-	labels["title"].add_theme_constant_override("shadow_offset_x",5)
-	labels["title"].add_theme_constant_override("shadow_offset_y",6)
-	labels["title"].add_theme_constant_override("line_spacing",-12)
-	_label("eyebrow", "THREE SOULS. ONE ESCAPE.", 17, MUTED)
-	_label("hero", "THE KNIGHT", 60, IVORY, true)
-	labels["hero"].add_theme_constant_override("outline_size",7)
-	labels["hero"].add_theme_color_override("font_outline_color",Color("090f22"))
-	_label("description", "STEEL, RESOLVE & RELENTLESS MOMENTUM", 17, MUTED)
-	_label("power_hint","Charge through the enemy line.",18,Color("d7d9e9"))
-	_label("help", "SWIPE TO MOVE  /  UP TO JUMP  /  DOWN TO SLIDE", 16, MUTED)
-	_label("distance", "0", 64, IVORY, true)
-	_label("distance_unit", "METRES", 12, MUTED)
-	_label("district", "CATHEDRAL APPROACH", 20, GOLD, true)
-	_label("score", "0  /  SCORE", 16, IVORY)
-	_label("route_title", "CHOOSE THE NEXT RUNNER", 14, MUTED)
-	_label("message", "", 23, IVORY, true)
-	_label("overlay_title", "PAUSED", 44, IVORY, true)
-	_label("overlay_detail", "THE CITY CAN WAIT A MOMENT.", 15, MUTED)
-	_label("result_distance", "0 m", 56, IVORY, true)
-	_label("result_score", "", 19, GOLD)
-	_label("best", "", 15, MUTED)
-	_label("version", "DEVELOPMENT BUILD  /  "+str(ProjectSettings.get_setting("application/config/version","0.1.2")), 12, MUTED)
-	_button("start", "BEGIN RUN", "start", "", true)
-	buttons["start"].add_theme_font_override("font",title_font)
-	buttons["start"].add_theme_font_size_override("font_size",36)
-	_button("settings", "SETTINGS", "settings")
-	_button("pause", "II", "pause")
-	_button("attack", "STRIKE", "attack", "", false, true)
-	_button("power", "POWER", "power", "", false, true)
-	for key in ["attack","power"]:
-		buttons[key].text = ""
-		var glyph := ActionGlyph.new()
-		glyph.kind = "strike" if key == "attack" else "power"
-		glyph.font = ui_font
-		glyph.mouse_filter = Control.MOUSE_FILTER_IGNORE
-		buttons[key].add_child(glyph)
-		glyph.set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-		action_glyphs[key] = glyph
-	_button("resume", "CONTINUE RUN", "resume", "", true)
-	_button("restart", "RUN AGAIN", "restart", "", true)
-	_button("home", "RETURN TO TEAM", "home")
-	_button("back", "BACK", "back")
-	_button("credits", "CREDITS & LICENSES", "credits")
-	credits = RichTextLabel.new()
-	credits.add_theme_font_override("normal_font",ui_font)
-	credits.add_theme_font_size_override("normal_font_size",18)
-	credits.add_theme_color_override("default_color",IVORY)
-	credits.text = "MYSTIC RUN\nA Lamont Labs game\n\nOriginal game design, code, procedural environment, interface and synthesized audio: Lamont Labs. Character illustrations generated for Mystic Run. Humanoid meshes and authored motion by Quaternius (CC0 1.0). Custom armor, wings and shaders by Lamont Labs.\n\nWorking development title.\n\nGodot Engine — MIT license\n\n" + FileAccess.get_file_as_string("res://assets/licenses/godot-LICENSE.txt") + "\n\nBangers, Cinzel and Manrope fonts — SIL Open Font License 1.1. Font license files are included with the project and application.\n\n"
-	credits.scroll_active = true
-	credits.mouse_filter = Control.MOUSE_FILTER_STOP
-	add_child(credits)
-	for kind in NAMES:
-		_button(kind, "", "character", kind)
-		var clear := StyleBoxFlat.new()
-		clear.bg_color = Color(0,0,0,0)
-		buttons[kind].add_theme_stylebox_override("normal",clear)
-		var hover := clear.duplicate()
-		hover.bg_color = Color(1,1,1,0.06)
-		buttons[kind].add_theme_stylebox_override("hover",hover)
-		buttons[kind].add_theme_stylebox_override("pressed",hover)
-	for setting in settings:
-		_button(setting, "", "setting", setting)
-	_layout()
-	refresh()
+	title_font=load("res://assets/fonts/bangers.ttf")
+	var font:=FontVariation.new();font.base_font=load("res://assets/fonts/manrope.ttf")
+	font.variation_opentype={TextServerManager.get_primary_interface().name_to_tag("wght"):650.0};ui_font=font
+	for kind in ["knight","gargoyle","witch"]:portraits[kind]=load("res://assets/illustrations/"+kind+"-comic-v1.png")
+	var gradient:=Gradient.new();gradient.offsets=PackedFloat32Array([0,.28,.7,1]);gradient.colors=PackedColorArray([Color(.025,.03,.07,.8),Color(.025,.03,.07,0),Color(.025,.03,.07,0),Color(.025,.03,.07,.62)])
+	fade=GradientTexture2D.new();fade.gradient=gradient;fade.fill_from=Vector2.ZERO;fade.fill_to=Vector2(0,1)
+	for definition in [["distance",64,true],["unit",18,false],["district",25,true],["score",22,false],["objective",20,false],["ability",23,true],["message",29,true],["guide_title",35,true],["guide_detail",25,false],["combat_hint",31,true],["countdown",120,true],["ready_caption",30,true]]:
+		var label:=Label.new();label.mouse_filter=Control.MOUSE_FILTER_IGNORE
+		label.add_theme_font_override("font",title_font if definition[2] else ui_font);label.add_theme_font_size_override("font_size",definition[1]);label.add_theme_color_override("font_color",WHITE)
+		label.add_theme_color_override("font_outline_color",Color("091025"));label.add_theme_constant_override("outline_size",4)
+		add_child(label);labels[definition[0]]=label
+	labels.unit.text="METRES";labels.ready_caption.text="GET READY";labels.combat_hint.text="TAP TO STRIKE"
+	labels.guide_detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	var pause:=Button.new();pause.text="II";pause.add_theme_font_override("font",ui_font);pause.add_theme_font_size_override("font_size",28)
+	pause.add_theme_stylebox_override("normal",_button_style(false));pause.add_theme_stylebox_override("pressed",_button_style(true));pause.pressed.connect(func():intent.emit("pause",""));add_child(pause);game_buttons.pause=pause
+	for action in ["attack","power"]:
+		var b:=ActionButton.new();b.kind=action;b.font=ui_font
+		b.add_theme_stylebox_override("normal",_button_style(false,true));b.add_theme_stylebox_override("pressed",_button_style(true,true));b.add_theme_stylebox_override("hover",_button_style(true,true));b.add_theme_stylebox_override("disabled",_button_style(false,true))
+		b.pressed.connect(func():intent.emit(action,""));add_child(b);game_buttons[action]=b
+	front=FrontEnd.new();front.title_font=title_font;front.body_font=ui_font;front.portraits=portraits
+	add_child(front);front.intent.connect(func(action: String,value: String):intent.emit(action,value))
+	_layout();refresh()
 
-
-func _gradient(menu: bool) -> GradientTexture2D:
-	var gradient := Gradient.new()
-	gradient.offsets = PackedFloat32Array([0.0, 0.25, 0.56, 0.78, 1.0])
-	gradient.colors = PackedColorArray([Color(INK, 0.85 if menu else 0.55), Color(INK, 0.03), Color(INK, 0.0), Color(INK, 0.86 if menu else 0.03), Color(INK, 0.98 if menu else 0.62)])
-	var texture := GradientTexture2D.new()
-	texture.gradient = gradient
-	texture.fill_from = Vector2.ZERO
-	texture.fill_to = Vector2(0, 1)
-	return texture
-
-
-func _label(id: String, value: String, font_size: int, color: Color, serif: bool = false) -> void:
-	var label := Label.new()
-	label.text = value
-	label.add_theme_font_override("font", title_font if serif else ui_font)
-	label.add_theme_font_size_override("font_size", font_size)
-	label.add_theme_color_override("font_color", color)
-	label.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	add_child(label)
-	labels[id] = label
-
-
-func _button(id: String, text: String, action: String, value: String = "", primary: bool = false, circle: bool = false) -> void:
-	var button := Button.new()
-	button.text = text
-	button.add_theme_font_override("font", ui_font)
-	button.add_theme_font_size_override("font_size", 24 if primary else 15 if circle else 18)
-	button.add_theme_color_override("font_color", INK if primary else IVORY)
-	button.add_theme_color_override("font_disabled_color", MUTED)
-	var style := StyleBoxFlat.new()
-	style.bg_color = Color("65e9ed") if primary else Color(INK, 0.82)
-	style.border_color = Color("2396aa") if primary else Color("556071")
-	style.set_border_width_all(1)
-	style.set_corner_radius_all(56 if circle else 2)
-	if primary:
-		style.border_width_bottom = 5
-	style.content_margin_left = 8
-	style.content_margin_right = 8
-	button.add_theme_stylebox_override("normal", style)
-	var hover := style.duplicate()
-	hover.border_color = IVORY
-	hover.bg_color = Color("b0ffff") if primary else Color("263447")
-	button.add_theme_stylebox_override("hover", hover)
-	button.add_theme_stylebox_override("pressed", hover)
-	var disabled := style.duplicate()
-	disabled.bg_color = Color(INK, 0.45)
-	disabled.border_color = Color("303b4c")
-	button.add_theme_stylebox_override("disabled", disabled)
-	button.action_mode = BaseButton.ACTION_MODE_BUTTON_PRESS
-	button.pressed.connect(func(): intent.emit(action, value))
-	button.focus_mode = Control.FOCUS_NONE
-	add_child(button)
-	buttons[id] = button
-
-
-func _place(id: String, at: Vector2, dimensions: Vector2, button: bool = false, align: int = HORIZONTAL_ALIGNMENT_LEFT) -> void:
-	var node: Control = buttons[id] if button else labels[id]
-	node.position = at
-	node.size = dimensions
-	if not button:
-		node.horizontal_alignment = align
-
-
-func _layout() -> void:
-	if labels.is_empty():
-		return
-	var w := size.x
-	var h := size.y
-	_place("brand", Vector2(36, 30), Vector2(w-240, 30))
-	_place("title", Vector2(32, 92), Vector2(w-64, 205))
-	_place("eyebrow", Vector2(36, 293), Vector2(w-72, 30))
-	_place("hero", Vector2(36, h-570), Vector2(w-72, 80))
-	_place("description", Vector2(38, h-493), Vector2(w-76, 30))
-	_place("power_hint", Vector2(38,h-454),Vector2(w-76,48))
-	_place("help", Vector2(32, h-61), Vector2(w-64, 30), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("version", Vector2(32, h-28), Vector2(w-64, 22), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("start", Vector2(36, h-164), Vector2(w-72, 96), true)
-	_place("settings", Vector2(w-190, 20), Vector2(154, 80), true)
-	for index in range(3):
-		var cell := (w-96)/3
-		_place(NAMES[index], Vector2(36+index*(cell+12), h-340), Vector2(cell, 150), true)
-	_place("distance", Vector2(w-230, 32), Vector2(192, 74), false, HORIZONTAL_ALIGNMENT_RIGHT)
-	_place("distance_unit", Vector2(w-230, 111), Vector2(192, 25), false, HORIZONTAL_ALIGNMENT_RIGHT)
-	_place("district", Vector2(138, 35), Vector2(w-365, 32))
-	_place("score", Vector2(138, 112), Vector2(w-300, 30))
-	_place("pause", Vector2(w-124, 162), Vector2(86, 86), true)
-	_place("attack", Vector2(w-150, h-190), Vector2(112, 112), true)
-	_place("power", Vector2(w-284, h-174), Vector2(108, 108), true)
-	_place("route_title", Vector2(30, 234), Vector2(w-60, 26), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("message", Vector2(30, h-290), Vector2(w-60, 55), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("overlay_title", Vector2(35, 280), Vector2(w-70, 70), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("overlay_detail", Vector2(35, 355), Vector2(w-70, 50), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("result_distance", Vector2(35, 460), Vector2(w-70, 80), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("result_score", Vector2(35, 553), Vector2(w-70, 40), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("best", Vector2(35, 605), Vector2(w-70, 35), false, HORIZONTAL_ALIGNMENT_CENTER)
-	_place("resume", Vector2(72, 530), Vector2(w-144, 78), true)
-	_place("restart", Vector2(72, 710), Vector2(w-144, 78), true)
-	_place("home", Vector2(72, 809), Vector2(w-144, 66), true)
-	_place("back", Vector2(72, 915), Vector2(w-144, 66), true)
-	_place("credits",Vector2(72,842),Vector2(w-144,50),true)
-	credits.position = Vector2(62,395)
-	credits.size = Vector2(w-124,490)
-	var index := 0
-	for setting in settings:
-		_place(setting, Vector2(72, 470+index*92), Vector2(w-144, 70), true)
-		index += 1
-
-
-func set_mode(value: String) -> void:
-	mode = value
-	refresh()
-
-
-func refresh() -> void:
-	if labels.is_empty():
-		return
-	for button in buttons.values():
-		button.visible = false
-	for label in labels.values():
-		label.visible = false
-	credits.visible = false
-	labels["version"].visible = mode != "game"
-	match mode:
-		"menu":
-			for key in ["brand", "title", "eyebrow", "hero", "description", "power_hint", "help"]:
-				labels[key].visible = true
-			for key in ["start", "settings", "knight", "gargoyle", "witch"]:
-				buttons[key].visible = true
-			labels["hero"].text = "THE " + selected.to_upper()
-			labels["description"].text = {"knight":"VANGUARD  /  SHIELD CHARGE", "gargoyle":"SKYBREAKER  /  WING BURST", "witch":"RIFTWEAVER  /  ARCANE BLINK"}[selected]
-			labels["description"].add_theme_color_override("font_color",ComicPresentation.COLORS[selected])
-			labels["power_hint"].text = {"knight":"Charge through the enemy line.","gargoyle":"Ride the air. Tear through the skyline.","witch":"Blink to a clear path. Strike from the rift."}[selected]
-			for kind in NAMES:
-				buttons[kind].modulate = Color.WHITE
-		"game":
-			for key in ["distance", "distance_unit", "district", "score"]:
-				labels[key].visible = true
-			for key in ["pause", "attack", "power"]:
-				buttons[key].visible = true
-		"pause":
-			labels["overlay_title"].text = "PAUSED"
-			labels["overlay_detail"].text = "THE CITY CAN WAIT A MOMENT."
-			for key in ["overlay_title", "overlay_detail"]:
-				labels[key].visible = true
-			for key in ["resume", "restart", "home", "settings"]:
-				buttons[key].visible = true
-		"results":
-			labels["overlay_title"].text = "THE RUN ENDS"
-			labels["overlay_detail"].text = "THE TEAM RETURNS. THE CITY REMAINS."
-			labels["result_distance"].text = "%d m" % int(end_distance)
-			labels["result_score"].text = "%d SCORE   /   %d RELIC SHARDS" % [end_score, shard_count]
-			labels["best"].text = "PERSONAL BEST  /  %d METRES" % int(best)
-			for key in ["overlay_title", "overlay_detail", "result_distance", "result_score", "best"]:
-				labels[key].visible = true
-			for key in ["restart", "home"]:
-				buttons[key].visible = true
-		"settings":
-			labels["overlay_title"].text = "SETTINGS"
-			labels["overlay_detail"].text = "SHAPE YOUR EXPERIENCE."
-			labels["overlay_title"].visible = true
-			labels["overlay_detail"].visible = true
-			buttons["back"].visible = true
-			buttons["credits"].visible = true
-			for setting in settings:
-				buttons[setting].visible = true
-				buttons[setting].text = setting.to_upper() + "  /  " + (("HIGH" if settings[setting] else "BATTERY") if setting == "quality" else ("ON" if settings[setting] else "OFF"))
-		"credits":
-			labels["overlay_title"].text = "CREDITS"
-			labels["overlay_detail"].text = "CRAFTED BY LAMONT LABS."
-			labels["overlay_title"].visible = true
-			labels["overlay_detail"].visible = true
-			credits.visible = true
-			buttons["back"].visible = true
-	queue_redraw()
-
-
-func update_session(data: Dictionary, shards: int) -> void:
-	session = data
-	shard_count = shards
-	if mode != "game":
-		return
-	labels["distance"].text = str(int(data["distance_mm"]) / 1000)
-	labels["district"].text = {"knight":"CATHEDRAL CAUSEWAY", "gargoyle":"THE UPPER SPIRES", "witch":"THE FRACTURED VEIL"}[data["character"]]
-	labels["score"].text = "%d SCORE   /   %d SHARDS" % [int(data["score"]), shards]
-	var remaining: int = data["cooldowns"][data["character"]]
-	var protected: bool = data["phase"] in ["handoff", "recovery"]
-	buttons["power"].disabled = remaining > 0 or protected or data["phase"] == "committed"
-	action_glyphs["power"].remaining = remaining/60.0
-	action_glyphs["power"].hero = data["character"]
-	action_glyphs["power"].queue_redraw()
-	buttons["attack"].disabled = protected
-	labels["route_title"].visible = route_visible and not protected
-	queue_redraw()
-
-
-func message(text: String, duration: float = 1.8) -> void:
-	labels["message"].text = text
-	message_time = duration
-	labels["message"].visible = true
-
-
-func impact(text: String, color: Color) -> void:
-	impact_text=text
-	impact_color=color
-	impact_left=.42
-	queue_redraw()
-
-
-func _process(delta: float) -> void:
-	if impact_left>0:
-		impact_left=maxf(0,impact_left-delta)
-		queue_redraw()
-	if mode == "menu":
-		comic_clock += delta
-		queue_redraw()
-	if message_time > 0.0:
-		message_time -= delta
-		labels["message"].modulate.a = minf(1.0, message_time * 3.0)
-		labels["message"].visible = message_time > 0.0 and mode == "game"
-	if flash > 0.0:
-		flash = maxf(0.0, flash-delta*2.0)
-		queue_redraw()
-
+func _button_style(active: bool, circle: bool=false) -> StyleBoxFlat:
+	var style:=StyleBoxFlat.new();style.bg_color=Color("253b51",.96) if active else Color("0c1429",.88)
+	style.border_color=Color("86e7ee") if active else Color("63758f");style.set_border_width_all(2);style.set_corner_radius_all(70 if circle else 10)
+	return style
 
 func _notification(what: int) -> void:
-	if what == NOTIFICATION_RESIZED:
-		_layout()
+	if what==NOTIFICATION_RESIZED and not labels.is_empty():_layout()
 
+func _place(key: String, at: Vector2, dimensions: Vector2, align: HorizontalAlignment=HORIZONTAL_ALIGNMENT_LEFT) -> void:
+	labels[key].position=at;labels[key].size=dimensions;labels[key].horizontal_alignment=align
+
+func _layout() -> void:
+	var w:=size.x;var h:=size.y
+	top_pad=22;bottom_pad=16
+	if OS.get_name()=="Android":
+		var safe:=DisplayServer.get_display_safe_area();var window:=DisplayServer.window_get_size()
+		if window.y>0 and safe.size.y>0:
+			top_pad=maxf(22,safe.position.y*size.y/window.y+10);bottom_pad=maxf(16,(window.y-safe.end.y)*size.y/window.y+10)
+	_place("district",Vector2(138,top_pad+6),Vector2(w-360,34))
+	_place("score",Vector2(138,top_pad+88),Vector2(w-300,35))
+	_place("distance",Vector2(w-230,top_pad),Vector2(194,75),HORIZONTAL_ALIGNMENT_RIGHT)
+	_place("unit",Vector2(w-230,top_pad+80),Vector2(194,28),HORIZONTAL_ALIGNMENT_RIGHT)
+	_place("objective",Vector2(36,top_pad+141),Vector2(w-185,32))
+	_place("ability",Vector2(w-270,h-bottom_pad-225),Vector2(232,38),HORIZONTAL_ALIGNMENT_RIGHT)
+	_place("message",Vector2(30,h-bottom_pad-310),Vector2(w-60,58),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("guide_title",Vector2(36,top_pad+188),Vector2(w-72,58))
+	_place("guide_detail",Vector2(36,top_pad+245),Vector2(w-72,98))
+	_place("combat_hint",Vector2(w*.5-155,h*.45),Vector2(310,45),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("countdown",Vector2(0,h*.34),Vector2(w,168),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("ready_caption",Vector2(0,h*.34+170),Vector2(w,50),HORIZONTAL_ALIGNMENT_CENTER)
+	if game_buttons.is_empty():return
+	game_buttons.pause.position=Vector2(w-128,top_pad+140);game_buttons.pause.size=Vector2(92,92)
+	game_buttons.power.position=Vector2(w-166,h-bottom_pad-180);game_buttons.power.size=Vector2(130,130)
+	game_buttons.attack.position=Vector2(w-306,h-bottom_pad-164);game_buttons.attack.size=Vector2(114,114)
+	queue_redraw()
+
+func set_mode(value: String) -> void:mode=value;refresh()
+func open_screen(screen: String, root: bool=false) -> void:
+	if root:navigation=[screen]
+	elif navigation.is_empty() or navigation[-1]!=screen:navigation.append(screen)
+	set_mode(screen)
+func go_back() -> void:
+	if navigation.size()>1:navigation.pop_back();set_mode(navigation[-1])
+	else:open_screen("home",true)
+func refresh() -> void:
+	if not is_instance_valid(front):return
+	for label in labels.values():label.hide()
+	for b in game_buttons.values():b.hide()
+	front.visible=mode not in ["game","countdown","closing"]
+	if front.visible:front.show_screen(mode,selected,course_id,profile_data,result_data,navigation.size()>1 or mode in ["pause","results"])
+	elif mode=="game":
+		for key in ["distance","unit","district","score","ability","objective"]:labels[key].show()
+		for b in game_buttons.values():b.show()
+	elif mode=="countdown":
+		labels.countdown.text=countdown_text;labels.countdown.show();labels.ready_caption.show();game_buttons.pause.show()
+	queue_redraw()
+
+func update_session(data: Dictionary, shards: int) -> void:
+	session=data;shard_count=shards
+	if mode!="game":return
+	labels.distance.text=str(int(data.distance_mm)/1000)
+	labels.district.text=str(data.get("district","MYSTIC RUN"))
+	labels.score.text="%d SCORE  /  %d RELICS"%[int(data.score),shards]
+	var length:float=data.get("course_length",0)
+	labels.objective.text="ENDLESS RELAY" if length==0 else "%d / %d M TO THE EXIT"%[mini(int(data.distance_mm/1000),int(length)),int(length)]
+	var character:String=data.character
+	labels.ability.text={"knight":"SHIELD CHARGE","gargoyle":"WING BURST","witch":"ARCANE BLINK"}[character]
+	var protected:bool=data.phase in ["handoff","recovery","failed","completed"]
+	var remaining:float=float(data.cooldowns[character])/60.0
+	game_buttons.power.remaining=remaining;game_buttons.power.hero=character
+	game_buttons.power.disabled=remaining>0 or protected or data.phase=="committed" or not data.get("power_available",true)
+	game_buttons.attack.disabled=protected
+	game_buttons.power.queue_redraw();game_buttons.attack.queue_redraw()
+	labels.guide_title.text=guide_title;labels.guide_detail.text=guide_detail
+	labels.guide_title.visible=not guide_title.is_empty();labels.guide_detail.visible=not guide_detail.is_empty()
+	labels.combat_hint.visible=combat_ready and guide_title.is_empty()
+	queue_redraw()
+
+func message(value: String, duration: float=1.8) -> void:labels.message.text=value;message_left=duration
+func impact(value: String,color: Color) -> void:impact_text=value;impact_color=color;impact_left=.32;queue_redraw()
+func _process(delta: float) -> void:
+	if mode=="game":message_left=maxf(0,message_left-delta);impact_left=maxf(0,impact_left-delta);flash=maxf(0,flash-delta*2)
+	labels.message.visible=mode=="game" and message_left>0
+	if labels.message.visible:labels.message.modulate.a=minf(1,message_left*3)
+	if impact_left>0 or flash>0:queue_redraw()
 
 func _draw() -> void:
-	if menu_gradient == null:
-		return
-	if mode == "menu" and comic != null:
-		comic.draw(self,selected,comic_clock,title_font)
-	else:
-		draw_texture_rect(game_gradient, Rect2(Vector2.ZERO, size), false)
-	if mode in ["pause", "settings", "results", "credits"]:
-		draw_rect(Rect2(Vector2.ZERO, size), Color(INK, 0.89))
-		draw_line(Vector2(72, 420), Vector2(size.x-72, 420), Color(GOLD, 0.45), 1)
-	if mode == "game":
-		var character: String=session.get("character",selected)
-		var accent: Color=ComicPresentation.COLORS[character]
-		var portrait_rect:=Rect2(26,27,92,104)
-		draw_rect(portrait_rect.grow(3),Color("0c1025",.88))
-		draw_texture_rect_region(comic.portraits[character],portrait_rect,Rect2(140,0,744,720))
-		draw_line(Vector2(26,134),Vector2(118,134),accent,3,true)
-		draw_line(Vector2(138,145),Vector2(size.x-38,145),Color(accent,.25),1,true)
-		if impact_left>0:
-			var center:=Vector2(size.x*.54,size.y*.48)
-			var burst:=PackedVector2Array()
-			for i in range(16):
-				var angle:=TAU*i/16-.14
-				burst.append(center+Vector2(cos(angle)*1.8,sin(angle))*(51 if i%2==0 else 25))
-			draw_colored_polygon(burst,Color(impact_color,minf(impact_left*4,.80)))
-			var length:=title_font.get_string_size(impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40).x
-			var at:=center+Vector2(-length/2,13)
-			draw_string_outline(title_font,at,impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40,7,Color("101125"))
-			draw_string(title_font,at,impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40,Color.WHITE)
-		for index in range(3):
-			var center := Vector2(149 + index * 30, 87)
-			var points := PackedVector2Array([center+Vector2(0,-8),center+Vector2(7,0),center+Vector2(0,8),center+Vector2(-7,0)])
-			draw_colored_polygon(points, GOLD if index < int(session.get("health",3)) else Color("30394a"))
-		if route_visible and str(session.get("phase", "")) not in ["handoff", "recovery"]:
-			var width := (size.x-64)/3
-			for index in range(3):
-				var rect := Rect2(30+index*(width+2), 275, width, 51)
-				draw_rect(rect, Color(INK, 0.88))
-				if index == route_lane:
-					draw_line(rect.position+Vector2(8,49),rect.position+Vector2(width-8,49),GOLD,2)
-				var text: String = ["GARGOYLE", "KNIGHT", "WITCH"][index]
-				draw_string(title_font, Vector2(rect.position.x+width*0.5-title_font.get_string_size(text,HORIZONTAL_ALIGNMENT_LEFT,-1,23).x*0.5,308), text, HORIZONTAL_ALIGNMENT_LEFT,-1,23,IVORY)
-	if flash > 0.0:
-		draw_rect(Rect2(Vector2.ZERO, size), Color(0.65,0.16,0.12,flash*0.21))
+	if fade==null or mode not in ["game","countdown"]:return
+	draw_texture_rect(fade,Rect2(Vector2.ZERO,size),false)
+	if mode=="countdown":return
+	var hero:String=session.get("character",selected);var accent:Color=ACCENTS[hero]
+	var portrait_rect:=Rect2(26,top_pad,92,106)
+	draw_rect(portrait_rect.grow(3),Color("0c1025",.85));draw_texture_rect_region(portraits[hero],portrait_rect,Rect2(140,0,744,720))
+	draw_line(Vector2(26,top_pad+110),Vector2(118,top_pad+110),accent,3,true)
+	for i in range(3):
+		var c:=Vector2(153+i*36,top_pad+63)
+		draw_colored_polygon(PackedVector2Array([c+Vector2(0,-11),c+Vector2(10,0),c+Vector2(0,11),c+Vector2(-10,0)]),Color("efd098") if i<int(session.get("health",3)) else Color("4a4c62"))
+	var length:float=session.get("course_length",0)
+	if length>0:
+		var width:=size.x-200
+		draw_rect(Rect2(36,top_pad+180,width,4),Color("343a53"));draw_rect(Rect2(36,top_pad+180,width*clampf(float(session.get("distance_mm",0))/1000.0/length,0,1),4),accent)
+	if route_visible and str(session.get("phase","")) not in ["handoff","recovery"]:
+		var width:float=(size.x-72)/3
+		for i in range(3):
+			var rect:=Rect2(32+i*(width+3),top_pad+248,width,67)
+			draw_rect(rect,Color("10162c",.92))
+			if i==route_lane:draw_rect(rect,accent,false,2)
+			var name:String=["GARGOYLE","KNIGHT","WITCH"][i]
+			var text_width:=title_font.get_string_size(name,HORIZONTAL_ALIGNMENT_LEFT,-1,26).x
+			draw_string(title_font,rect.position+Vector2((width-text_width)*.5,44),name,HORIZONTAL_ALIGNMENT_LEFT,-1,26,WHITE)
+		draw_string(ui_font,Vector2(36,top_pad+230),"RELAY GATE  /  CHOOSE THE NEXT RUNNER",HORIZONTAL_ALIGNMENT_LEFT,-1,23,WHITE)
+	if impact_left>0:
+		var center:=Vector2(size.x*.54,size.y*.47);var burst:=PackedVector2Array()
+		for i in range(16):
+			var angle:float=TAU*i/16-.14;burst.append(center+Vector2(cos(angle)*1.8,sin(angle))*(50 if i%2==0 else 26))
+		draw_colored_polygon(burst,Color(impact_color,minf(impact_left*5,.8)))
+		var w:=title_font.get_string_size(impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40).x
+		var at:=center+Vector2(-w*.5,13)
+		draw_string_outline(title_font,at,impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40,7,Color("0a1025"));draw_string(title_font,at,impact_text,HORIZONTAL_ALIGNMENT_LEFT,-1,40,WHITE)
+	if flash>0:draw_rect(Rect2(Vector2.ZERO,size),Color(.7,.12,.16,flash*.25))

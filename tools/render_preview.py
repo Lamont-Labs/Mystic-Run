@@ -21,6 +21,8 @@ def main():
     parser.add_argument('--qa-ticks', type=int, default=0)
     parser.add_argument('--frames', type=int, default=150)
     parser.add_argument('--resolution', default='540x960')
+    parser.add_argument('--screen', default='home')
+    parser.add_argument('--navigation',action='store_true')
     args = parser.parse_args()
     if not args.xvfb:
         raise SystemExit('Xvfb is required for actual rendered previews')
@@ -55,12 +57,14 @@ def main():
             else:
                 raise RuntimeError('Virtual display did not become ready')
             command = [str(args.godot),'--path',str(root),'--audio-driver','Dummy','--resolution',args.resolution]
-            if not args.qa_ticks:
+            if args.navigation:
+                command += ['--script','res://tests/gameplay_navigation.gd']
+            if not args.qa_ticks and not args.navigation:
                 command += ['--quit-after',str(args.frames)]
             command += ['--',f'--capture-dir={args.output}',f'--character={args.character}']
-            command += ['--qa',f'--qa-ticks={args.qa_ticks}'] if args.qa_ticks else ['--qa-menu']
+            command += ['--qa',f'--qa-ticks={args.qa_ticks}'] if args.qa_ticks else [] if args.navigation else ['--qa-menu',f'--screen={args.screen}']
             with (args.output/'game.log').open('w') as log:
-                run = subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=360 if args.qa_ticks else 60)
+                run = subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=360 if args.qa_ticks or args.navigation else 60)
             print(f'Render exit={run.returncode}; output={args.output}')
             return run.returncode
         finally:

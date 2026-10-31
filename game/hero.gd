@@ -62,7 +62,7 @@ func _build() -> void:
 	mats={"steel":_paint("526b8b",0.65),"edge":_paint("96bdd0",0.6),"dark":_paint("171d36",0.25),"gold":_paint("d3a45e",0.6),"cloth":_paint("47305e"),"stone":_paint("637f99"),"glow":_paint("5de9f2",0.25,1.5)}
 	body=Node3D.new()
 	body.rotation.y=PI
-	body.scale=Vector3.ONE*(1.46 if identity=="gargoyle" else 1.35)
+	body.scale=Vector3.ONE*(1.16 if identity=="gargoyle" else 1.08)
 	add_child(body)
 	var gender := "Female" if identity=="witch" else "Male"
 	var model: Node3D=(load("res://assets/models/quaternius/base/Superhero_"+gender+"_FullBody.gltf") as PackedScene).instantiate()
@@ -283,7 +283,8 @@ func animate(delta: float) -> void:
 	body.rotation.z=lerpf(body.rotation.z,-lean*.09,1-exp(-delta*10))
 	for index in range(wings.size()):
 		var sign_value:=1.0 if index==0 else -1.0
-		wings[index].rotation.y=sign_value*((.08 if airborne else 1.12)+sin(clock*(7 if airborne else 2))*(.18 if airborne else .04))
+		wings[index].rotation.y=sign_value*((.08 if airborne else 1.48 if sliding else 1.12)+sin(clock*(7 if airborne else 2))*(.18 if airborne else .04))
+		wings[index].rotation.z=lerpf(wings[index].rotation.z,sign_value*-.32 if sliding else 0.0,1-exp(-delta*14))
 	if is_instance_valid(cape): cape.rotation.x=sin(clock*6)*.018
 	if is_instance_valid(aura):
 		aura.position.y=1.32+sin(clock*2.4)*.04

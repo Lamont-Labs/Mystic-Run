@@ -60,3 +60,7 @@ interaction checks remain in place. Three automated starting-character runs cove
 all directed teammate handoffs. Desktop software-rendered captures are inspected
 for character visibility, materials, course continuity and handoff frames.
 These checks do not establish physical-phone performance or premium visual quality.
+
+## 0.3.0 motion update
+
+The same pinned free Standard animation source now supplies authored crouch locomotion. The runtime cache contains nine clips (about 130 KB compressed), and character display scale is closer to the physical capsule. See GAMEPLAY_AND_NAVIGATION.md for the control and navigation revision.

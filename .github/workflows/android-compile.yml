@@ -40,7 +40,7 @@ jobs:
         run: python3 tools/verify_core.py --godot "$(cat "${RUNNER_TEMP}/godot-path")"
       - name: Compile and inspect unsigned APK
         run: |
-          python3 tools/build_android.py --unsigned --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --version-code "$((1000 + GITHUB_RUN_NUMBER))" --version-name 0.2.0
+          python3 tools/build_android.py --unsigned --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --version-code "$((1000 + GITHUB_RUN_NUMBER))" --version-name 0.3.0
       - name: Preserve compilation for owner signing
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

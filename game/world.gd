@@ -114,7 +114,7 @@ func set_theme(kind: String) -> void:
 
 func update(distance: float, delta: float) -> void:
 	elapsed += delta
-	course_bend=sin(distance/115.0)*10.0
+	course_bend=sin(distance/145.0)*2.2
 	for mat in materials.values(): mat.set_shader_parameter("bend",course_bend)
 	var offset := fposmod(distance, CHUNK)
 	for index in range(chunks.size()):
@@ -174,6 +174,19 @@ func _build_dust() -> void:
 	add_child(dust)
 
 
+func set_gaps(rows: Array[Dictionary], distance: float) -> void:
+	var openings:=PackedVector4Array()
+	for row in rows:
+		if row.kind=="gap" and float(row.at)-distance<120 and float(row.at)-distance> -18:
+			openings.append(Vector4((int(row.lane)-1)*WIDTH,distance-float(row.at),1.23,1.76))
+			if openings.size()==12:break
+	var count:=openings.size()
+	while openings.size()<12:openings.append(Vector4.ZERO)
+	for mat in materials.values():
+		mat.set_shader_parameter("gap_count",count)
+		mat.set_shader_parameter("gaps",openings)
+
+
 func update_labels(node: Node3D) -> void:
 	for child in node.get_children():
 		if child is Label3D:
@@ -206,9 +219,11 @@ func prop(kind: String) -> Node3D:
 			b.box(Vector3(0, 1.48, 0), Vector3(2.3, 0.35, 0.55), materials["dark"])
 			b.box(Vector3(0, 1.28, 0.28), Vector3(2.0, 0.05, 0.04), materials["red"])
 		"gap":
-			b.box(Vector3(0, 0.025, 0), Vector3(2.45, 0.025, 3.6), materials["void"])
-			for side in [-1.0, 1.0]:
-				b.box(Vector3(0, 0.07, side * 1.8), Vector3(2.5, 0.055, 0.12), materials["red"])
+			# The world shader opens the actual road surface. These are the rims.
+			for side in [-1.0,1.0]:
+				b.armor(Vector3(0,-.08,side*1.86),Vector3(2.48,.26,.22),materials.pale,.70)
+				b.box(Vector3(0,.07,side*1.87),Vector3(2.47,.05,.07),materials.red)
+				b.box(Vector3(side*1.25,-.06,0),Vector3(.09,.21,3.7),materials.dark)
 		"shard":
 			b.cylinder(Vector3(0, 1.0, 0), 0.14, 0.36, materials["amber"], 0.0, Vector3.ZERO, 4)
 			b.cylinder(Vector3(0, 0.64, 0), 0.14, 0.36, materials["gold"], 0.0, Vector3(PI, 0, 0), 4)

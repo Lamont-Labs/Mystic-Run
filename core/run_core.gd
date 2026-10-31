@@ -20,6 +20,7 @@ var phase: String = "ready"
 var active_character: String = "knight"
 var tick: int = 0
 var distance_mm: int = 0
+var speed_mm_per_second: int = SPEED_MM_PER_SECOND
 var health: int = MAX_HEALTH
 var score: int = 0
 var handoff_epoch: int = 0
@@ -59,10 +60,10 @@ func step(count: int = 1) -> void:
 	if count <= 0:
 		return
 	for _index in range(count):
-		if phase in ["ready", "paused", "failed"]:
+		if phase in ["ready", "paused", "failed", "completed"]:
 			return
 		tick += 1
-		_distance_remainder += SPEED_MM_PER_SECOND
+		_distance_remainder += speed_mm_per_second
 		distance_mm += _distance_remainder / HZ
 		_distance_remainder %= HZ
 		for token in _live_attacks.keys():
@@ -85,6 +86,27 @@ func step(count: int = 1) -> void:
 			route = {}
 			phase = "running"
 			_record("control_restored")
+
+
+func set_speed(metres_per_second: float) -> bool:
+	if not is_finite(metres_per_second) or metres_per_second<6.0 or metres_per_second>24.0: return false
+	speed_mm_per_second=roundi(metres_per_second*1000)
+	return true
+
+
+func sync_route_deadline(route_id: String, remaining_ticks: int) -> bool:
+	if phase not in ["telegraph","committed"] or str(route.get("id",""))!=route_id or remaining_ticks<1: return false
+	route["deadline"]=tick+remaining_ticks
+	return true
+
+
+func complete_run() -> bool:
+	if not _can_act(): return false
+	phase="completed"
+	_live_enemies.clear()
+	_live_attacks.clear()
+	_record("run_completed",{"distance_mm":distance_mm,"score":score})
+	return true
 
 
 func offer_route(route_id: String, target: String, preview_ticks: int = 144) -> bool:
@@ -214,7 +236,7 @@ func fail_run(reason: String) -> bool:
 
 
 func pause() -> bool:
-	if phase in ["ready", "paused", "failed"]:
+	if phase in ["ready", "paused", "failed", "completed"]:
 		return false
 	_paused_phase = phase
 	phase = "paused"
@@ -237,7 +259,7 @@ func snapshot() -> Dictionary:
 		cooldowns[character] = power_remaining(character)
 	return {
 		"phase": phase, "character": active_character, "tick": tick,
-		"distance_mm": distance_mm, "health": health, "score": score,
+		"distance_mm": distance_mm, "speed_mm_per_second":speed_mm_per_second, "health": health, "score": score,
 		"epoch": handoff_epoch, "seed": seed_value, "cooldowns": cooldowns,
 		"route": route.duplicate(true), "live_enemies": _live_enemies.size(),
 		"live_attacks": _live_attacks.size()

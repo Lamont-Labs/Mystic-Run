@@ -1,6 +1,6 @@
 {
-  "checks": 37,
+  "checks": 107,
   "failed": 0,
   "failures": [],
-  "scope": "Scene/physics/UI signal and gesture handling on desktop headless; not a phone touch-latency test"
+  "scope": "Native Godot GUI hit testing, touch/drag/tap delivery, screen history, physical runner actions, finite finish and practice. Scripted desktop input; no phone comfort or latency claim."
 }

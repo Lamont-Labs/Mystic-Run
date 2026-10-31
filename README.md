@@ -1,96 +1,99 @@
-# Mystic Run — Android Development Build
+# Mystic Run
 
-**Lamont Labs · Working game title · Version 0.2.0**
+A Lamont Labs Android forward runner blending dark fantasy and futuristic magic.
+Knight, Gargoyle and Witch hand the run to one another through relay routes.
 
-A playable 3D endless runner combining dark fantasy and futuristic architecture. Knight, Gargoyle and Witch are separate teammates who hand the continuous run to one another through route choices. This is an early playable alpha; the owner's premium visual target remains an active development goal.
+Version 0.3.0 rebuilds navigation and core game feel after owner feedback. The game
+remains a development alpha below its final premium production target.
 
-## Actual rendered preview
+## Download
 
-![Godot gameplay, software-rendered desktop capture](docs/previews/gameplay-0.2.0.png)
+The current published 0.2.0 build is under [GitHub Releases](https://github.com/Lamont-Labs/Mystic-Run/releases).
+The 0.3.0 build is verified on the quality branch before publication.
 
-The illustrations are original art assets; this preview is an actual game frame. This first art and animation pass remains below the final production quality target.
+## Actual rendered menus
 
-## Download and install
+![Home screen with persistent navigation](docs/previews/home-0.3.0.png)
 
-[Download the signed Android APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.2.0-build1004/Mystic_Run_0.2.0_GitHub_Build1004.apk) or open [GitHub Releases](https://github.com/Lamont-Labs/Mystic-Run/releases/tag/v0.2.0-build1004). Open the APK on an arm64 Android phone to install this development alpha.
+![Playable route selection](docs/previews/routes-0.3.0.png)
 
-## Playable features
+These are native Godot screen captures from a scripted desktop review.
 
-- Three weighted and animated characters, original comic illustrations, custom equipment and separate powers.
-- Painted distant city, comic shading, curving causeway, illustrated HUD and impact feedback.
-- Starting selection and route-driven handoffs between separate teammates.
-- Endless cathedral, rooftop and rift visual treatments.
-- Directional movement, jumping, sliding, melee/spell attacks and signature powers.
-- Knight charge, Gargoyle wing burst/glide, and Witch blink toward a visible safe anchor.
-- Enemies, barriers, low beams, gaps, collectible shards and shared health/score.
-- Pause/resume, results, restart, settings, personal best and profile backup recovery.
-- Original synthesized audio, optional vibration, graphics settings and license credits.
-- Portrait touch controls plus desktop keyboard support.
+## Play flow
 
-## Controls
+Home → Team → Routes → ready countdown → run → results. Persistent Home, Team,
+Routes and Records tabs, settings, controls, credits and working Back paths are
+included. Pause resumes or opens settings/controls and returns to the same run.
 
-| Input | Action |
+| Route | Goal |
 | --- | --- |
-| Swipe left/right | Change path |
-| Swipe up/down | Jump/slide |
-| Strike / Power | Basic attack / signature ability |
-| A/D or arrows | Desktop movement |
-| Space / E | Desktop attack / power |
-| Escape | Pause/resume |
+| Citadel Breakout | Reach 650 m |
+| The Skyward Relay | Reach 900 m |
+| Fracture Protocol | Reach 1100 m |
+| Endless Relay | Keep the run alive |
+| Guided Practice | Perform six real controls, including a successful hit |
 
-At a gate, marked paths lead to Gargoyle, Knight and Witch. The choice commits near the entrance. Handoffs preserve distance, health, score and separate cooldowns.
+All three characters are available. Choose a starting runner before the level;
+marked relay lanes hand the continuous run to another teammate. Each teammate has
+its own power recharge. Results and route clears are saved in the local journal.
 
-## Run and check
+| Control | Action |
+| --- | --- |
+| Swipe left / right | Move one lane, including while airborne |
+| Swipe up | Jump, with a short input buffer |
+| Swipe down | Slide; in the air, land into a slide |
+| Tap the open play area / Strike | Basic attack |
+| Power | Charge / Wing Burst / Blink |
+| Android Back | Navigate back or pause |
+| Arrows / WASD, Space, E, Escape | Desktop controls |
 
-Open `project.godot` in **Godot 4.7.2 standard**, import assets, then run. The game uses GDScript and Compatibility rendering, with no required backend or account.
+See [the gameplay revision](docs/GAMEPLAY_AND_NAVIGATION.md) for the specific
+control corrections. No physical-phone comfort or performance claim is made.
+
+## Source and checks
+
+Open project.godot in pinned Godot 4.7.2 standard, using Compatibility rendering.
+No backend or game account is required.
 
 ```bash
 godot --path .
-godot --headless --path . --script res://tests/run_tests.gd
-godot --headless --path . --script res://tests/scene_interactions.gd
-godot --headless --path . --script res://tests/rig_motion.gd
-godot --headless --path . -- --qa --qa-ticks=3600
+godot --headless --path . --script tests/run_tests.gd
+godot --headless --path . --script tests/runner_controls.gd
+godot --headless --path . --script tests/gameplay_navigation.gd
+godot --headless --path . --script tests/rig_motion.gd
+godot --headless --path . -- --qa --qa-ticks=3600 --character=knight
 ```
 
-The last command drives a real 60-second automated scene run. Add `--character=gargoyle` or `--character=witch` to exercise another start. These desktop/headless checks are not phone latency, GPU or thermal tests.
+The last command uses a disclosed automated input driver; repeat with Gargoyle
+and Witch. Reports are in tests/evidence/. The existing scene_interactions.gd
+entry point now runs native GUI and touch navigation checks, rather than directly
+emitting button signals.
 
-## Android
-
-The export preset defines the arm64 development package `com.lamontlabs.knightgargoylewitch.dev`. Use matching Godot 4.7.2 export templates, JDK 17, Android platform/build tools 35 and the existing owner development keystore.
-
-`tools/build_android.py` requires `--godot`, `--sdk` and `--keystore`. It imports, exports, verifies the signature and 16 KB alignment, inspects package metadata and writes a source-bound manifest. Signing material is stored separately and never committed.
-
-The manual GitHub Android workflow expects `RELAY_DEVELOPMENT_KEYSTORE_BASE64` and `RELAY_DEVELOPMENT_KEY_PASSWORD`. The core workflow needs no secrets. The canonical source destination is https://github.com/Lamont-Labs/Mystic-Run, the owner's private organization repository covered by the connected GitHub app. Remote workflow outcomes are verified separately from local checks.
-
-`Compile Android APK` runs on game/build changes to `main` or a `quality/` branch and creates an explicitly unsigned APK with GitHub run, source, package and byte-hash evidence. This job requires no signing secret. Its artifact requires owner signing before phone installation. `tools/sign_android.py` signs the downloaded compilation with the preserved key and verifies its source/run identity, unchanged packaged game files, certificate, package/version, ZIP integrity, 16 KB alignment and bundled notices. The final signed manifest preserves the original GitHub compilation metadata.
-
-## Verified scope
-
-- 427 core assertions, 37 scene/physics/menu/gesture assertions and 18 rig/motion checks passed.
-- Three automated 840 m runs completed with three handoffs each and zero damage/deaths, covering all six directed teammate pairs together.
-- Rendered frames were reviewed through several revisions. Jump cancellation, camera clipping, navigation and audio shutdown were corrected.
-- An initial signed APK exported successfully. The delivered APK manifest records the final artifact's exact verification.
-- Physical installation, touch comfort, graphics compatibility and sustained phone performance remain open.
-
-See `docs/ART_DIRECTION.md` for the reference target, remaining gaps and asset provenance, `docs/BUILD_STATUS.md` for current status, `docs/MASTER_DEVELOPMENT_BLUEPRINT.md` for the design baseline and `tests/evidence/` for actual records. Core check counts include repeated assertions.
-
-## Source map
-
-| Path | Responsibility |
+| Source | Purpose |
 | --- | --- |
-| `game/main.gd` | Playable scene, movement, encounters, combat, handoffs |
-| `game/hero.gd` | Weighted characters, equipment and secondary motion |
-| `game/rig_motion.gd` | Authored pose retargeting and upper-body combat blending |
-| `game/comic_presentation.gd` | Illustrated character selection |
-| `game/world.gd` | Environment kit, track, horizon, encounter props |
-| `game/geometry.gd` | Geometry batching, armor, procedural materials |
-| `game/hud.gd` | Menus, settings, credits, HUD, controls |
-| `core/run_core.gd` | Fixed-tick state, ownership, rewards, cooldowns |
-| `core/route_contract.gd` | Static route safety checks |
-| `tools/create_audio.py` | Original sound generation |
-| `tools/render_preview.py` | Actual rendered capture |
-| `tools/build_android.py` | Android export and verification |
+| game/main.gd | Scene, physical runner, combat, relay and run flow |
+| game/front_end.gd | Native menus, navigation and journal |
+| game/hud.gd | In-run HUD and countdown |
+| game/gesture_input.gd | Pointer ownership, swipes and taps |
+| game/encounter_director.gd | Seeded authored encounter phrases |
+| core/course_catalog.gd | Playable expeditions and pace |
+| core/run_core.gd | Fixed-tick state, score, cooldowns and completion |
+| game/hero.gd and rig_motion.gd | Weighted characters and authored motion |
 
-## Ownership
+GitHub's Compile Android APK workflow produces an unsigned compilation with its
+source/run/hash metadata. The preserved owner key signs it separately. The publish
+workflow verifies exact signed bytes and exposes an installable APK under Releases.
+Private signing keys and credentials are never committed. The optional manual
+fully signed workflow needs owner-configured signing secrets.
 
-Original game source, custom procedural equipment and audio: Copyright 2026 Lamont Labs. All rights reserved. Godot is separately MIT licensed. Quaternius humanoid meshes and motion are CC0 1.0. Character illustrations and the city matte were generated for this game. Bangers, Cinzel and Manrope use the SIL Open Font License. Notices are bundled with the source and application. Private keys and owner credentials never belong in source commits.
+## Art and ownership
+
+Original game code, custom equipment, interface and synthesized audio: Lamont Labs.
+Original generated character illustrations and distant city matte are used in the
+actual game. Quaternius humanoid meshes and authored motion are CC0 1.0. Godot is
+MIT licensed; Bangers, Cinzel and Manrope are SIL OFL. Notices are shipped in the APK.
+See assets/ART_PROVENANCE.json and assets/models/quaternius/PROVENANCE.json.
+
+The illustration quality is not a claim about production 3D model fidelity. Further
+character detail, course set pieces, environment transitions and phone validation
+remain necessary for the owner's Temple Run / Marvel Snap quality target.

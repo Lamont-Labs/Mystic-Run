@@ -1,7 +1,7 @@
 extends RefCounted
 ## Samples authored CC0 motion onto each character's rest skeleton.
 ## Positions preserve target limb lengths; only pelvis translation is animated.
-const REQUIRED := ["Idle","Sprint","Jump","Slide","Sword_Regular_A","Punch_Cross","Spell_Simple_Shoot","Shield_Dash"]
+const REQUIRED := ["Idle","Sprint","Jump","Slide","Crouch_Fwd","Sword_Regular_A","Punch_Cross","Spell_Simple_Shoot","Shield_Dash"]
 static var clips: Dictionary = {}
 static var source_rests: Dictionary = {}
 var skeleton: Skeleton3D
@@ -11,6 +11,7 @@ var rests: Array[Transform3D] = []
 var upper: Array[bool] = []
 var locomotion: String = "Idle"
 var motion_clock: float = 0.0
+var locomotion_rate: float = 1.0
 var attack_clock: float = 99.0
 var attack_clip: String = "Sword_Regular_A"
 var power_clock: float = 99.0
@@ -49,7 +50,7 @@ func power() -> void: power_clock=0.0
 
 func _pose(clip_name: String, time: float) -> Dictionary:
 	var animation: Animation = clips[clip_name]
-	var at := fposmod(time,animation.length) if clip_name in ["Idle","Sprint","Jump","Slide"] else minf(time,animation.length-0.001)
+	var at := fposmod(time,animation.length) if clip_name in ["Idle","Sprint","Jump","Slide","Crouch_Fwd"] else minf(time,animation.length-0.001)
 	var result: Dictionary = {}
 	var source: Dictionary = source_rests[clip_name]
 	for track in range(animation.get_track_count()):
@@ -67,11 +68,11 @@ func _pose(clip_name: String, time: float) -> Dictionary:
 	return result
 
 func advance(delta: float, moving: bool, airborne: bool, sliding: bool, kind: String) -> void:
-	var next := "Slide" if sliding else "Jump" if airborne else "Sprint" if moving else "Idle"
+	var next := "Crouch_Fwd" if sliding else "Jump" if airborne else "Sprint" if moving else "Idle"
 	if next != locomotion:
 		locomotion=next
 		motion_clock=0.0
-	motion_clock+=delta*(1.12 if next=="Sprint" else 1.0)
+	motion_clock+=delta*(1.12*locomotion_rate if next=="Sprint" else locomotion_rate if next=="Crouch_Fwd" else 1.0)
 	attack_clock+=delta
 	power_clock+=delta
 	var pose := _pose(locomotion,motion_clock)
