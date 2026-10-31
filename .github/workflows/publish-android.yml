@@ -1,0 +1,43 @@
+name: Publish installable Android APK
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/android-releases/**'
+      - '.github/scripts/**'
+      - '.github/workflows/publish-android.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  actions: read
+
+jobs:
+  publish:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout release record
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Check release reconstruction contracts
+        run: python3 -m unittest discover -s .github/scripts -p 'test_release_reconstruction.py'
+      - name: Setup Android verification tools
+        uses: android-actions/setup-android@9fc6c4e9069bf8d3d10b2204b1fb8f6ef7065407
+        with:
+          packages: ''
+          log-accepted-android-sdk-licenses: false
+      - name: Install APK verification tools
+        run: sdkmanager 'build-tools;35.0.1'
+      - name: Restore, verify and publish signed APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          python3 .github/scripts/publish_android_release.py publish --records .github/android-releases --sdk "${ANDROID_SDK_ROOT}" --output "${RUNNER_TEMP}/mystic-release"
+      - name: Preserve installable APK and checks
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mystic-run-installable-android
+          path: ${{ runner.temp }}/mystic-release/*
+          retention-days: 30
+          if-no-files-found: error

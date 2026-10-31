@@ -4,6 +4,10 @@
 
 A playable 3D endless runner combining dark fantasy and futuristic architecture. Knight, Gargoyle and Witch are separate teammates who hand the continuous run to one another through route choices. This is an early playable alpha; the owner's premium visual target remains an active development goal.
 
+## Download and install
+
+[Download the signed Android APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.1.2-build1003/Mystic_Run_0.1.2_GitHub_Build1003.apk) or open [GitHub Releases](https://github.com/Lamont-Labs/Mystic-Run/releases/tag/v0.1.2-build1003). Open the APK on an arm64 Android phone to install this development alpha.
+
 ## Playable features
 
 - Three original articulated characters with separate silhouettes and powers.
