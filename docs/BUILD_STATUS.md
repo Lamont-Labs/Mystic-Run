@@ -23,3 +23,20 @@ This remains a development alpha. The requested premium production art target is
 not approved. Further character/environment art, authored set pieces and device
 performance work remain. Synthetic gravity and desktop checks do not establish
 Android sensor orientation, phone comfort, sustained frame rate or thermal safety.
+
+## Verified Android artifact
+
+- APK: `Mystic_Run_0.4.0_GitHub_Build1008.apk`
+- Android version: 0.4.0 / 1008; arm64; 38,320,587 bytes.
+- SHA-256: `13dfe0b6d958840ffacfe6115949ce8b2af8ccb895e5c6f1439074a4bb178994`.
+- Compiled source: `5bd9eed344f114f7daccfe3ed9dee5f6d2e4a538`.
+- [Successful compilation](https://github.com/Lamont-Labs/Mystic-Run/actions/runs/41510834963).
+- [Successful gameplay checks](https://github.com/Lamont-Labs/Mystic-Run/actions/runs/41510918946).
+- All 93 runtime source and asset hashes match the local reviewed implementation.
+- Preserved certificate, package/version, APK signature, ZIP integrity, unchanged
+  game payload, six license notices and APK/native 16 KB alignment verified.
+
+The branch carries a byte-verified signed-archive reconstruction record for build
+1008. The existing publisher will create the signed GitHub Release when that
+record reaches main. Publication has not occurred; the source and release record
+are reviewable in [PR #2](https://github.com/Lamont-Labs/Mystic-Run/pull/2).
