@@ -53,9 +53,9 @@ var handoff_pairs: Array[String] = []
 var clock: float = 0.0
 var foot_clock: float = 0.0
 var impact_shake: float = 0.0
-var profile := {"schema":1,"best":0.0,"runs":0,"relics":0,"history":[],"route_records":{},"selected_character":"knight","selected_course":"citadel","practice_complete":false,"settings":{"music":true,"sound":true,"vibration":true,"quality":true,"sensitivity":"normal","control_mode":"tilt","tilt_sensitivity":"normal","tilt_invert":false,"reduced_motion":false}}
-var course_id: String="citadel"
-var last_normal_course: String="citadel"
+var profile := {"schema":1,"best":0.0,"runs":0,"relics":0,"history":[],"route_records":{},"selected_character":"knight","selected_course":"endless","practice_complete":false,"intro_lessons":0,"intro_dismissed":false,"settings":{"music":true,"sound":true,"vibration":true,"quality":true,"sensitivity":"normal","control_mode":"tilt","tilt_sensitivity":"normal","tilt_invert":false,"reduced_motion":false}}
+var course_id: String="endless"
+var last_normal_course: String="endless"
 var director=Director.new()
 var run_seconds: float=0.0
 var run_speed: float=12.0
@@ -74,6 +74,8 @@ var failure_detail: String=""
 var falling: bool=false
 var fall_left: float=0.0
 var training_step: int=0
+var guided_intro: bool=false
+var menu_clear_rows:Array[Dictionary]=[]
 var practice_finish_left: float=-1.0
 var preview_screen: String="opening"
 const TRAINING := [
@@ -308,6 +310,32 @@ func _open_screen(screen: String, root: bool=false) -> void:
 	_sync_front()
 
 
+func _menu_stage(delta: float) -> void:
+	world.visible=true;motor.visible=true;world.flat_course=true
+	world.set_gaps(menu_clear_rows,0);world.update(0,delta)
+	motor.position=Vector3.ZERO;motor.velocity=Vector3.ZERO
+	var active:Node3D=heroes[selected]
+	active.rotation=Vector3.ZERO;active.body.rotation.y=.12
+	active.moving=false;active.airborne=false;active.sliding=false;active.lean=0
+	active.animate(delta)
+	camera.fov=48;camera.h_offset=0;camera.v_offset=0
+	var stage:Control=ui.front.stage_control
+	var centre_y:float=.42
+	var fraction_y:float=.28
+	if is_instance_valid(stage) and stage.size.y>1:
+		centre_y=stage.get_global_rect().get_center().y/ui.size.y
+		fraction_y=stage.size.y*.94/ui.size.y
+	var projection:Projection=camera.get_camera_projection()
+	var orbit_distance:float=maxf(2.25*projection.y.y/(2*fraction_y),2.5*projection.x.x/1.7)
+	var focus:=Vector3(0,1.05,0)
+	camera.position=focus+Vector3(2.25,.80,4.7).normalized()*orbit_distance
+	camera.look_at(focus)
+	camera.v_offset=(centre_y-.5)*2*orbit_distance/projection.y.y
+	hero_key.position=Vector3(2.6,3.5,3);hero_rim.position=Vector3(-2.5,3.2,-1)
+	for row in rows:row.node.visible=false
+	for effect in effects:effect.node.visible=false
+
+
 func _start_run() -> void:
 	for row in rows:row.node.queue_free()
 	rows.clear()
@@ -330,26 +358,29 @@ func _start_run() -> void:
 	next_row=64;next_gate=180;row_index=0;distance=0;shards=0;defeated=0
 	run_recorded=false;run_seconds=0;run_outcome="ended";failure_detail=""
 	sliding_left=0;power_left=0;attack_age=10;attack_token=-1
-	training_step=0;practice_finish_left=-1
+	guided_intro=not qa and course_id=="endless" and not bool(profile.practice_complete) and not bool(profile.intro_dismissed)
+	training_step=clampi(int(profile.intro_lessons),0,5) if guided_intro else 0
+	practice_finish_left=-1
 	previous_phase="running";total_handoffs=0;handoff_pairs.clear()
 	gestures.reset()
 	for hero in heroes.values():
 		hero.sliding=false;hero.airborne=false;hero.moving=false;hero.lean=0
+		hero.body.rotation.y=PI
 		hero.motion.attack_clock=99;hero.motion.power_clock=99;hero.attack_time=0;hero.power_time=0
 		hero.animate(.2)
 	camera.position=Vector3(0,3.3,7.4);camera.h_offset=0;camera.v_offset=0
 	camera.look_at(Vector3(0,1.45,-18))
-	countdown_left=0 if qa else 3.0
-	ui.countdown_text="3"
+	countdown_left=0 if qa else 1.5
+	ui.countdown_text="READY"
 	ui.control_hint="HOLD YOUR PHONE COMFORTABLY" if profile.settings.control_mode=="tilt" else "SWIPE TO STEER"
 	ui.navigation.clear()
 	ui.set_mode("game" if qa else "countdown")
-	ui.guide_title="";ui.guide_detail="";ui.combat_ready=false
+	ui.guide_title="";ui.guide_detail="";ui.combat_ready=false;ui.combat_warning=false
+	ui.intro_active=guided_intro;ui.district_name="";ui.district_left=0
 	world.visible=true;motor.visible=true
 	_select_character(selected)
 	_spawn_ahead();world.flat_course=course_id=="training";world.update(0,0);_update_rows(0)
-	if course_id=="training":_training_prompt()
-	elif not qa:ui.message(("TILT TO STEER" if profile.settings.control_mode=="tilt" else "SWIPE TO STEER")+". SWIPE UP TO JUMP.",2.4)
+	if course_id=="training" or guided_intro:_training_prompt()
 
 
 func _physics_process(delta: float) -> void:
@@ -360,14 +391,14 @@ func _physics_process(delta: float) -> void:
 		if profile.settings.control_mode=="tilt":tilt.calibrate(_motion_sample())
 		countdown_left=maxf(0,countdown_left-delta)
 		motor.velocity=Vector3(0,-1,0);motor.move_and_slide()
-		var text:=str(maxi(1,ceili(countdown_left)))
+		var text:="READY" if countdown_left>.65 else "GO"
 		if ui.countdown_text!=text:ui.countdown_text=text;ui.refresh()
 		if countdown_left<=0:
 			tilt.finish_calibration();gestures.reset();ui.set_mode("game")
 		return
 	if ui.mode!="game":
 		anchor.visible=false
-		if ui.mode in ["opening","home","team","routes","records"]:world.visible=false;motor.visible=false
+		if ui.mode in ["opening","home","team"]:_menu_stage(delta)
 		return
 	if qa:_qa_control()
 	run_seconds+=delta
@@ -475,9 +506,10 @@ func _physics_process(delta: float) -> void:
 
 
 func _spawn_ahead() -> void:
-	if course_id=="training":return
+	if course_id=="training" or guided_intro:return
 	if row_index==0:
-		for marker in [22.0,25.0,28.0,31.0]:_add_row("shard",1,marker)
+		var trail_start:float=maxf(22,next_row-42)
+		for offset in [0.0,3.0,6.0,9.0]:_add_row("shard",1,trail_start+offset)
 	while next_row<distance+150:
 		var phrase: Array[Dictionary]=director.phrase(row_index,next_row)
 		for entry in phrase:
@@ -497,11 +529,15 @@ func _add_row(kind: String, target_lane: int, marker: float) -> void:
 func _update_rows(delta: float) -> void:
 	ui.route_visible = false
 	ui.combat_ready=false
+	ui.combat_warning=false;ui.threat_seconds=INF
 	for index in range(rows.size()-1,-1,-1):
 		var row: Dictionary = rows[index]
 		var node: Node3D = row["node"]
 		var kind := str(row["kind"])
 		if row.get("practice_target",false):row["at"]=distance+3.4
+		if row.get("guided_target",false) and not row.resolved and float(row.at)<distance-2:
+			row.at=distance+maxf(run_speed,18.5)*1.6
+			row.lane=lane
 		var z := distance-float(row["at"])
 		node.position = Vector3(LANES[int(row["lane"])],0,z)
 		if kind=="enemy":
@@ -528,15 +564,21 @@ func _update_rows(delta: float) -> void:
 			node.rotation.y += delta*1.7
 			node.position.y = sin(clock*2.6+float(row["at"]))*0.08
 		if kind == "enemy" and z>-55 and z<8:
+			node.threat_intensity=clampf(1.0-maxf(0,float(row.at)-distance)/(maxf(run_speed,18.5)*1.6),0,1)
 			node.animate(delta)
 		if kind == "drone":
 			node.position.y = sin(clock*3+float(row["at"]))*0.12
 		var contact_width := 1.35 if kind in ["barrier","beam"] else 1.25 if kind == "gap" else 0.70 if kind == "shard" else 0.85
 		var same_lane := absf(motor.position.x-LANES[int(row["lane"])]) < contact_width
 		var ahead := motor.position.z-z
+		if kind in ["enemy","drone"] and ahead>0 and ahead<=maxf(run_speed,18.5)*1.6 and absf(motor.position.x-LANES[int(row.lane)])<.95 and _line_clear(row):
+			var approach:float=ahead/maxf(run_speed,18.5)
+			if approach<ui.threat_seconds:
+				ui.combat_warning=true;ui.threat_seconds=approach
+				ui.threat_position=camera.unproject_position(node.position+Vector3(0,1.45,0))
 		if same_lane and kind in ["enemy","drone","barrier"]:
 			var attack_range := 13.0 if selected == "witch" else 4.2
-			if kind!="barrier" and ahead>0 and ahead<(13.0 if selected=="witch" else 8.5) and absf(motor.position.x-LANES[int(row["lane"])])<.95:ui.combat_ready=true
+			if kind!="barrier" and ahead>0 and ahead<strike_cue_range() and absf(motor.position.x-LANES[int(row["lane"])])<.95 and _line_clear(row):ui.combat_ready=true
 			var charging := selected == "knight" and power_left > 0
 			if charging and ahead > 0 and ahead < 7.0:
 				if core.resolve_enemy(int(row["id"]),core.power_attack_token):
@@ -583,7 +625,7 @@ func _line_clear(target: Dictionary) -> bool:
 
 func _destroy_row(row: Dictionary) -> void:
 	defeated+=1
-	if row.get("practice_target",false):_training_action("attack")
+	if row.get("practice_target",false) or row.get("guided_target",false):_training_action("attack")
 	ui.impact("SHATTER" if selected=="knight" else "CRUSH" if selected=="gargoyle" else "HEX",heroes[selected].accent())
 	impact_shake=1.0
 	row["resolved"] = true
@@ -595,7 +637,7 @@ func _destroy_row(row: Dictionary) -> void:
 
 
 func _hurt(context: Dictionary = {}) -> void:
-	if course_id=="training":return
+	if course_id=="training" or guided_intro:return
 	failure_detail={"enemy":"A sentinel caught you. Tap to strike when the target cue appears, or change lane.","drone":"A drone caught you. Slide beneath it or move to a clear lane.","barrier":"You hit a low barrier. Jump or change lane before contact.","beam":"An overhead beam caught you. Swipe down to slide."}.get(str(context.get("kind","")),"Your team ran out of health. Read the next opening and try again.")
 	if power_left > 0.0 and selected in ["knight","witch"]:
 		return
@@ -614,6 +656,11 @@ func _attack() -> void:
 	_perform_attack()
 
 
+func strike_cue_range() -> float:
+	# A cue is only active where a tap is accepted immediately or buffered safely.
+	return 13.0 if selected=="witch" else minf(11.0,5.1+maxf(run_speed,18.5)*.24)
+
+
 func _perform_attack() -> void:
 	if selected!="witch":
 		var nearest:=INF
@@ -621,7 +668,7 @@ func _perform_attack() -> void:
 			if not row.resolved and row.kind in ["enemy","drone"] and absf(LANES[int(row.lane)]-motor.position.x)<.95:
 				var ahead:float=float(row.at)-distance
 				if ahead>0:nearest=minf(nearest,ahead)
-		if nearest>5.1 and nearest<9.0:return
+		if nearest>5.1 and nearest<=strike_cue_range():return
 	var token: int=core.attack()
 	if token<0:return
 	strike_buffer=0;attack_token=token;attack_age=0;qa_attacks+=1
@@ -780,10 +827,12 @@ func _intent(action: String, value: String="") -> void:
 				if profile.settings.control_mode=="tilt":
 					tilt.reset_calibration();countdown_left=1.2;ui.set_mode("countdown")
 				else:ui.set_mode(resume_mode)
-		"home","results_routes":
+		"home","results_routes","results_team":
 			if core.phase=="paused":return
 			if course_id=="training":course_id=last_normal_course
-			motor.position=Vector3.ZERO;_open_screen("home" if action=="home" else "routes",true)
+			motor.position=Vector3.ZERO;_open_screen("home" if action=="home" else "team" if action=="results_team" else "routes",true)
+		"skip_intro":
+			if guided_intro:_finish_intro(false)
 		"abandon":
 			if core.phase=="paused":core.resume()
 			run_outcome="abandoned";failure_detail="You ended the run. Your progress up to this point is in your journal.";core.fail_run("abandoned");_end_run()
@@ -836,6 +885,7 @@ func _end_run() -> void:
 
 func _training_prompt() -> void:
 	if training_step>=TRAINING.size():
+		if guided_intro:_finish_intro(true);return
 		ui.guide_title="READY FOR THE CITY";ui.guide_detail="All six controls practised. Your runner is ready.";practice_finish_left=.8;return
 	ui.guide_title="%d / 6  ·  %s"%[training_step+1,TRAINING[training_step].title]
 	ui.guide_detail=TRAINING[training_step].detail
@@ -843,14 +893,28 @@ func _training_prompt() -> void:
 		ui.guide_title="%d / 6  ·  %s"%[training_step+1,"TILT LEFT" if training_step==0 else "RETURN TO CENTRE"]
 		ui.guide_detail="Tilt gently left to move across the path." if training_step==0 else "Return your phone to the comfortable holding angle from the countdown."
 	if training_step==4:
-		_add_row("enemy",lane,distance+3.4)
-		rows[-1]["practice_target"]=true
+		_add_row("enemy",lane,distance+(maxf(run_speed,18.5)*1.6 if guided_intro else 3.4))
+		rows[-1]["guided_target" if guided_intro else "practice_target"]=true
 
 
 func _training_action(action: String) -> void:
-	if course_id!="training" or training_step>=TRAINING.size():return
+	if course_id!="training" and not guided_intro or training_step>=TRAINING.size():return
 	if str(TRAINING[training_step].action)==action:
-		training_step+=1;_sound("pickup",1.1);_training_prompt()
+		training_step+=1
+		if guided_intro:profile.intro_lessons=training_step;_save_profile()
+		_sound("pickup",1.1);_training_prompt()
+
+
+func _finish_intro(completed:bool) -> void:
+	guided_intro=false;ui.intro_active=false
+	ui.guide_title="";ui.guide_detail=""
+	if completed:profile.practice_complete=true;profile.intro_lessons=TRAINING.size()
+	else:profile.intro_dismissed=true
+	for row in rows:
+		row.node.queue_free()
+		if int(row.id)>=0:core.retire_enemy(int(row.id))
+	rows.clear();next_row=distance+48;row_index=0
+	_save_profile();ui.message("YOUR RUN BEGINS",1.8)
 
 
 func _apply_settings() -> void:
@@ -886,6 +950,8 @@ func _load_profile() -> void:
 			if Core.CHARACTERS.has(parsed.get("selected_character","")):profile.selected_character=parsed.selected_character
 			if Courses.ORDER.has(parsed.get("selected_course","")):profile.selected_course=parsed.selected_course
 			if parsed.get("practice_complete") is bool:profile.practice_complete=parsed.practice_complete
+			if parsed.get("intro_dismissed") is bool:profile.intro_dismissed=parsed.intro_dismissed
+			if parsed.get("intro_lessons") is int or parsed.get("intro_lessons") is float:profile.intro_lessons=clampi(int(parsed.intro_lessons),0,TRAINING.size())
 			if values is Dictionary:
 				if values.get("control_mode") in ["tilt","swipe"]:profile.settings.control_mode=values.control_mode
 				if values.get("tilt_sensitivity") in ["low","normal","high"]:profile.settings.tilt_sensitivity=values.tilt_sensitivity
