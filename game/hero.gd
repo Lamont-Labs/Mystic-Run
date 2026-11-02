@@ -30,10 +30,10 @@ func accent() -> Color:
 func _paint(color: String, metal: float=0.0, emission: float=0.0) -> StandardMaterial3D:
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color=Color(color)
-	mat.diffuse_mode=BaseMaterial3D.DIFFUSE_TOON
-	mat.specular_mode=BaseMaterial3D.SPECULAR_DISABLED
+	mat.diffuse_mode=BaseMaterial3D.DIFFUSE_BURLEY
+	mat.specular_mode=BaseMaterial3D.SPECULAR_SCHLICK_GGX
 	mat.metallic=metal
-	mat.roughness=0.42 if metal>0.4 else 0.85
+	mat.roughness=0.32 if metal>0.4 else 0.78
 	if emission>0:
 		mat.emission_enabled=true
 		mat.emission=Color(color)
@@ -270,7 +270,11 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 			geo.triangle(vertices[1],vertices[2],vertices[3],mats.cloth)
 	var cloth: StandardMaterial3D=mats.cloth
 	cloth.cull_mode=BaseMaterial3D.CULL_DISABLED
-	cape.add_child(geo.build())
+	var fabric:MeshInstance3D=geo.build()
+	var woven:=ShaderMaterial.new();woven.shader=preload("res://assets/shaders/embroidered_cloth.gdshader")
+	woven.set_shader_parameter("half_width",width);woven.set_shader_parameter("top",top);woven.set_shader_parameter("bottom",bottom)
+	woven.set_shader_parameter("cloth_color",Color("442363") if identity=="knight" else Color("40214f"))
+	fabric.material_override=woven;cape.add_child(fabric)
 	Geo.segment(cape,Vector3(-width*.60,top,z),Vector3(-width*1.18,bottom,z-.42),.009,mats.gold)
 	Geo.segment(cape,Vector3(width*.60,top,z),Vector3(width*1.18,bottom,z-.42),.009,mats.gold)
 

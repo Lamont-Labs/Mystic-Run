@@ -1,3 +1,8 @@
+> 0.4.0 update: gameplay now uses lit character surfaces, embroidered cloth,
+> patterned stone, layered 3D architecture and a grade-aware closer camera. The
+> production-quality target remains unapproved. Opening artwork alone is not
+> evidence that gameplay meets the owner's art expectations.
+
 # Mystic Run: comic art and animation revision
 
 The user reference is Temple Run's readable forward runner with the illustration

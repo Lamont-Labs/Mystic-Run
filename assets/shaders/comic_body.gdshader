@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode unshaded;
+render_mode diffuse_burley;
 uniform vec4 base_color : source_color = vec4(0.1,0.2,0.3,1.0);
 uniform vec4 highlight_color : source_color = vec4(0.2,0.4,0.5,1.0);
 uniform vec4 skin_color : source_color = vec4(0.64,0.36,0.25,1.0);
@@ -29,5 +29,9 @@ void fragment(){
   color*=1.0-seam*0.35;
   cracks=vec3(0.08,0.5,0.57)*seam*0.48;
  }
- ALBEDO=color*shade+highlight_color.rgb*rim*0.13+cracks;
+ ALBEDO=color*(0.88+shade*0.12);
+ ROUGHNESS=character_kind==1?0.78:0.40;
+ METALLIC=character_kind==0?0.42:0.06;
+ SPECULAR=0.45;
+ EMISSION=highlight_color.rgb*rim*0.12+cracks;
 }

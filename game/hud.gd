@@ -32,12 +32,12 @@ class ActionButton:
 		var width:=font.get_string_size(caption,HORIZONTAL_ALIGNMENT_LEFT,-1,20).x
 		draw_string(font,Vector2((size.x-width)*.5,size.y-17),caption,HORIZONTAL_ALIGNMENT_LEFT,-1,20,WHITE)
 
-var mode: String="home"
+var mode: String="opening"
 var selected: String="knight"
 var course_id: String="citadel"
 var profile_data: Dictionary={}
 var result_data: Dictionary={}
-var navigation: Array[String]=["home"]
+var navigation: Array[String]=["opening"]
 var front: Control
 var game_buttons: Dictionary={}
 var buttons: Dictionary:
@@ -54,6 +54,7 @@ var route_distance: float=0
 var shard_count: int=0
 var flash: float=0
 var countdown_text: String="3"
+var control_hint:String="HOLD YOUR PHONE COMFORTABLY"
 var guide_title: String=""
 var guide_detail: String=""
 var combat_ready: bool=false
@@ -68,18 +69,19 @@ var bottom_pad: float=16
 func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
-	title_font=load("res://assets/fonts/bangers.ttf")
+	var display_font:=FontVariation.new();display_font.base_font=load("res://assets/fonts/cinzel.ttf")
+	display_font.variation_opentype={TextServerManager.get_primary_interface().name_to_tag("wght"):700.0};title_font=display_font
 	var font:=FontVariation.new();font.base_font=load("res://assets/fonts/manrope.ttf")
 	font.variation_opentype={TextServerManager.get_primary_interface().name_to_tag("wght"):650.0};ui_font=font
 	for kind in ["knight","gargoyle","witch"]:portraits[kind]=load("res://assets/illustrations/"+kind+"-comic-v1.png")
 	var gradient:=Gradient.new();gradient.offsets=PackedFloat32Array([0,.28,.7,1]);gradient.colors=PackedColorArray([Color(.025,.03,.07,.8),Color(.025,.03,.07,0),Color(.025,.03,.07,0),Color(.025,.03,.07,.62)])
 	fade=GradientTexture2D.new();fade.gradient=gradient;fade.fill_from=Vector2.ZERO;fade.fill_to=Vector2(0,1)
-	for definition in [["distance",64,true],["unit",18,false],["district",25,true],["score",22,false],["objective",20,false],["ability",23,true],["message",29,true],["guide_title",35,true],["guide_detail",25,false],["combat_hint",31,true],["countdown",120,true],["ready_caption",30,true]]:
+	for definition in [["distance",54,true],["unit",15,false],["district",18,false],["score",19,false],["objective",17,false],["speed",24,false],["steering",16,false],["ability",18,false],["message",29,true],["guide_title",35,true],["guide_detail",25,false],["combat_hint",31,true],["countdown",120,true],["ready_caption",30,true]]:
 		var label:=Label.new();label.mouse_filter=Control.MOUSE_FILTER_IGNORE
 		label.add_theme_font_override("font",title_font if definition[2] else ui_font);label.add_theme_font_size_override("font_size",definition[1]);label.add_theme_color_override("font_color",WHITE)
 		label.add_theme_color_override("font_outline_color",Color("091025"));label.add_theme_constant_override("outline_size",4)
 		add_child(label);labels[definition[0]]=label
-	labels.unit.text="METRES";labels.ready_caption.text="GET READY";labels.combat_hint.text="TAP TO STRIKE"
+	labels.unit.text="METRES";labels.ready_caption.text="HOLD YOUR PHONE COMFORTABLY";labels.combat_hint.text="TAP TO STRIKE"
 	labels.guide_detail.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	var pause:=Button.new();pause.text="II";pause.add_theme_font_override("font",ui_font);pause.add_theme_font_size_override("font_size",28)
 	pause.add_theme_stylebox_override("normal",_button_style(false));pause.add_theme_stylebox_override("pressed",_button_style(true));pause.pressed.connect(func():intent.emit("pause",""));add_child(pause);game_buttons.pause=pause
@@ -109,22 +111,26 @@ func _layout() -> void:
 		var safe:=DisplayServer.get_display_safe_area();var window:=DisplayServer.window_get_size()
 		if window.y>0 and safe.size.y>0:
 			top_pad=maxf(22,safe.position.y*size.y/window.y+10);bottom_pad=maxf(16,(window.y-safe.end.y)*size.y/window.y+10)
-	_place("district",Vector2(138,top_pad+6),Vector2(w-360,34))
-	_place("score",Vector2(138,top_pad+88),Vector2(w-300,35))
-	_place("distance",Vector2(w-230,top_pad),Vector2(194,75),HORIZONTAL_ALIGNMENT_RIGHT)
-	_place("unit",Vector2(w-230,top_pad+80),Vector2(194,28),HORIZONTAL_ALIGNMENT_RIGHT)
-	_place("objective",Vector2(36,top_pad+141),Vector2(w-185,32))
-	_place("ability",Vector2(w-270,h-bottom_pad-225),Vector2(232,38),HORIZONTAL_ALIGNMENT_RIGHT)
-	_place("message",Vector2(30,h-bottom_pad-310),Vector2(w-60,58),HORIZONTAL_ALIGNMENT_CENTER)
-	_place("guide_title",Vector2(36,top_pad+188),Vector2(w-72,58))
-	_place("guide_detail",Vector2(36,top_pad+245),Vector2(w-72,98))
-	_place("combat_hint",Vector2(w*.5-155,h*.45),Vector2(310,45),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("district",Vector2(26,top_pad+92),Vector2(w-52,30))
+	_place("score",Vector2(26,top_pad+55),Vector2(210,30))
+	_place("distance",Vector2(w*.5-105,top_pad-8),Vector2(210,64),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("unit",Vector2(w*.5-105,top_pad+58),Vector2(210,22),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("objective",Vector2(26,top_pad+128),Vector2(w-52,30))
+	_place("speed",Vector2(30,h-bottom_pad-127),Vector2(220,35))
+	_place("steering",Vector2(30,h-bottom_pad-43),Vector2(250,25))
+	_place("ability",Vector2(w-300,h-bottom_pad-180),Vector2(270,30),HORIZONTAL_ALIGNMENT_RIGHT)
+	_place("message",Vector2(30,h-bottom_pad-255),Vector2(w-60,70),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("guide_title",Vector2(30,top_pad+186),Vector2(w-60,58))
+	_place("guide_detail",Vector2(30,top_pad+245),Vector2(w-60,98))
+	_place("combat_hint",Vector2(w*.5-165,h*.44),Vector2(330,45),HORIZONTAL_ALIGNMENT_CENTER)
 	_place("countdown",Vector2(0,h*.34),Vector2(w,168),HORIZONTAL_ALIGNMENT_CENTER)
-	_place("ready_caption",Vector2(0,h*.34+170),Vector2(w,50),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("ready_caption",Vector2(30,h*.34+170),Vector2(w-60,80),HORIZONTAL_ALIGNMENT_CENTER)
+	labels.ready_caption.add_theme_font_size_override("font_size",21)
+	labels.ready_caption.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	if game_buttons.is_empty():return
-	game_buttons.pause.position=Vector2(w-128,top_pad+140);game_buttons.pause.size=Vector2(92,92)
-	game_buttons.power.position=Vector2(w-166,h-bottom_pad-180);game_buttons.power.size=Vector2(130,130)
-	game_buttons.attack.position=Vector2(w-306,h-bottom_pad-164);game_buttons.attack.size=Vector2(114,114)
+	game_buttons.pause.position=Vector2(w-92,top_pad);game_buttons.pause.size=Vector2(62,62)
+	game_buttons.power.position=Vector2(w-148,h-bottom_pad-142);game_buttons.power.size=Vector2(118,118)
+	game_buttons.attack.position=Vector2(w-266,h-bottom_pad-130);game_buttons.attack.size=Vector2(102,102)
 	queue_redraw()
 
 func set_mode(value: String) -> void:mode=value;refresh()
@@ -142,20 +148,22 @@ func refresh() -> void:
 	front.visible=mode not in ["game","countdown","closing"]
 	if front.visible:front.show_screen(mode,selected,course_id,profile_data,result_data,navigation.size()>1 or mode in ["pause","results"])
 	elif mode=="game":
-		for key in ["distance","unit","district","score","ability","objective"]:labels[key].show()
+		for key in ["distance","unit","district","score","ability","objective","speed","steering"]:labels[key].show()
 		for b in game_buttons.values():b.show()
 	elif mode=="countdown":
-		labels.countdown.text=countdown_text;labels.countdown.show();labels.ready_caption.show();game_buttons.pause.show()
+		labels.ready_caption.text=control_hint;labels.countdown.text=countdown_text;labels.countdown.show();labels.ready_caption.show();game_buttons.pause.show()
 	queue_redraw()
 
 func update_session(data: Dictionary, shards: int) -> void:
 	session=data;shard_count=shards
 	if mode!="game":return
-	labels.distance.text=str(int(data.distance_mm)/1000)
+	labels.distance.text=str(int(float(data.distance_mm)/1000.0))
+	labels.speed.text="%d KM/H"%roundi(float(data.get("speed_mps",0))*3.6)
+	labels.steering.text="TILT TO STEER" if data.get("steering","SWIPE")=="TILT" else "SWIPE TO STEER"
 	labels.district.text=str(data.get("district","MYSTIC RUN"))
 	labels.score.text="%d SCORE  /  %d RELICS"%[int(data.score),shards]
 	var length:float=data.get("course_length",0)
-	labels.objective.text="ENDLESS RELAY" if length==0 else "%d / %d M TO THE EXIT"%[mini(int(data.distance_mm/1000),int(length)),int(length)]
+	labels.objective.text="ENDLESS RUN" if length==0 else "%d / %d M TO THE EXIT"%[mini(int(data.distance_mm/1000),int(length)),int(length)]
 	var character:String=data.character
 	labels.ability.text={"knight":"SHIELD CHARGE","gargoyle":"WING BURST","witch":"ARCANE BLINK"}[character]
 	var protected:bool=data.phase in ["handoff","recovery","failed","completed"]
@@ -182,26 +190,17 @@ func _draw() -> void:
 	draw_texture_rect(fade,Rect2(Vector2.ZERO,size),false)
 	if mode=="countdown":return
 	var hero:String=session.get("character",selected);var accent:Color=ACCENTS[hero]
-	var portrait_rect:=Rect2(26,top_pad,92,106)
-	draw_rect(portrait_rect.grow(3),Color("0c1025",.85));draw_texture_rect_region(portraits[hero],portrait_rect,Rect2(140,0,744,720))
-	draw_line(Vector2(26,top_pad+110),Vector2(118,top_pad+110),accent,3,true)
 	for i in range(3):
-		var c:=Vector2(153+i*36,top_pad+63)
-		draw_colored_polygon(PackedVector2Array([c+Vector2(0,-11),c+Vector2(10,0),c+Vector2(0,11),c+Vector2(-10,0)]),Color("efd098") if i<int(session.get("health",3)) else Color("4a4c62"))
+		var rect:=Rect2(28+i*35,top_pad+16,26,7)
+		draw_rect(rect,Color("f0d1a0") if i<int(session.get("health",3)) else Color("4a4c62"))
+	var steer_center:=Vector2(94,size.y-bottom_pad-73)
+	draw_line(steer_center-Vector2(60,0),steer_center+Vector2(60,0),Color("646f8c",.6),2,true)
+	var steer:float=float(session.get("tilt_position",0))
+	draw_circle(steer_center+Vector2(steer*57,0),5,accent)
 	var length:float=session.get("course_length",0)
 	if length>0:
-		var width:=size.x-200
-		draw_rect(Rect2(36,top_pad+180,width,4),Color("343a53"));draw_rect(Rect2(36,top_pad+180,width*clampf(float(session.get("distance_mm",0))/1000.0/length,0,1),4),accent)
-	if route_visible and str(session.get("phase","")) not in ["handoff","recovery"]:
-		var width:float=(size.x-72)/3
-		for i in range(3):
-			var rect:=Rect2(32+i*(width+3),top_pad+248,width,67)
-			draw_rect(rect,Color("10162c",.92))
-			if i==route_lane:draw_rect(rect,accent,false,2)
-			var name:String=["GARGOYLE","KNIGHT","WITCH"][i]
-			var text_width:=title_font.get_string_size(name,HORIZONTAL_ALIGNMENT_LEFT,-1,26).x
-			draw_string(title_font,rect.position+Vector2((width-text_width)*.5,44),name,HORIZONTAL_ALIGNMENT_LEFT,-1,26,WHITE)
-		draw_string(ui_font,Vector2(36,top_pad+230),"RELAY GATE  /  CHOOSE THE NEXT RUNNER",HORIZONTAL_ALIGNMENT_LEFT,-1,23,WHITE)
+		var width:=size.x-52
+		draw_rect(Rect2(26,top_pad+168,width,4),Color("343a53"));draw_rect(Rect2(26,top_pad+168,width*clampf(float(session.get("distance_mm",0))/1000.0/length,0,1),4),accent)
 	if impact_left>0:
 		var center:=Vector2(size.x*.54,size.y*.47);var burst:=PackedVector2Array()
 		for i in range(16):

@@ -46,9 +46,11 @@ func begin_route() -> void:
 	await frames(5)
 	check(game.ui.mode=="game","The countdown hands control to the runner")
 func run() -> void:
-	game=load("res://scenes/main.tscn").instantiate();game.testing=true
+	game=load("res://scenes/main.tscn").instantiate();game.testing=true;game.profile.settings.control_mode="swipe"
 	root.add_child(game);await frames(5)
-	check(game.ui.mode=="home","Launch opens the home screen")
+	check(game.ui.mode=="opening","Launch opens the cinematic opening screen")
+	await capture("opening")
+	await click("enter");check(game.ui.mode=="home","Enter the City opens the play hub")
 	await capture("home")
 	await click("nav_team");check(game.ui.mode=="team","Team tab opens the character roster")
 	await click("gargoyle");check(game.selected=="gargoyle","Roster selection changes the starting runner")
@@ -68,6 +70,8 @@ func run() -> void:
 	await capture("routes")
 	await begin_route()
 	check(game.core.active_character=="gargoyle","Run starts with the roster choice")
+	check(game.core.character_locked and not game.core.offer_route("forbidden","witch",120),"A live run rejects teammate handoffs")
+	check(not game.rows.any(func(row):return row.kind=="gate"),"The live course never spawns character gates")
 	var attacks_before:int=game.qa_attacks
 	await touch("left");check(game.lane==0,"A real touch swipe steers before finger release")
 	var framed:=true

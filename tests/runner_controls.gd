@@ -53,7 +53,7 @@ func _initialize() -> void:
 	check(core.snapshot()==done and core.attack()<0 and not core.use_power(),"Finished expeditions stop gameplay and rewards")
 	for id in Courses.ORDER:
 		var course:=Courses.get_course(id)
-		check(Courses.speed_at(id,0,0)==7.0,"Every expedition starts at a controlled pace")
+		check(Courses.speed_at(id,0,0)>=18.0,"Every expedition starts at a fast running pace")
 		check(Courses.speed_at(id,5000,500)<=float(course.maximum),"Acceleration respects the route speed cap")
 		check(float(course.length)>0 or id=="endless","Only endless omits a finish line")
 		var director:=Director.new();director.configure(id,987)

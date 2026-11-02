@@ -9,14 +9,22 @@ const Courses=preload("res://core/course_catalog.gd")
 const Director=preload("res://game/encounter_director.gd")
 const GestureInput=preload("res://game/gesture_input.gd")
 const LANES := [-2.6, 0.0, 2.6]
-const ROUTE_CHARACTERS := ["gargoyle", "knight", "witch"]
+const Tilt=preload("res://core/tilt_steering.gd")
+const CourseProfile=preload("res://core/course_profile.gd")
 
 var core = Core.new()
 var world: Node3D
+var floor_body: StaticBody3D
+var ground_y: float=0.0
+var tilt=Tilt.new()
+var tilt_warned: bool=false
+var last_section: String=""
 var motor: CharacterBody3D
 var collider: CollisionShape3D
 var camera: Camera3D
 var key_light: DirectionalLight3D
+var hero_key: OmniLight3D
+var hero_rim: OmniLight3D
 var ui: Control
 var heroes: Dictionary = {}
 var selected: String = "knight"
@@ -45,7 +53,7 @@ var handoff_pairs: Array[String] = []
 var clock: float = 0.0
 var foot_clock: float = 0.0
 var impact_shake: float = 0.0
-var profile := {"schema":1,"best":0.0,"runs":0,"relics":0,"history":[],"route_records":{},"selected_character":"knight","selected_course":"citadel","practice_complete":false,"settings":{"music":true,"sound":true,"vibration":true,"quality":true,"sensitivity":"normal"}}
+var profile := {"schema":1,"best":0.0,"runs":0,"relics":0,"history":[],"route_records":{},"selected_character":"knight","selected_course":"citadel","practice_complete":false,"settings":{"music":true,"sound":true,"vibration":true,"quality":true,"sensitivity":"normal","control_mode":"tilt","tilt_sensitivity":"normal","tilt_invert":false,"reduced_motion":false}}
 var course_id: String="citadel"
 var last_normal_course: String="citadel"
 var director=Director.new()
@@ -67,7 +75,7 @@ var falling: bool=false
 var fall_left: float=0.0
 var training_step: int=0
 var practice_finish_left: float=-1.0
-var preview_screen: String="home"
+var preview_screen: String="opening"
 const TRAINING := [
  {"title":"SWIPE LEFT","detail":"Move into the left lane.","action":"left"},
  {"title":"SWIPE RIGHT","detail":"Now move back to the centre.","action":"right"},
@@ -174,11 +182,11 @@ func _setup_environment() -> void:
 	environment.sky = sky
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
 	environment.ambient_light_color = Color("b8b8df")
-	environment.ambient_light_energy = 0.50
+	environment.ambient_light_energy = 0.68
 	environment.fog_enabled = true
 	environment.fog_light_color = Color("373154")
 	environment.fog_light_energy = 0.55
-	environment.fog_density = 0.0035
+	environment.fog_density = 0.0024
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	var node := WorldEnvironment.new()
 	node.environment = environment
@@ -193,7 +201,7 @@ func _setup_environment() -> void:
 	var fill := DirectionalLight3D.new()
 	fill.rotation_degrees = Vector3(-24, 148, 0)
 	fill.light_color = Color("83b4d2")
-	fill.light_energy = 0.42
+	fill.light_energy = 0.78
 	add_child(fill)
 	camera = Camera3D.new()
 	camera.fov = 65
@@ -203,21 +211,23 @@ func _setup_environment() -> void:
 	add_child(camera)
 	camera.look_at(Vector3(0, 1.25, 0))
 	var hero_light := OmniLight3D.new()
+	hero_key=hero_light
 	hero_light.position = Vector3(2.6,3.5,3.0)
 	hero_light.omni_range = 8.0
-	hero_light.light_energy = 0.5
+	hero_light.light_energy = 1.1
 	hero_light.light_color = Color("e7ceb0")
 	add_child(hero_light)
 	var rim := OmniLight3D.new()
+	hero_rim=rim
 	rim.position = Vector3(-2.5,3.2,-1.0)
 	rim.omni_range = 6.0
 	rim.light_color = Color("7ea6cf")
-	rim.light_energy = 0.9
+	rim.light_energy = 1.4
 	add_child(rim)
 
 
 func _setup_motor() -> void:
-	var floor_body := StaticBody3D.new()
+	floor_body = StaticBody3D.new()
 	var floor_shape := CollisionShape3D.new()
 	var box := BoxShape3D.new()
 	box.size = Vector3(18, 1, 450)
@@ -228,6 +238,7 @@ func _setup_motor() -> void:
 	motor = CharacterBody3D.new()
 	motor.name = "AuthoritativeRunner"
 	motor.floor_snap_length = 0.12
+	motor.platform_floor_layers=0
 	collider = CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
 	capsule.radius = 0.35
@@ -308,6 +319,9 @@ func _start_run() -> void:
 	elif qa and selected=="witch":qa_target_sequence=[1,0,2,0,1,2]
 	var run_seed:=73129 if qa else (int(Time.get_unix_time_from_system()) ^ int(Time.get_ticks_usec()))
 	core.start(selected,run_seed)
+	core.character_locked=true
+	ground_y=0.0;floor_body.position.y=0.0
+	tilt.reset_calibration();tilt_warned=false;last_section=""
 	rng.seed=run_seed;fx_rng.seed=run_seed ^ 90871
 	director.configure(course_id,run_seed)
 	lane=1;lane_from=0;lane_elapsed=.18
@@ -327,14 +341,15 @@ func _start_run() -> void:
 	camera.look_at(Vector3(0,1.45,-18))
 	countdown_left=0 if qa else 3.0
 	ui.countdown_text="3"
+	ui.control_hint="HOLD YOUR PHONE COMFORTABLY" if profile.settings.control_mode=="tilt" else "SWIPE TO STEER"
 	ui.navigation.clear()
 	ui.set_mode("game" if qa else "countdown")
 	ui.guide_title="";ui.guide_detail="";ui.combat_ready=false
 	world.visible=true;motor.visible=true
 	_select_character(selected)
-	_spawn_ahead();world.update(0,0);_update_rows(0)
+	_spawn_ahead();world.flat_course=course_id=="training";world.update(0,0);_update_rows(0)
 	if course_id=="training":_training_prompt()
-	elif not qa:ui.message("READ THE COURSE. KEEP THE RELAY ALIVE.",2.4)
+	elif not qa:ui.message(("TILT TO STEER" if profile.settings.control_mode=="tilt" else "SWIPE TO STEER")+". SWIPE UP TO JUMP.",2.4)
 
 
 func _physics_process(delta: float) -> void:
@@ -342,24 +357,30 @@ func _physics_process(delta: float) -> void:
 	clock+=delta
 	if ui.mode=="countdown":
 		heroes[selected].moving=false;heroes[selected].animate(delta)
+		if profile.settings.control_mode=="tilt":tilt.calibrate(_motion_sample())
 		countdown_left=maxf(0,countdown_left-delta)
-		motor.velocity.y=-1;motor.move_and_slide()
+		motor.velocity=Vector3(0,-1,0);motor.move_and_slide()
 		var text:=str(maxi(1,ceili(countdown_left)))
 		if ui.countdown_text!=text:ui.countdown_text=text;ui.refresh()
 		if countdown_left<=0:
-			gestures.reset();ui.set_mode("game")
+			tilt.finish_calibration();gestures.reset();ui.set_mode("game")
 		return
 	if ui.mode!="game":
 		anchor.visible=false
-		if ui.mode in ["home","team","routes","records"]:world.visible=false;motor.visible=false
+		if ui.mode in ["opening","home","team","routes","records"]:world.visible=false;motor.visible=false
 		return
 	if qa:_qa_control()
 	run_seconds+=delta
 	run_speed=Courses.speed_at(course_id,distance,run_seconds)
+	if course_id!="training":run_speed=clampf(run_speed-CourseProfile.grade_at(distance)*3.0,17.0,24.0)
 	if selected=="knight" and power_left>0:run_speed=minf(24,run_speed*1.18)
 	core.set_speed(run_speed)
 	core.step()
 	distance=core.distance_mm/1000.0
+	var surface:float=CourseProfile.height_at(distance) if course_id!="training" else 0.0
+	motor.position.y+=surface-ground_y
+	ground_y=surface;floor_body.position.y=surface
+	floor_body.force_update_transform()
 	sliding_left=maxf(0,sliding_left-delta);power_left=maxf(0,power_left-delta);attack_age+=delta
 	jump_buffer=maxf(0,jump_buffer-delta);slide_buffer=maxf(0,slide_buffer-delta)
 	coyote_left=.10 if motor.is_on_floor() else maxf(0,coyote_left-delta)
@@ -374,30 +395,47 @@ func _physics_process(delta: float) -> void:
 	lane_elapsed=minf(.18,lane_elapsed+delta)
 	var t:=smoothstep(0,.18,lane_elapsed)
 	var desired_x:=lerpf(lane_from,float(LANES[lane]),t)
+	if profile.settings.control_mode=="tilt" and not qa:
+		var tilt_x:float=tilt.update(_motion_sample(),delta)
+		if tilt.available:
+			desired_x=lerpf(motor.position.x,tilt_x,1.0-exp(-delta*17.0))
+			lane=clampi(roundi(tilt_x/2.6)+1,0,2)
+			lane_from=motor.position.x;lane_elapsed=0.18
+			if tilt_x< -1.6:_training_action("left")
+			elif tilt_x> -0.6 and tilt_x<0.6:_training_action("right")
+		elif OS.get_name()=="Android" and tilt.missing_seconds>1.0 and not tilt_warned:
+			tilt_warned=true;ui.message("MOTION SENSOR UNAVAILABLE · SWIPE TO STEER",3.0)
+			if course_id=="training":_training_prompt()
 	motor.velocity.x=(desired_x-motor.position.x)/delta
 	motor.velocity.z=0
 	motor.move_and_slide()
-	qa_peak_height=maxf(qa_peak_height,motor.position.y)
+	qa_peak_height=maxf(qa_peak_height,motor.position.y-ground_y)
 	var capsule: CapsuleShape3D=collider.shape
 	capsule.height=.9 if sliding_left>0 else 1.8;collider.position.y=capsule.height*.5
 	if strike_buffer>0:
 		strike_buffer=maxf(0,strike_buffer-delta)
 		_perform_attack()
-	_handle_transition(delta)
 	_spawn_ahead();_update_rows(delta);_update_effects(delta)
 	world.set_gaps(rows,distance)
+	world.flat_course=course_id=="training"
 	world.update(distance,delta)
 	var active: Node3D=heroes[selected]
-	active.motion.locomotion_rate=clampf(run_speed/12.0,.55,1.60)
-	active.moving=true;active.airborne=motor.position.y>.10 or falling;active.sliding=sliding_left>0;active.lean=motor.velocity.x*.035
+	active.motion.locomotion_rate=clampf(run_speed/16.0,.55,1.65)
+	active.moving=true;active.airborne=motor.position.y-ground_y>.10 or falling;active.sliding=sliding_left>0;active.lean=motor.velocity.x*.035
 	active.animate(delta)
-	var view_target:=Vector3(motor.position.x*.62,3.3+clampf(motor.position.y,0,2)*.12,7.4)
-	camera.position=camera.position.lerp(view_target,1-exp(-delta*6))
-	camera.position.x=clampf(camera.position.x,motor.position.x-1.0,motor.position.x+1.0)
-	camera.look_at(Vector3(motor.position.x*.40,1.45,-18))
-	camera.fov=61+clampf(run_speed-10,0,10)*.35
+	active.rotation.x=lerp_angle(active.rotation.x,atan(CourseProfile.grade_at(distance))*.7,1-exp(-delta*9)) if course_id!="training" else 0.0
+	hero_key.position=Vector3(motor.position.x+2.6,ground_y+3.5,3.0)
+	hero_rim.position=Vector3(motor.position.x-2.5,ground_y+3.2,-1.0)
+	var target_height:float=ground_y+3.2+clampf(motor.position.y-ground_y,0,2)*.10
+	var view_target:=Vector3(motor.position.x*.70,target_height,6.1)
+	camera.position=camera.position.lerp(view_target,1-exp(-delta*8))
+	camera.position.x=clampf(camera.position.x,motor.position.x-.9,motor.position.x+.9)
+	var ahead_height:float=CourseProfile.height_at(distance+18) if course_id!="training" else 0.0
+	camera.look_at(Vector3(motor.position.x*.50,1.45+lerpf(ground_y,ahead_height,.62),-18))
+	var target_fov:float=66.0 if profile.settings.reduced_motion else 72+clampf(run_speed-18,0,6)*.65
+	camera.fov=lerpf(camera.fov,target_fov,1-exp(-delta*4))
 	impact_shake=maxf(0,impact_shake-delta*4)
-	camera.h_offset=sin(clock*63)*impact_shake*.025;camera.v_offset=cos(clock*77)*impact_shake*.018
+	camera.h_offset=0 if profile.settings.reduced_motion else sin(clock*63)*impact_shake*.022;camera.v_offset=0 if profile.settings.reduced_motion else cos(clock*77)*impact_shake*.015
 	if qa:
 		var projected:=camera.unproject_position(motor.position+Vector3(0,1.1,0))
 		if projected.x<0 or projected.x>get_viewport().get_visible_rect().size.x:qa_offscreen_ticks+=1
@@ -406,12 +444,15 @@ func _physics_process(delta: float) -> void:
 		foot_clock=0;_sound("step",.95+fx_rng.randf()*.08)
 	var snapshot: Dictionary=core.snapshot()
 	snapshot["course_length"]=Courses.get_course(course_id).length
-	snapshot["district"]=str(Courses.get_course(course_id).district)
+	snapshot["district"]=CourseProfile.section_at(distance) if course_id!="training" else "GUIDED PRACTICE"
+	snapshot["speed_mps"]=run_speed;snapshot["elevation_m"]=ground_y
+	snapshot["tilt_position"]=tilt.filtered
+	snapshot["steering"]="TILT" if profile.settings.control_mode=="tilt" and tilt.available else "SWIPE"
 	snapshot["power_available"]=selected!="witch" or _blink_destination()>=0
 	ui.update_session(snapshot,shards)
 	var anchor_lane:=_blink_destination() if selected=="witch" else -1
 	anchor.visible=anchor_lane>=0 and core.power_remaining("witch")==0 and core.phase in ["running","telegraph"]
-	if anchor.visible:anchor.position=Vector3(LANES[anchor_lane],.09,-2);anchor.rotation.y+=delta*.7
+	if anchor.visible:anchor.position=Vector3(LANES[anchor_lane],ground_y+.09,-2);anchor.rotation.y+=delta*.7
 	if course_id=="training" and practice_finish_left>=0:
 		practice_finish_left-=delta
 		if practice_finish_left<=0:run_outcome="practice";core.complete_run();_end_run();return
@@ -435,20 +476,12 @@ func _physics_process(delta: float) -> void:
 
 func _spawn_ahead() -> void:
 	if course_id=="training":return
-	while next_gate<distance+190:
-		var finish: float=Courses.get_course(course_id).length
-		if finish==0 or next_gate<finish-30:
-			var gate: Dictionary={"kind":"gate","lane":1,"at":next_gate,"node":world.prop("gate"),"resolved":false,"offered":false,"id":-1,"epoch":-1}
-			add_child(gate.node);rows.append(gate)
-		next_gate+=240
 	if row_index==0:
 		for marker in [22.0,25.0,28.0,31.0]:_add_row("shard",1,marker)
 	while next_row<distance+150:
 		var phrase: Array[Dictionary]=director.phrase(row_index,next_row)
 		for entry in phrase:
-			var gate_at:=180+roundi((float(entry.at)-180)/240)*240
 			var finish: float=Courses.get_course(course_id).length
-			if float(entry.at)>gate_at-22 and float(entry.at)<gate_at+32:continue
 			if finish>0 and float(entry.at)>finish-18:continue
 			_add_row(str(entry.kind),int(entry.lane),float(entry.at))
 		row_index+=1;next_row+=Director.PHRASE_LENGTH
@@ -470,7 +503,11 @@ func _update_rows(delta: float) -> void:
 		var kind := str(row["kind"])
 		if row.get("practice_target",false):row["at"]=distance+3.4
 		var z := distance-float(row["at"])
-		node.position = Vector3(0.0 if kind == "gate" else LANES[int(row["lane"])],0,z)
+		node.position = Vector3(LANES[int(row["lane"])],0,z)
+		if kind=="enemy":
+			node.position.y=CourseProfile.height_at(float(row.at)) if course_id!="training" else 0.0
+			node.position.x+=CourseProfile.lateral_at(float(row.at),distance)
+			node.rotation.x=atan(CourseProfile.grade_at(float(row.at)))
 		if z > 24:
 			if kind in ["enemy","drone","barrier"]:
 				core.retire_enemy(int(row["id"]))
@@ -481,7 +518,6 @@ func _update_rows(delta: float) -> void:
 			continue
 		if kind == "gate":
 			world.update_labels(node)
-			_update_gate(row,-z)
 			continue
 		if bool(row["resolved"]):
 			continue
@@ -505,19 +541,19 @@ func _update_rows(delta: float) -> void:
 			if charging and ahead > 0 and ahead < 7.0:
 				if core.resolve_enemy(int(row["id"]),core.power_attack_token):
 					_destroy_row(row)
-			elif kind != "barrier" and attack_age >= 0.045 and attack_age < 0.36 and ahead > 0 and ahead < attack_range and (selected == "witch" or motor.position.y < 1.9):
+			elif kind != "barrier" and attack_age >= 0.045 and attack_age < 0.36 and ahead > 0 and ahead < attack_range and (selected == "witch" or (motor.position.y-ground_y) < 1.9):
 				if _line_clear(row) and core.resolve_enemy(int(row["id"]),attack_token):
 					_destroy_row(row)
 		if bool(row["resolved"]):
 			continue
-		if same_lane and kind == "shard" and absf(ahead) < 0.9 and motor.position.y < 2.4:
+		if same_lane and kind == "shard" and absf(ahead) < 0.9 and (motor.position.y-ground_y) < 2.4:
 			if core.collect(int(row["id"])):
 				shards += 1
 				row["resolved"] = true
 				node.visible = false
 				_sound("pickup",0.95+shards%5*0.055)
 		elif same_lane and kind == "gap" and absf(ahead) < 1.8:
-			if motor.position.y < 0.18 and core.phase in ["running","telegraph","committed"]:
+			if (motor.position.y-ground_y) < 0.18 and core.phase in ["running","telegraph","committed"]:
 				row["edge_time"]=float(row.get("edge_time",0))+delta
 				if float(row.edge_time)<.075:continue
 				core.fail_run("fell_into_fracture")
@@ -525,7 +561,7 @@ func _update_rows(delta: float) -> void:
 				falling=true;fall_left=.48;motor.set_collision_mask_value(1,false);motor.velocity.y=-5
 				row["resolved"] = true
 		elif same_lane and kind not in ["shard","gap"] and ahead < 0.65 and ahead > -0.7:
-			var clear := (kind == "beam" and (sliding_left > 0.0 or motor.position.y > 1.8)) or (kind == "barrier" and motor.position.y > 1.10) or (kind == "enemy" and motor.position.y > 2.1) or (kind == "drone" and (sliding_left > 0.0 or motor.position.y > 2.1))
+			var clear := (kind == "beam" and (sliding_left > 0.0 or (motor.position.y-ground_y) > 1.8)) or (kind == "barrier" and (motor.position.y-ground_y) > 1.10) or (kind == "enemy" and (motor.position.y-ground_y) > 2.1) or (kind == "drone" and (sliding_left > 0.0 or (motor.position.y-ground_y) > 2.1))
 			if not clear:
 				if kind == "gap" and core.phase in ["running","telegraph","committed"]:
 					core.fail_run("fell_into_fracture")
@@ -545,51 +581,6 @@ func _line_clear(target: Dictionary) -> bool:
 	return true
 
 
-func _update_gate(row: Dictionary, ahead: float) -> void:
-	if ahead>48 or ahead< -2 or row.resolved:return
-	var id:="gate-"+str(int(row.at))
-	if not row.offered and core.phase=="running":
-		var preview:=maxi(Core.MIN_PREVIEW_TICKS,ceili(ahead/maxf(run_speed,1)*60))
-		if core.offer_route(id,ROUTE_CHARACTERS[lane],preview):row.offered=true
-	if core.phase in ["telegraph","committed"] and str(core.route.get("id",""))==id:
-		core.sync_route_deadline(id,maxi(1,ceili(ahead/maxf(run_speed,1)*60)))
-		if core.phase=="telegraph":
-			core.select_route_target(id,ROUTE_CHARACTERS[lane])
-			if ahead<=5:core.commit_route(id)
-	ui.route_visible=ahead>0;ui.route_lane=lane;ui.route_distance=ahead
-	if ahead<0:row.resolved=true
-
-
-func _handle_transition(delta: float) -> void:
-	if core.phase == "handoff" and previous_phase != "handoff":
-		outgoing = selected
-		incoming = str(core.route["target"])
-		handoff_age = 0
-		heroes[incoming].visible = true
-		heroes[incoming].rotation = Vector3.ZERO
-		heroes[incoming].moving = true
-		heroes[incoming].motion.locomotion_rate=clampf(run_speed/12.0,.55,1.60)
-		power_left = 0
-		attack_token = -1
-		attack_age = 10
-		touches.clear()
-		_sound("handoff")
-		ui.message("RELAY  /  "+incoming.to_upper(),1.4)
-	if core.phase == "handoff":
-		handoff_age += delta
-		var blend := clampf(handoff_age/0.5,0,1)
-		heroes[outgoing].position = Vector3(-.8*blend,0,-1.6*blend)
-		heroes[incoming].position = Vector3(.8*(1-blend),.35*(1-blend) if incoming == "gargoyle" else 0.0,1.6*(1-blend))
-		heroes[incoming].animate(delta)
-	if core.phase == "recovery" and previous_phase == "handoff":
-		total_handoffs += 1
-		handoff_pairs.append(outgoing+"->"+incoming)
-		_select_character(core.active_character)
-		ui.message("THE " + selected.to_upper() + " TAKES THE LEAD",1.5)
-		_capture("handoff-%02d-%s" % [total_handoffs,selected])
-	previous_phase = core.phase
-
-
 func _destroy_row(row: Dictionary) -> void:
 	defeated+=1
 	if row.get("practice_target",false):_training_action("attack")
@@ -597,7 +588,7 @@ func _destroy_row(row: Dictionary) -> void:
 	impact_shake=1.0
 	row["resolved"] = true
 	row["node"].visible = false
-	_burst(row["node"].position+Vector3(0,1,0),heroes[selected].accent())
+	_burst(Vector3(row["node"].position.x,ground_y+1,row["node"].position.z),heroes[selected].accent())
 	_sound("impact",1.0 if selected == "knight" else 1.25)
 	if profile["settings"]["vibration"] and not qa:
 		Input.vibrate_handheld(16)
@@ -644,17 +635,17 @@ func _strike_trail() -> void:
 	var color: Color=heroes[selected].accent()
 	var material:=Geo.material(color,.0,1.2)
 	if selected=="witch":
-		var endpoint:=Vector3(motor.position.x,1.3,-12)
+		var endpoint:=Vector3(motor.position.x,ground_y+1.3,-12)
 		for row in rows:
 			if not row.resolved and row.kind in ["enemy","drone"] and absf(LANES[int(row.lane)]-motor.position.x)<.95 and float(row.at)-distance>0 and float(row.at)-distance<13:
-				endpoint=Vector3(LANES[int(row.lane)],1.3,distance-float(row.at));break
+				endpoint=Vector3(LANES[int(row.lane)],ground_y+1.3,distance-float(row.at));break
 		var holder:=Node3D.new();add_child(holder)
-		Geo.segment(holder,Vector3(motor.position.x,1.4,-.2),endpoint,.027,material)
+		Geo.segment(holder,Vector3(motor.position.x,ground_y+1.4,-.2),endpoint,.027,material)
 		effects.append({"node":holder,"life":.18,"max":.18,"velocity":Vector3.ZERO,"ring":true})
 	else:
 		for i in range(18):
 			var a:float=lerpf(-1.15,1.15,i/18.0);var b:float=lerpf(-1.15,1.15,(i+1)/18.0)
-			var center:=Vector3(motor.position.x,1.3,-.7)
+			var center:=Vector3(motor.position.x,ground_y+1.3,-.7)
 			geometry.triangle(center+Vector3(sin(a)*1.35,cos(a)*.7,-.5),center+Vector3(sin(b)*1.35,cos(b)*.7,-.5),center+Vector3(sin(a)*1.65,cos(a)*.92,-.6),material)
 		var node:Node3D=geometry.build();add_child(node)
 		effects.append({"node":node,"life":.16,"max":.16,"velocity":Vector3.ZERO,"ring":true})
@@ -687,7 +678,7 @@ func _power() -> void:
 			motor.position.x = LANES[lane]
 			lane_from=motor.position.x;lane_elapsed=.18
 			_sound("spell",0.7)
-	_pulse(heroes[selected].accent(),Vector3(motor.position.x,0.12,0),1.25)
+	_pulse(heroes[selected].accent(),Vector3(motor.position.x,ground_y+0.12,0),1.25)
 	_training_action("power")
 
 
@@ -766,12 +757,13 @@ func _update_effects(delta: float) -> void:
 
 func _intent(action: String, value: String="") -> void:
 	match action:
+		"enter":_open_screen("home",true)
 		"navigate":_open_screen(value)
 		"tab":_open_screen(value,true)
 		"course":
 			if Courses.ORDER.has(value):course_id=value;last_normal_course=value;profile.selected_course=value;_save_profile();_sync_front()
 		"character":
-			if Core.CHARACTERS.has(value):_select_character(value);profile.selected_character=value;_save_profile()
+			if ui.mode not in ["game","countdown","pause"] and core.phase!="paused" and Core.CHARACTERS.has(value):_select_character(value);profile.selected_character=value;_save_profile()
 		"start","restart":_start_run()
 		"practice":
 			if course_id!="training":last_normal_course=course_id
@@ -783,7 +775,11 @@ func _intent(action: String, value: String="") -> void:
 				resume_mode=ui.mode;gestures.reset()
 				ui.result_data={"distance":distance};_open_screen("pause",true)
 		"resume":
-			if core.resume():gestures.reset();ui.navigation.clear();ui.set_mode(resume_mode)
+			if core.resume():
+				gestures.reset();ui.navigation.clear()
+				if profile.settings.control_mode=="tilt":
+					tilt.reset_calibration();countdown_left=1.2;ui.set_mode("countdown")
+				else:ui.set_mode(resume_mode)
 		"home","results_routes":
 			if core.phase=="paused":return
 			if course_id=="training":course_id=last_normal_course
@@ -799,6 +795,15 @@ func _intent(action: String, value: String="") -> void:
 			else:ui.go_back();gestures.reset();_sync_front()
 		"setting":
 			if profile.settings.get(value) is bool:profile.settings[value]=not profile.settings[value];ui.settings=profile.settings.duplicate(true);_apply_settings();_save_profile();_sync_front()
+		"control_mode":
+			profile.settings.control_mode="swipe" if profile.settings.control_mode=="tilt" else "tilt"
+			_save_profile();_sync_front()
+		"tilt_sensitivity":
+			var values:Array=["low","normal","high"]
+			profile.settings.tilt_sensitivity=values[(values.find(profile.settings.tilt_sensitivity)+1)%3]
+			_apply_settings();_save_profile();_sync_front()
+		"recenter":
+			tilt.reset_calibration();_intent("resume")
 		"sensitivity":
 			var values: Array=["low","normal","high"]
 			profile.settings.sensitivity=values[(values.find(profile.settings.sensitivity)+1)%3]
@@ -823,7 +828,7 @@ func _end_run() -> void:
 		profile.history=history.slice(0,12)
 	elif run_outcome=="practice":profile.practice_complete=true
 	if not qa:_save_profile()
-	var detail: String="The relay reached the exit. Choose another expedition or beat this run." if run_outcome=="clear" else "You practised steering, jumping, sliding, striking and your signature power." if run_outcome=="practice" else failure_detail
+	var detail: String="Your runner reached the exit. Choose another expedition or beat this run." if run_outcome=="clear" else "You practised steering, jumping, sliding, striking and your signature power." if run_outcome=="practice" else failure_detail
 	ui.result_data={"distance":distance,"score":core.score,"shards":shards,"defeated":defeated,"handoffs":total_handoffs,"outcome":run_outcome,"detail":detail}
 	_open_screen("results",true)
 	if qa:qa_deaths+=1;_qa_finish()
@@ -831,9 +836,12 @@ func _end_run() -> void:
 
 func _training_prompt() -> void:
 	if training_step>=TRAINING.size():
-		ui.guide_title="READY FOR THE CITY";ui.guide_detail="All six controls practised. Your team is ready.";practice_finish_left=.8;return
+		ui.guide_title="READY FOR THE CITY";ui.guide_detail="All six controls practised. Your runner is ready.";practice_finish_left=.8;return
 	ui.guide_title="%d / 6  ·  %s"%[training_step+1,TRAINING[training_step].title]
 	ui.guide_detail=TRAINING[training_step].detail
+	if training_step<2 and profile.settings.control_mode=="tilt" and OS.get_name()=="Android" and not tilt_warned:
+		ui.guide_title="%d / 6  ·  %s"%[training_step+1,"TILT LEFT" if training_step==0 else "RETURN TO CENTRE"]
+		ui.guide_detail="Tilt gently left to move across the path." if training_step==0 else "Return your phone to the comfortable holding angle from the countdown."
 	if training_step==4:
 		_add_row("enemy",lane,distance+3.4)
 		rows[-1]["practice_target"]=true
@@ -850,6 +858,7 @@ func _apply_settings() -> void:
 	get_viewport().msaa_3d = Viewport.MSAA_2X if profile["settings"]["quality"] else Viewport.MSAA_DISABLED
 	key_light.shadow_enabled = profile["settings"]["quality"]
 	gestures.sensitivity=str(profile.settings.sensitivity)
+	tilt.sensitivity=str(profile.settings.tilt_sensitivity);tilt.inverted=bool(profile.settings.tilt_invert)
 	if is_instance_valid(music):
 		music.volume_db = -24 if profile["settings"]["music"] else -80
 
@@ -877,6 +886,9 @@ func _load_profile() -> void:
 			if Core.CHARACTERS.has(parsed.get("selected_character","")):profile.selected_character=parsed.selected_character
 			if Courses.ORDER.has(parsed.get("selected_course","")):profile.selected_course=parsed.selected_course
 			if parsed.get("practice_complete") is bool:profile.practice_complete=parsed.practice_complete
+			if values is Dictionary:
+				if values.get("control_mode") in ["tilt","swipe"]:profile.settings.control_mode=values.control_mode
+				if values.get("tilt_sensitivity") in ["low","normal","high"]:profile.settings.tilt_sensitivity=values.tilt_sensitivity
 			if values is Dictionary and values.get("sensitivity") in ["low","normal","high"]:profile.settings.sensitivity=values.sensitivity
 			break
 
@@ -940,7 +952,7 @@ func _notification(what: int) -> void:
 	if what in [NOTIFICATION_APPLICATION_PAUSED,NOTIFICATION_APPLICATION_FOCUS_OUT] and not qa and ui.mode in ["game","countdown"]:_intent("pause")
 	elif what==NOTIFICATION_WM_GO_BACK_REQUEST:
 		if ui.mode in ["game","countdown"]:_intent("pause")
-		elif ui.mode=="home":_quit_gracefully()
+		elif ui.mode in ["home","opening"]:_quit_gracefully()
 		else:_intent("back")
 	elif what==NOTIFICATION_WM_CLOSE_REQUEST:_quit_gracefully()
 
@@ -971,7 +983,7 @@ func _qa_control() -> void:
 			elif selected=="gargoyle" and closest.kind=="gap" and core.power_remaining(selected)==0:_power()
 			else:_jump()
 			closest["qa_jumped"]=true
-		elif motor.position.y<1.15 and core.phase=="running":
+		elif motor.position.y-ground_y<1.15 and core.phase=="running":
 			_move_lane(-1 if lane>0 else 1)
 	elif closest.kind=="beam" and best_distance<run_speed*.30 and not closest.get("qa_slid",false):
 		_slide();closest["qa_slid"]=true
@@ -1001,14 +1013,14 @@ func _qa_finish() -> void:
 		"scene_nodes":get_tree().get_node_count(),"active_rows":rows.size(),
 		"active_effects":effects.size(),"captures":captures.keys(),
 		"incidents":qa_incidents,"starting_character":starting_character,
-		"jumps":qa_jump_count,"peak_jump_height_m":qa_peak_height,"slides":qa_slide_count,"offscreen_character_ticks":qa_offscreen_ticks,
+		"jumps":qa_jump_count,"elevation_m":ground_y,"character_locked":core.character_locked,"peak_jump_height_m":qa_peak_height,"slides":qa_slide_count,"offscreen_character_ticks":qa_offscreen_ticks,
 		"phase":core.phase,"scope":"Automated desktop/headless scene run; not an Android device test"
 	}
 	var file := FileAccess.open("res://tests/evidence/scene-run-"+starting_character+".json",FileAccess.WRITE)
 	if file != null:
 		file.store_string(JSON.stringify(report,"  "))
 	print("SCENE_QA "+JSON.stringify(report))
-	_quit_gracefully(0 if qa_deaths == 0 and qa_damage == 0 and qa_offscreen_ticks == 0 and qa_attacks > 0 and total_handoffs >= 3 else 1)
+	_quit_gracefully(0 if qa_deaths == 0 and qa_damage == 0 and qa_offscreen_ticks == 0 and qa_attacks > 0 and total_handoffs == 0 and selected==starting_character else 1)
 
 
 func _preview_menu() -> void:
@@ -1044,3 +1056,8 @@ func _exit_tree() -> void:
 	_stop_audio()
 	Geo.release_shared()
 	preload("res://game/rig_motion.gd").release_shared()
+
+
+func _motion_sample() -> Vector3:
+	var sample:Vector3=Input.get_gravity()
+	return sample if tilt.valid_sample(sample) else Input.get_accelerometer()
