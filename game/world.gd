@@ -4,6 +4,7 @@ const Geo = preload("res://game/geometry.gd")
 const WIDTH := 2.6
 const CHUNK := 24.0
 const PAINT = preload("res://assets/shaders/comic_world.gdshader")
+const CourseProfile=preload("res://core/course_profile.gd")
 
 var themes: Dictionary = {}
 var chunks: Array[MeshInstance3D] = []
@@ -13,6 +14,8 @@ var machine: Node3D
 var dust: MultiMeshInstance3D
 var elapsed: float = 0.0
 var course_bend: float = 0.0
+var flat_course: bool = false
+var city_layers: Array[MeshInstance3D] = []
 
 
 func _paint(hex: String, metal: float=0.0, glow: float=0.0) -> ShaderMaterial:
@@ -30,8 +33,10 @@ func configure() -> void:
 		"metal":_paint("4b5471",.35),"gold":_paint("ac8957",.30),
 		"amber":_paint("eea556",.10,.55),"teal":_paint("4cb5ca",.10,.70),
 		"violet":_paint("a064e5",.10,.70),"red":_paint("f36779",.10,.65),
-		"void":_paint("080b1c"),"road":_paint("414663"),"road_alt":_paint("494b68"),
+		"void":_paint("080b1c"),"road":_paint("555364"),"road_alt":_paint("525161"),
 	}
+	materials.road.set_shader_parameter("pavement",true)
+	materials.road_alt.set_shader_parameter("pavement",true)
 	for kind in ["knight", "gargoyle", "witch"]:
 		var template: MeshInstance3D = _chunk_mesh(kind)
 		themes[kind] = template.mesh
@@ -41,8 +46,41 @@ func configure() -> void:
 		node.mesh = themes[current_theme]
 		add_child(node)
 		chunks.append(node)
+		node.extra_cull_margin=35.0
 	_build_horizon()
 	_build_dust()
+	_build_city_layers()
+
+
+func _build_city_layers() -> void:
+	# Rendered architecture provides midground parallax in front of the matte.
+	for side in [-1.0,1.0]:
+		for variant in range(3):
+			var g=Geo.new()
+			var x:float=side*(14.0+variant*5.2)
+			var h:float=13.0+variant*6.5
+			g.cylinder(Vector3(x,h*.5-5,0),2.75,h,materials.stone,.78,Vector3.ZERO,12)
+			g.cylinder(Vector3(x,-5,0),3.8,1.1,materials.dark,.88,Vector3.ZERO,12)
+			for tier in range(3):
+				var y:float=-2+tier*5.0
+				g.cylinder(Vector3(x,y,0),2.85,.26,materials.metal,1.0,Vector3.ZERO,12)
+				for offset in [-1.4,0.0,1.4]:
+					g.armor(Vector3(x+offset,y+1.9,2.55),Vector3(.40,2.6,.12),materials.dark,.72)
+					g.box(Vector3(x+offset,y+1.9,2.62),Vector3(.09,1.8,.04),materials.amber if variant!=1 else materials.teal)
+					g.cylinder(Vector3(x+offset,y+3.35,2.55),.22,.60,materials.gold,0.0,Vector3.ZERO,6)
+			g.cylinder(Vector3(x,h-1,0),2.5,8.0,materials.dark,0.0,Vector3.ZERO,8)
+			g.cylinder(Vector3(x,h+3.4,0),.12,2.2,materials.gold,0.0,Vector3.ZERO,8)
+			for corner in [-1.0,1.0]:
+				g.armor(Vector3(x+corner*2.5,h*.45-4,2.65),Vector3(.52,h*.9,.65),materials.pale,.75)
+				g.cylinder(Vector3(x+corner*2.5,h-3.6,2.65),.58,3.0,materials.gold,0.0,Vector3.ZERO,6)
+			# The far bank links towers with flying buttresses below the playable bridge.
+			g.box(Vector3(side*9.0,-4.8,0),Vector3(10.0,.65,1.0),materials.dark,Vector3(0,0,-side*.32))
+			var template:MeshInstance3D=g.build()
+			for repeat in range(3):
+				var node:=MeshInstance3D.new();node.mesh=template.mesh;node.extra_cull_margin=50
+				node.set_meta("offset",variant*40+repeat*120+(18 if side>0 else 0))
+				add_child(node);city_layers.append(node)
+			template.free()
 
 
 func _arch(geo: RefCounted, z: float, width: float, height: float, mat: Material, radius: float=.13) -> void:
@@ -70,6 +108,15 @@ func _chunk_mesh(kind: String) -> MeshInstance3D:
 		# Tiny central inlays show speed without covering the obstacle lanes.
 		b.box(Vector3(0,.049,z),Vector3(.04,.009,.42),materials.gold)
 	for side in [-1.0,1.0]:
+		for z in [-1.0,-7.0,-13.0,-19.0]:
+			b.armor(Vector3(side*4.9,-1.4,z),Vector3(.7,2.7,1.2),materials.stone,.8)
+			b.box(Vector3(side*3.4,-1.55,z),Vector3(3.0,.34,.55),materials.dark,Vector3(0,0,side*.25))
+			b.armor(Vector3(side*4.20,.075,z),Vector3(.34,.06,.62),materials.gold)
+		for z in [-5.0,-17.0]:
+			b.cylinder(Vector3(side*5.16,2.15,z),.07,4.3,materials.metal,1.0,Vector3.ZERO,8)
+			b.armor(Vector3(side*5.16,3.70,z),Vector3(.42,.67,.42),materials.dark)
+			b.armor(Vector3(side*5.16,3.70,z),Vector3(.30,.46,.30),accent)
+			b.cylinder(Vector3(side*5.16,4.16,z),.23,.48,materials.gold,0.0,Vector3.ZERO,6)
 		b.box(Vector3(side*4.48,.10,-12),Vector3(.055,.055,24),accent)
 		b.box(Vector3(side*4.73,-.04,-12),Vector3(.43,.50,24),materials.metal)
 		for z in [-3.0,-9.0,-15.0,-21.0]:
@@ -115,10 +162,16 @@ func set_theme(kind: String) -> void:
 func update(distance: float, delta: float) -> void:
 	elapsed += delta
 	course_bend=sin(distance/145.0)*2.2
-	for mat in materials.values(): mat.set_shader_parameter("bend",course_bend)
+	for mat in materials.values():
+		mat.set_shader_parameter("bend",course_bend)
+		mat.set_shader_parameter("course_distance",distance)
+		mat.set_shader_parameter("flat_course",flat_course)
 	var offset := fposmod(distance, CHUNK)
 	for index in range(chunks.size()):
 		chunks[index].position.z = 24.0 + offset - index * CHUNK
+	for building in city_layers:
+		building.position.z=42.0+fposmod(distance,360.0)-float(building.get_meta("offset"))
+		if building.position.z>55:building.position.z-=360.0
 	if is_instance_valid(machine):
 		machine.rotation.z = sin(elapsed * 0.08) * 0.12
 		machine.rotation.y = elapsed * 0.02
@@ -140,6 +193,7 @@ func _build_horizon() -> void:
 	matte.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
 	matte.disable_fog=true
 	matte.albedo_texture=load("res://assets/environment/citadel-matte-v1.png")
+	matte.albedo_color=Color(.80,.79,.87,1.0)
 	plate.material_override=matte
 	plate.position=Vector3(0,61,-235)
 	add_child(plate)
@@ -248,4 +302,6 @@ func prop(kind: String) -> Node3D:
 				label.billboard = BaseMaterial3D.BILLBOARD_ENABLED
 				root.add_child(label)
 	root.add_child(b.build())
+	for child in root.get_children():
+		if child is MeshInstance3D:child.extra_cull_margin=35.0
 	return root

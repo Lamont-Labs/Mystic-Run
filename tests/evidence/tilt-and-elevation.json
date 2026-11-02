@@ -1,0 +1,6 @@
+{
+  "checks": 35,
+  "failed": 0,
+  "failures": [],
+  "scope": "Synthetic gravity samples, frame-rate invariance, sensor loss/recentering, course grade continuity, live scene surface alignment and character lock. Physical Android sensor behavior remains a device check."
+}

@@ -1,3 +1,9 @@
+> **Current owner direction — November 2, 2026:** Use calibrated tilt steering,
+> faster pacing and visible climbs/descents. Choose one character before the run;
+> do not switch characters mid-run. Add an opening screen and overhaul the UI/UX.
+> The current implementation contract is `GAMEPLAY_AND_NAVIGATION.md` (0.4.0).
+> Handoff, slow-ramp and flat-course proposals below are historical and superseded.
+
 # Mystic Run — Master Android Game Development Blueprint
 
 > Implementation update: the original headless foundation described below has become a playable Android alpha. `BUILD_STATUS.md` and the repository README provide current implementation and check results. This remains the design baseline; its original foundation-status entries are historical.

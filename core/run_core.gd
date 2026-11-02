@@ -27,6 +27,7 @@ var handoff_epoch: int = 0
 var power_attack_token: int = -1
 var seed_value: int = 0
 var route: Dictionary = {}
+var character_locked: bool = false
 var events: Array[Dictionary] = []
 
 var _paused_phase: String = ""
@@ -110,7 +111,7 @@ func complete_run() -> bool:
 
 
 func offer_route(route_id: String, target: String, preview_ticks: int = 144) -> bool:
-	if phase != "running" or route_id.is_empty():
+	if character_locked or phase != "running" or route_id.is_empty():
 		return false
 	if not CHARACTERS.has(target) or preview_ticks < MIN_PREVIEW_TICKS:
 		return false

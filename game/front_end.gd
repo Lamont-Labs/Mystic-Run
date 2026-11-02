@@ -2,7 +2,8 @@ extends Control
 
 signal intent(action: String, value: String)
 const Courses=preload("res://core/course_catalog.gd")
-const INK:=Color("0c1022")
+const INK:=Color("111422")
+const GOLD:=Color("f0d1a0")
 const WHITE:=Color("f1efff")
 const MUTED:=Color("b5b6d0")
 const ACCENTS:={"knight":Color("65e8ef"),"gargoyle":Color("76e1be"),"witch":Color("be91ff")}
@@ -11,7 +12,8 @@ const HEROES:={
  "gargoyle":{"role":"THE SKYBREAKER","power":"WING BURST","detail":"A powerful close-range strike. Wing Burst lifts you above the course and slows your descent.","cooldown":"7 SEC RECHARGE"},
  "witch":{"role":"THE RIFTWEAVER","power":"ARCANE BLINK","detail":"A ranged arcane strike. Blink moves you to a clear lane without pulling you backward.","cooldown":"9 SEC RECHARGE"}
 }
-var screen: String="home"
+var screen: String="opening"
+var visual_clock:float=0.0
 var selected: String="knight"
 var course_id: String="citadel"
 var profile: Dictionary={}
@@ -37,7 +39,7 @@ func _ready() -> void:
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
 	city=load("res://assets/environment/citadel-matte-v1.png")
 	var g:=Gradient.new()
-	g.colors=PackedColorArray([Color(.025,.03,.085,.60),Color(.025,.03,.085,.96)])
+	g.colors=PackedColorArray([Color(.025,.03,.085,.18),Color(.025,.03,.085,.94)])
 	shade=GradientTexture2D.new();shade.gradient=g;shade.fill_from=Vector2.ZERO;shade.fill_to=Vector2(0,1)
 	frame=VBoxContainer.new();frame.add_theme_constant_override("separation",18)
 	add_child(frame)
@@ -71,8 +73,10 @@ func show_screen(value: String, hero: String, route: String, data: Dictionary, e
 	for container in [header,content,actions,dock]:
 		for child in container.get_children(): child.hide();child.queue_free()
 	scroll.scroll_vertical=0
-	_build_header()
+	header.visible=screen!="opening"
+	if screen!="opening":_build_header()
 	match screen:
+		"opening":_opening()
 		"home":_home()
 		"team":_team()
 		"routes":_routes()
@@ -88,10 +92,11 @@ func show_screen(value: String, hero: String, route: String, data: Dictionary, e
 
 func _style(primary: bool=false, selected_card: bool=false) -> StyleBoxFlat:
 	var s:=StyleBoxFlat.new()
-	s.bg_color=ACCENTS[selected] if primary else Color("11172d",.92)
-	s.border_color=ACCENTS[selected] if selected_card else Color("3c405f")
+	s.bg_color=GOLD if primary else Color("111525",.88)
+	s.border_color=ACCENTS[selected] if selected_card else Color("575064",.65)
 	s.set_border_width_all(2 if selected_card else 1)
-	s.set_corner_radius_all(10)
+	s.shadow_color=Color(0,0,0,.25);s.shadow_size=8;s.shadow_offset=Vector2(0,4)
+	s.set_corner_radius_all(4)
 	s.content_margin_left=20;s.content_margin_right=20;s.content_margin_top=14;s.content_margin_bottom=14
 	return s
 
@@ -105,7 +110,7 @@ func _text(parent: Node, value: String, point_size: int=26, color: Color=WHITE, 
 
 func _button(parent: Node, id: String, text: String, action: String, value: String="", primary: bool=false, height: float=88) -> Button:
 	var b:=Button.new();b.text=text;b.custom_minimum_size=Vector2(0,height);b.size_flags_horizontal=Control.SIZE_EXPAND_FILL
-	b.add_theme_font_override("font",title_font if primary else body_font);b.add_theme_font_size_override("font_size",34 if primary else 24)
+	b.add_theme_font_override("font",title_font if primary else body_font);b.add_theme_font_size_override("font_size",28 if primary else 23)
 	b.add_theme_color_override("font_color",INK if primary else WHITE)
 	b.add_theme_stylebox_override("normal",_style(primary))
 	var pressed:=_style(primary,true);pressed.bg_color=Color("d0fbff") if primary else Color("2d2c50")
@@ -122,7 +127,7 @@ func _panel(parent: Node, active: bool=false) -> VBoxContainer:
 
 func _heading(kicker: String, title: String, detail: String="") -> void:
 	_text(content,kicker,20,ACCENTS[selected])
-	_text(content,title,58,WHITE,true)
+	_text(content,title,44,WHITE,true)
 	if not detail.is_empty(): _text(content,detail,25,MUTED)
 
 func _build_header() -> void:
@@ -133,8 +138,8 @@ func _build_header() -> void:
 		var settings:=_button(header,"settings","SETTINGS","navigate","settings",false,66);settings.size_flags_horizontal=Control.SIZE_SHRINK_END;settings.custom_minimum_size.x=152
 
 func _build_dock() -> void:
-	for item in [["home","HOME"],["team","TEAM"],["routes","ROUTES"],["records","RECORDS"]]:
-		var b:=_button(dock,"nav_"+item[0],item[1],"tab",item[0],false,94)
+	for item in [["home","PLAY"],["team","RUNNERS"],["routes","COURSES"],["records","JOURNAL"]]:
+		var b:=_button(dock,"nav_"+item[0],item[1],"tab",item[0],false,78)
 		b.add_theme_font_size_override("font_size",24)
 		if screen==item[0]: b.add_theme_stylebox_override("normal",_style(false,true));b.add_theme_color_override("font_color",ACCENTS[selected])
 
@@ -142,29 +147,35 @@ func _hero_image(parent: Node, hero: String, height: float) -> void:
 	var image:=TextureRect.new();image.texture=portraits[hero];image.expand_mode=TextureRect.EXPAND_IGNORE_SIZE;image.stretch_mode=TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	image.custom_minimum_size=Vector2(0,height);image.size_flags_horizontal=Control.SIZE_EXPAND_FILL;image.mouse_filter=Control.MOUSE_FILTER_IGNORE;parent.add_child(image)
 
+func _opening() -> void:
+	var space:=Control.new();space.custom_minimum_size.y=maxf(40,size.y*.16);content.add_child(space)
+	var studio:=_text(content,"L A M O N T   L A B S",20,GOLD);studio.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var title:=_text(content,"MYSTIC\nRUN",106,WHITE,true);title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	title.add_theme_color_override("font_shadow_color",Color(0,0,0,.7));title.add_theme_constant_override("shadow_offset_y",8)
+	var line:=_text(content,"THE CITY WILL NOT LET YOU GO.",19,GOLD);line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+	var bottom:=Control.new();bottom.custom_minimum_size.y=70;content.add_child(bottom)
+	_button(actions,"enter","ENTER THE CITY","enter","",true,104)
+	_button(actions,"opening_settings","SETTINGS","navigate","settings",false,68)
+	var version:=_text(actions,"MYSTIC RUN  /  "+str(ProjectSettings.get_setting("application/config/version")),16,MUTED);version.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
+
 func _home() -> void:
-	_heading("THREE SOULS. ONE ESCAPE.","THE CITY IS WAKING")
+	_heading("MAKE YOUR ESCAPE","CHOOSE YOUR PATH")
 	var hero:=_panel(content,true)
-	var row:=HBoxContainer.new();row.add_theme_constant_override("separation",20);hero.add_child(row)
-	var portrait:=VBoxContainer.new();portrait.custom_minimum_size.x=260;portrait.size_flags_horizontal=Control.SIZE_EXPAND_FILL;row.add_child(portrait)
-	_hero_image(portrait,selected,minf(size.y*.26,370))
-	var info:=VBoxContainer.new();info.size_flags_horizontal=Control.SIZE_EXPAND_FILL;info.add_theme_constant_override("separation",18);row.add_child(info)
-	_text(info,HEROES[selected].role,19,ACCENTS[selected])
-	_text(info,selected.to_upper(),49,WHITE,true)
-	_text(info,HEROES[selected].power,26,ACCENTS[selected],true)
-	_text(info,"Your starting runner. All three teammates can take the lead at relay gates.",24,MUTED)
-	_button(info,"view_team","CHANGE RUNNER","navigate","team",false,74)
+	_hero_image(hero,selected,clampf(size.y*.26,230,370))
+	var row:=HBoxContainer.new();hero.add_child(row)
+	var name:=_text(row,selected.to_upper(),38,WHITE,true);name.size_flags_horizontal=Control.SIZE_EXPAND_FILL
+	_button(row,"view_team","CHANGE","navigate","team",false,62)
+	_text(hero,HEROES[selected].role+"  ·  "+HEROES[selected].power,19,ACCENTS[selected])
 	var course:=Courses.get_course(course_id)
 	var route:=_panel(content)
-	_text(route,"SELECTED ROUTE",19,MUTED)
-	_text(route,course.title,36,WHITE,true)
-	_text(route,"ENDLESS" if course.length==0 else "%d METRES  ·  %s"%[int(course.length),course.difficulty],22,ACCENTS[selected])
-	_button(actions,"play","CHOOSE A ROUTE","navigate","routes",true,96)
-	_button(actions,"practice","PRACTICE THE CONTROLS","practice","",false,84)
-	_text(content,"Swipe to move. Tap to strike. Hand the run to your team.",22,MUTED)
+	_text(route,course.title,30,WHITE,true)
+	_text(route,str(profile.get("settings",{}).get("control_mode","tilt")).to_upper()+" TO STEER  ·  "+("ENDLESS" if course.length==0 else str(int(course.length))+" METRES"),19,GOLD)
+	_button(route,"choose_course","CHANGE COURSE","navigate","routes",false,64)
+	_button(actions,"play","RUN WITH THE "+selected.to_upper(),"start","",true,96)
+	_button(actions,"practice","PRACTICE CONTROLS","practice","",false,70)
 
 func _team() -> void:
-	_heading("YOUR RELAY TEAM","CHOOSE YOUR RUNNER","Choose before a run, or take another character's route at a relay gate.")
+	_heading("THREE WAYS TO ESCAPE","CHOOSE YOUR RUNNER","Choose once. Your runner stays with you until the run ends.")
 	var hero:=_panel(content,true)
 	_hero_image(hero,selected,minf(size.y*.31,430))
 	_text(hero,"THE "+selected.to_upper(),48,WHITE,true)
@@ -196,7 +207,7 @@ func _routes() -> void:
 	_button(content,"route_team","CHANGE STARTING RUNNER","navigate","team",false,76)
 
 func _records() -> void:
-	_heading("YOUR RUNS","THE RELAY JOURNAL","Records are saved on this phone.")
+	_heading("YOUR RUNS","THE RUN JOURNAL","Records are saved on this phone.")
 	var stats:=_panel(content,true)
 	_text(stats,"LONGEST RUN",22,ACCENTS[selected]);_text(stats,"%d METRES"%int(profile.get("best",0)),58,WHITE,true)
 	_text(stats,"%d RUNS LOGGED  ·  %d RELICS COLLECTED"%[int(profile.get("runs",0)),int(profile.get("relics",0))],25,MUTED)
@@ -218,8 +229,15 @@ func _records() -> void:
 
 func _settings() -> void:
 	_heading("MAKE IT YOURS","SETTINGS")
+	var controls:Dictionary=profile.get("settings",{})
+	_text(content,"MOVEMENT",19,GOLD)
+	_button(content,"control_mode","STEERING  /  "+str(controls.get("control_mode","tilt")).to_upper(),"control_mode")
+	_button(content,"tilt_sensitivity","TILT SENSITIVITY  /  "+str(controls.get("tilt_sensitivity","normal")).to_upper(),"tilt_sensitivity")
+	_button(content,"tilt_invert","INVERT TILT  /  "+("ON" if controls.get("tilt_invert",false) else "OFF"),"setting","tilt_invert")
+	if profile.get("in_run",false):_button(content,"recenter","RECENTER TILT & CONTINUE","recenter")
+	_text(content,"Hold your phone at a comfortable angle during the countdown. Tilt gently to move across the full width of the path. Recenter through Pause when you change your grip.",23,MUTED)
 	var settings: Dictionary=profile.get("settings",{})
-	for item in [["music","MUSIC"],["sound","SOUND EFFECTS"],["vibration","HAPTIC FEEDBACK"],["quality","GRAPHICS"]]:
+	for item in [["music","MUSIC"],["sound","SOUND EFFECTS"],["vibration","HAPTIC FEEDBACK"],["quality","GRAPHICS"],["reduced_motion","REDUCED CAMERA MOTION"]]:
 		var value: bool=settings.get(item[0],true)
 		_button(content,item[0],item[1]+"   /   "+(("HIGH" if value else "BATTERY") if item[0]=="quality" else ("ON" if value else "OFF")),"setting",item[0])
 	_button(content,"sensitivity","SWIPE SENSITIVITY   /   "+str(settings.get("sensitivity","normal")).to_upper(),"sensitivity")
@@ -230,7 +248,7 @@ func _settings() -> void:
 
 func _howto() -> void:
 	_heading("KEEP THE RUN ALIVE","HOW TO PLAY")
-	for item in [["SWIPE LEFT / RIGHT","Move one lane. You can steer while jumping or sliding."],["SWIPE UP","Jump over low barriers and fractures. An early jump just before landing is buffered."],["SWIPE DOWN","Slide beneath overhead beams. Swiping down in the air lands you into a slide."],["TAP TO STRIKE","Tap the open play area or the STRIKE button. A target cue appears as enemies enter reach."],["USE YOUR POWER","The large ability button uses your current runner's signature skill. Each teammate has a separate recharge."],["HAND OFF THE RUN","Choose a marked lane at a relay gate. The next teammate carries your health, score and distance forward."]]:
+	for item in [["TILT TO STEER","Tilt left or right to move smoothly across the path. Your comfortable holding angle is calibrated during the countdown. Swipe steering is available in Settings."],["SWIPE UP","Jump over low barriers and fractures. An early jump just before landing is buffered."],["SWIPE DOWN","Slide beneath overhead beams. Swiping down in the air lands you into a slide."],["TAP TO STRIKE","Tap the open play area or the STRIKE button. A target cue appears as enemies enter reach."],["USE YOUR POWER","The large ability button uses your current runner's signature skill. Each teammate has a separate recharge."],["ONE RUNNER. ONE RUN.","Choose Knight, Gargoyle or Witch before starting. Climb bridges, crest the skyline and descend into the undercity with that runner."]]:
 		var card:=_panel(content);_text(card,item[0],30,ACCENTS[selected],true);_text(card,item[1],25,MUTED)
 	if profile.get("in_run",false):_button(actions,"back_to_run","CONTINUE RUN","resume","",true,94)
 	else:_button(actions,"practice","TRY GUIDED PRACTICE","practice","",true,94)
@@ -248,6 +266,7 @@ func _pause() -> void:
 	_text(box,"%d METRES  ·  THE %s"%[int(result.get("distance",0)),selected.to_upper()],25,MUTED)
 	_button(actions,"resume","CONTINUE RUN","resume","",true,96)
 	_button(content,"pause_settings","SETTINGS","navigate","settings")
+	if profile.get("settings",{}).get("control_mode","tilt")=="tilt":_button(content,"pause_recenter","RECENTER TILT","recenter")
 	_button(content,"pause_howto","CONTROLS","navigate","howto")
 	_button(content,"abandon","END RUN & SEE RESULTS","abandon","",false,88)
 
@@ -258,7 +277,7 @@ func _results() -> void:
 	var box:=_panel(content,true)
 	_text(box,"%d METRES"%int(result.get("distance",0)),66,WHITE,true)
 	_text(box,"%d SCORE  ·  %d RELICS"%[int(result.get("score",0)),int(result.get("shards",0))],28,ACCENTS[selected])
-	_text(box,"%d SENTINELS DEFEATED  ·  %d HANDOFFS"%[int(result.get("defeated",0)),int(result.get("handoffs",0))],23,MUTED)
+	_text(box,"%d SENTINELS DEFEATED  ·  %d RELICS"%[int(result.get("defeated",0)),int(result.get("shards",0))],23,MUTED)
 	_text(box,"PERSONAL BEST  /  %d METRES"%int(profile.get("best",0)),23,MUTED)
 	_button(actions,"restart","PRACTICE AGAIN" if outcome=="practice" else "RUN AGAIN","restart","",true,94)
 	_button(content,"choose_route","CHOOSE ANOTHER ROUTE","results_routes")
@@ -274,5 +293,12 @@ func _draw() -> void:
 		var region_size:=size/scale_value
 		draw_texture_rect_region(city,Rect2(Vector2.ZERO,size),Rect2((source-region_size)*.5,region_size))
 		draw_texture_rect(shade,Rect2(Vector2.ZERO,size),false)
-		draw_rect(Rect2(Vector2.ZERO,size),Color("0b1027",.40))
+		draw_rect(Rect2(Vector2.ZERO,size),Color("0b1027",.14 if screen=="opening" else .30))
+		if screen=="opening":
+			for i in range(24):
+				var at:=Vector2(fposmod(i*137.7+sin(visual_clock*.2+i)*24,size.x),fposmod(i*79.3-visual_clock*(4+i%4),size.y))
+				draw_circle(at,1.0 if i%3 else 2.0,Color(GOLD,.20+sin(visual_clock+i)*.10))
 	draw_line(Vector2(30,size.y-bottom_inset-110),Vector2(size.x-30,size.y-bottom_inset-110),Color(ACCENTS[selected],.25),1,true)
+
+func _process(delta:float) -> void:
+	if visible and screen=="opening":visual_clock+=delta;queue_redraw()
