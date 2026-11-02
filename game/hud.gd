@@ -15,6 +15,10 @@ class ActionButton:
 	func _draw() -> void:
 		var center:=size*Vector2(.5,.40)
 		var color:=Color("9debf2") if not disabled else Color("8794b0")
+		if kind=="power":
+			var cooldown:float={"knight":8.0,"gargoyle":7.0,"witch":9.0}[hero]
+			var progress:float=1.0-clampf(remaining/cooldown,0,1)
+			draw_arc(size*.5,size.x*.5-5,-PI*.5,-PI*.5+TAU*maxf(.01,progress),64,Color(color,.75),3,true)
 		if remaining>0:
 			var value:="%.1f"%remaining
 			draw_string(font,center+Vector2(-font.get_string_size(value,HORIZONTAL_ALIGNMENT_LEFT,-1,28).x*.5,9),value,HORIZONTAL_ALIGNMENT_LEFT,-1,28,color)
@@ -34,7 +38,7 @@ class ActionButton:
 
 var mode: String="opening"
 var selected: String="knight"
-var course_id: String="citadel"
+var course_id: String="endless"
 var profile_data: Dictionary={}
 var result_data: Dictionary={}
 var navigation: Array[String]=["opening"]
@@ -58,6 +62,12 @@ var control_hint:String="HOLD YOUR PHONE COMFORTABLY"
 var guide_title: String=""
 var guide_detail: String=""
 var combat_ready: bool=false
+var combat_warning:bool=false
+var threat_position:=Vector2.ZERO
+var threat_seconds:float=INF
+var intro_active:bool=false
+var district_name:String=""
+var district_left:float=0
 var message_left: float=0
 var impact_left: float=0
 var impact_text: String=""
@@ -89,6 +99,9 @@ func _ready() -> void:
 		var b:=ActionButton.new();b.kind=action;b.font=ui_font
 		b.add_theme_stylebox_override("normal",_button_style(false,true));b.add_theme_stylebox_override("pressed",_button_style(true,true));b.add_theme_stylebox_override("hover",_button_style(true,true));b.add_theme_stylebox_override("disabled",_button_style(false,true))
 		b.pressed.connect(func():intent.emit(action,""));add_child(b);game_buttons[action]=b
+	var skip:=Button.new();skip.text="SKIP";skip.add_theme_font_override("font",ui_font)
+	skip.add_theme_font_size_override("font_size",18);skip.add_theme_stylebox_override("normal",_button_style(false))
+	skip.pressed.connect(func():intent.emit("skip_intro",""));add_child(skip);game_buttons.skip_intro=skip
 	front=FrontEnd.new();front.title_font=title_font;front.body_font=ui_font;front.portraits=portraits
 	add_child(front);front.intent.connect(func(action: String,value: String):intent.emit(action,value))
 	_layout();refresh()
@@ -111,26 +124,28 @@ func _layout() -> void:
 		var safe:=DisplayServer.get_display_safe_area();var window:=DisplayServer.window_get_size()
 		if window.y>0 and safe.size.y>0:
 			top_pad=maxf(22,safe.position.y*size.y/window.y+10);bottom_pad=maxf(16,(window.y-safe.end.y)*size.y/window.y+10)
-	_place("district",Vector2(26,top_pad+92),Vector2(w-52,30))
+	_place("district",Vector2(26,top_pad+132),Vector2(w-52,36),HORIZONTAL_ALIGNMENT_CENTER)
 	_place("score",Vector2(26,top_pad+55),Vector2(210,30))
 	_place("distance",Vector2(w*.5-105,top_pad-8),Vector2(210,64),HORIZONTAL_ALIGNMENT_CENTER)
 	_place("unit",Vector2(w*.5-105,top_pad+58),Vector2(210,22),HORIZONTAL_ALIGNMENT_CENTER)
-	_place("objective",Vector2(26,top_pad+128),Vector2(w-52,30))
+	_place("objective",Vector2(26,top_pad+94),Vector2(w-52,28),HORIZONTAL_ALIGNMENT_CENTER)
 	_place("speed",Vector2(30,h-bottom_pad-127),Vector2(220,35))
 	_place("steering",Vector2(30,h-bottom_pad-43),Vector2(250,25))
 	_place("ability",Vector2(w-300,h-bottom_pad-180),Vector2(270,30),HORIZONTAL_ALIGNMENT_RIGHT)
 	_place("message",Vector2(30,h-bottom_pad-255),Vector2(w-60,70),HORIZONTAL_ALIGNMENT_CENTER)
-	_place("guide_title",Vector2(30,top_pad+186),Vector2(w-60,58))
-	_place("guide_detail",Vector2(30,top_pad+245),Vector2(w-60,98))
-	_place("combat_hint",Vector2(w*.5-165,h*.44),Vector2(330,45),HORIZONTAL_ALIGNMENT_CENTER)
+	_place("guide_title",Vector2(30,top_pad+188),Vector2(w-180,110))
+	labels.guide_title.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
+	_place("guide_detail",Vector2(30,top_pad+295),Vector2(w-60,100))
+	_place("combat_hint",Vector2(w*.5-180,h-bottom_pad-250),Vector2(360,45),HORIZONTAL_ALIGNMENT_CENTER)
 	_place("countdown",Vector2(0,h*.34),Vector2(w,168),HORIZONTAL_ALIGNMENT_CENTER)
 	_place("ready_caption",Vector2(30,h*.34+170),Vector2(w-60,80),HORIZONTAL_ALIGNMENT_CENTER)
 	labels.ready_caption.add_theme_font_size_override("font_size",21)
 	labels.ready_caption.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	if game_buttons.is_empty():return
-	game_buttons.pause.position=Vector2(w-92,top_pad);game_buttons.pause.size=Vector2(62,62)
-	game_buttons.power.position=Vector2(w-148,h-bottom_pad-142);game_buttons.power.size=Vector2(118,118)
-	game_buttons.attack.position=Vector2(w-266,h-bottom_pad-130);game_buttons.attack.size=Vector2(102,102)
+	game_buttons.pause.position=Vector2(w-122,top_pad);game_buttons.pause.size=Vector2(96,96)
+	game_buttons.power.position=Vector2(w-174,h-bottom_pad-168);game_buttons.power.size=Vector2(144,144)
+	game_buttons.attack.position=Vector2(w-320,h-bottom_pad-150);game_buttons.attack.size=Vector2(124,124)
+	game_buttons.skip_intro.position=Vector2(w-126,top_pad+188);game_buttons.skip_intro.size=Vector2(96,96)
 	queue_redraw()
 
 func set_mode(value: String) -> void:mode=value;refresh()
@@ -148,8 +163,9 @@ func refresh() -> void:
 	front.visible=mode not in ["game","countdown","closing"]
 	if front.visible:front.show_screen(mode,selected,course_id,profile_data,result_data,navigation.size()>1 or mode in ["pause","results"])
 	elif mode=="game":
-		for key in ["distance","unit","district","score","ability","objective","speed","steering"]:labels[key].show()
-		for b in game_buttons.values():b.show()
+		for key in ["distance","unit","score"]:labels[key].show()
+		for key in ["pause","attack","power"]:game_buttons[key].show()
+		game_buttons.skip_intro.visible=intro_active
 	elif mode=="countdown":
 		labels.ready_caption.text=control_hint;labels.countdown.text=countdown_text;labels.countdown.show();labels.ready_caption.show();game_buttons.pause.show()
 	queue_redraw()
@@ -160,10 +176,13 @@ func update_session(data: Dictionary, shards: int) -> void:
 	labels.distance.text=str(int(float(data.distance_mm)/1000.0))
 	labels.speed.text="%d KM/H"%roundi(float(data.get("speed_mps",0))*3.6)
 	labels.steering.text="TILT TO STEER" if data.get("steering","SWIPE")=="TILT" else "SWIPE TO STEER"
-	labels.district.text=str(data.get("district","MYSTIC RUN"))
-	labels.score.text="%d SCORE  /  %d RELICS"%[int(data.score),shards]
+	var district:String=str(data.get("district","MYSTIC RUN"))
+	if district!=district_name:district_name=district;district_left=2.2
+	labels.district.text=district_name;labels.district.visible=district_left>0 and guide_title.is_empty()
+	labels.score.text="◆  %d"%shards
 	var length:float=data.get("course_length",0)
 	labels.objective.text="ENDLESS RUN" if length==0 else "%d / %d M TO THE EXIT"%[mini(int(data.distance_mm/1000),int(length)),int(length)]
+	labels.objective.visible=length>0
 	var character:String=data.character
 	labels.ability.text={"knight":"SHIELD CHARGE","gargoyle":"WING BURST","witch":"ARCANE BLINK"}[character]
 	var protected:bool=data.phase in ["handoff","recovery","failed","completed"]
@@ -175,12 +194,14 @@ func update_session(data: Dictionary, shards: int) -> void:
 	labels.guide_title.text=guide_title;labels.guide_detail.text=guide_detail
 	labels.guide_title.visible=not guide_title.is_empty();labels.guide_detail.visible=not guide_detail.is_empty()
 	labels.combat_hint.visible=combat_ready and guide_title.is_empty()
+	game_buttons.skip_intro.visible=intro_active
 	queue_redraw()
 
 func message(value: String, duration: float=1.8) -> void:labels.message.text=value;message_left=duration
 func impact(value: String,color: Color) -> void:impact_text=value;impact_color=color;impact_left=.32;queue_redraw()
 func _process(delta: float) -> void:
-	if mode=="game":message_left=maxf(0,message_left-delta);impact_left=maxf(0,impact_left-delta);flash=maxf(0,flash-delta*2)
+	if mode=="game":message_left=maxf(0,message_left-delta);impact_left=maxf(0,impact_left-delta);flash=maxf(0,flash-delta*2);district_left=maxf(0,district_left-delta)
+	labels.district.visible=mode=="game" and district_left>0 and guide_title.is_empty()
 	labels.message.visible=mode=="game" and message_left>0
 	if labels.message.visible:labels.message.modulate.a=minf(1,message_left*3)
 	if impact_left>0 or flash>0:queue_redraw()
@@ -193,14 +214,15 @@ func _draw() -> void:
 	for i in range(3):
 		var rect:=Rect2(28+i*35,top_pad+16,26,7)
 		draw_rect(rect,Color("f0d1a0") if i<int(session.get("health",3)) else Color("4a4c62"))
-	var steer_center:=Vector2(94,size.y-bottom_pad-73)
-	draw_line(steer_center-Vector2(60,0),steer_center+Vector2(60,0),Color("646f8c",.6),2,true)
-	var steer:float=float(session.get("tilt_position",0))
-	draw_circle(steer_center+Vector2(steer*57,0),5,accent)
+	if combat_warning and threat_position.y>top_pad+170 and threat_position.y<size.y-bottom_pad-230:
+		var cue:Color=Color("b8f8eb") if combat_ready else Color("f0d1a0",.85)
+		var radius:float=23 if combat_ready else 29
+		for side in [-1,1]:
+			draw_polyline(PackedVector2Array([threat_position+Vector2(side*radius,-13),threat_position+Vector2(side*(radius+7),0),threat_position+Vector2(side*radius,13)]),cue,3,true)
 	var length:float=session.get("course_length",0)
 	if length>0:
 		var width:=size.x-52
-		draw_rect(Rect2(26,top_pad+168,width,4),Color("343a53"));draw_rect(Rect2(26,top_pad+168,width*clampf(float(session.get("distance_mm",0))/1000.0/length,0,1),4),accent)
+		draw_rect(Rect2(26,top_pad+125,width,3),Color("343a53"));draw_rect(Rect2(26,top_pad+125,width*clampf(float(session.get("distance_mm",0))/1000.0/length,0,1),3),accent)
 	if impact_left>0:
 		var center:=Vector2(size.x*.54,size.y*.47);var burst:=PackedVector2Array()
 		for i in range(16):

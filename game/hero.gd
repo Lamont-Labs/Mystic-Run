@@ -18,6 +18,7 @@ var sliding: bool = false
 var airborne: bool = false
 var moving: bool = false
 var lean: float = 0.0
+var threat_intensity:float=0.0
 var mats: Dictionary = {}
 
 func configure(kind: String) -> void:
@@ -283,6 +284,10 @@ func animate(delta: float) -> void:
 	attack_time=maxf(0,attack_time-delta)
 	power_time=maxf(0,power_time-delta)
 	motion.advance(delta,moving,airborne,sliding,identity)
+	if get_meta("sentinel",false):
+		var arm:int=skeleton.find_bone("upperarm_r")
+		skeleton.set_bone_pose_rotation(arm,skeleton.get_bone_pose_rotation(arm)*Quaternion(Vector3.RIGHT,-.9*threat_intensity))
+		body.rotation.x=-.08*threat_intensity
 	skeleton.force_update_all_bone_transforms()
 	body.rotation.z=lerpf(body.rotation.z,-lean*.09,1-exp(-delta*10))
 	for index in range(wings.size()):

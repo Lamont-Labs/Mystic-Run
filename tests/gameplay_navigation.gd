@@ -46,11 +46,13 @@ func begin_route() -> void:
 	await frames(5)
 	check(game.ui.mode=="game","The countdown hands control to the runner")
 func run() -> void:
-	game=load("res://scenes/main.tscn").instantiate();game.testing=true;game.profile.settings.control_mode="swipe"
+	game=load("res://scenes/main.tscn").instantiate();game.testing=true;game.profile.settings.control_mode="swipe";game.profile.practice_complete=true
 	root.add_child(game);await frames(5)
 	check(game.ui.mode=="opening","Launch opens the cinematic opening screen")
 	await capture("opening")
-	await click("enter");check(game.ui.mode=="home","Enter the City opens the play hub")
+	check(game.course_id=="endless" and game.ui.buttons.has("play"),"Cold launch offers Endless Run directly from its opening menu")
+	await click("view_team");await click("gargoyle");await click("team_done")
+	check(game.ui.mode=="home" and game.course_id=="endless" and game.selected=="gargoyle","Choosing a runner returns to the menu and preserves the mode")
 	await capture("home")
 	await click("nav_team");check(game.ui.mode=="team","Team tab opens the character roster")
 	await click("gargoyle");check(game.selected=="gargoyle","Roster selection changes the starting runner")
@@ -109,7 +111,7 @@ func run() -> void:
 	check(game.ui.mode=="results" and game.core.phase=="completed","Reaching the expedition finish produces a clear result")
 	check(game.profile.route_records.citadel.clears==1,"A completed expedition records its clear")
 	await capture("expedition-clear")
-	await click("home");await click("practice")
+	await click("home");await click("settings");await click("howto");await click("practice")
 	game.countdown_left=.01;await frames(5)
 	check(game.course_id=="training" and game.training_step==0,"Practice starts its interactive first step")
 	await touch("left");await frames(14);await touch("right");await frames(14)
@@ -129,7 +131,44 @@ func run() -> void:
 	game._update_rows(0);game.world.set_gaps(game.rows,game.distance);game.world.update(game.distance,0)
 	check(game.world.materials.road.get_shader_parameter("gap_count")==1,"The visible fracture is bound into the road material")
 	await capture("fracture-close")
-	var report:Dictionary={"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Native Godot GUI hit testing, touch/drag/tap delivery, screen history, physical runner actions, finite finish and practice. Scripted desktop input; no phone comfort or latency claim."}
+	# The integrated introduction runs within Endless and hands off without a result.
+	game.profile.practice_complete=false;game.profile.intro_dismissed=false;game.profile.intro_lessons=0
+	game._select_character("knight");game.course_id="endless";game._start_run();game.countdown_left=.001
+	game.set_physics_process(true);await frames(6)
+	check(game.guided_intro and game.course_id=="endless" and game.rows.is_empty(),"A first Endless run teaches controls in a protected opening")
+	await touch("left");await frames(14);await touch("right");await frames(14)
+	check(game.profile.intro_lessons==2,"Completed introduction lessons are retained for a later attempt")
+	game._start_run();game.countdown_left=.001;await frames(6)
+	check(game.guided_intro and game.training_step==2,"Retry resumes the first unfinished lesson")
+	await touch("jump");await frames(8);await touch("slide");await frames(20)
+	check(game.training_step==4,"Normal play observes actual jump and slide inputs")
+	game.set_physics_process(false)
+	var target:Dictionary=game.rows[-1]
+	target.at=game.distance+28;game._update_rows(0)
+	check(game.ui.combat_warning and not game.ui.combat_ready,"An approaching sentinel is warned before a strike is accepted")
+	target.at=game.distance+game.strike_cue_range()-.2;game._update_rows(0)
+	check(game.ui.combat_ready,"The active strike cue is tied to the accepted input window")
+	var before_attack:int=game.qa_attacks
+	game._attack()
+	check(game.strike_buffer>0 and game.qa_attacks==before_attack,"A cue-window melee tap buffers until the weapon can connect")
+	target.at=game.distance+4.0;game._perform_attack();game.attack_age=.08;game._update_rows(0)
+	check(game.defeated==1 and game.training_step==5,"The combat lesson requires an actual resolved strike")
+	game._power()
+	check(not game.guided_intro and game.profile.practice_complete and game.ui.mode=="game","The final power lesson continues the same run without a results screen")
+	check(game.profile.runs==2 and game.rows.is_empty(),"Finishing the introduction creates no extra run record or stale targets")
+	game._spawn_ahead()
+	check(not game.rows.is_empty() and game.rows.all(func(row):return float(row.at)>game.distance),"The encounter director resumes ahead of the runner after the introduction")
+	check(not game.ui.labels.speed.visible and not game.ui.labels.steering.visible,"Routine speed and steering diagnostics stay outside the gameplay HUD")
+	game.profile.practice_complete=false;game.profile.intro_lessons=1;game._start_run();game.countdown_left=.001
+	game.set_physics_process(true);await frames(6);await click("skip_intro")
+	check(not game.guided_intro and game.profile.intro_dismissed and not game.profile.practice_complete,"Skipping the introduction does not falsely record completed practice")
+	game._start_run();check(not game.guided_intro,"Later runs respect an explicit introduction skip")
+	var variants:Dictionary={}
+	for marker in [0.0,72.0,144.0,216.0,288.0]:
+		game.world.update(marker,0)
+		for chunk in game.world.chunks:variants[int(chunk.get_meta("variant"))]=true
+	check(variants.size()==5 and game.world.chunks.size()==11,"All five authored silhouettes reuse the bounded eleven-piece world pool")
+	var report:Dictionary={"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Native GUI clicks, touch gestures, direct launch/retry, runner and mode continuity, finite completion, standalone practice, persistent integrated lessons, truthful skip, combat warning/buffering and bounded five-piece scenery. Scripted desktop input; no phone comfort or latency claim."}
 	FileAccess.open("res://tests/evidence/scene-interactions.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("NAVIGATION_QA ",JSON.stringify(report))
 	game._stop_audio();await create_timer(.18).timeout;game.queue_free();await frames(2)

@@ -1,31 +1,31 @@
 {
-  "verified_at_utc": "2026-11-02T19:25:36.007262+00:00",
+  "verified_at_utc": "2026-11-02T22:42:10.954639+00:00",
   "engine_version": "4.7.2.stable.official.ed1daf0bf",
   "scope": "Headless gameplay-core assertions and static handoff-route contracts",
   "checks": 427,
   "failures": 0,
   "source_sha256": {
-    "project.godot": "ab175cb7a416096478f9bff27a42112aeb4af79a2e314e1c34abe3283caafe9d",
-    "core/course_catalog.gd": "9c48b4e02ba9fdd0a4b3fccb6faa31903a1495595cbefdc34e1f5ec6d3748dcb",
+    "project.godot": "b0f136d41c02fb488f687f4823cb8733d34f061c72bce5844908ec3e8a1a7322",
+    "core/course_catalog.gd": "ceaf46c14816b5b1f94974f5bd1e1e23049742f538e9f4589b5385708b71cc6a",
     "core/course_profile.gd": "6526403607984e9f3e2638b4934e485017a68b6720db8fe4a928d46da236c9e5",
     "core/route_contract.gd": "d3da4677f1481335ff75ecaea9eccea712d48e892a71139a2428ed635a4d5cf7",
     "core/run_core.gd": "b39396b910574459e5169b7a166db3af09bad07b6f9d2cb3158fdc171f0d186e",
     "core/tilt_steering.gd": "0fcf75b14d3dcfd87c88437ef4c151ced5942963bcb83fc9643a2e234a8f6fa2",
-    "tests/gameplay_navigation.gd": "ff9dd83abc7ceff98596c780f55ccde705cfb1ea47bf80d2758e0dd7a4f5389b",
+    "tests/gameplay_navigation.gd": "c6e4459812f12c56d603030f3f07a43a908854c2e96778cd163414f74b6c5ac4",
     "tests/rig_motion.gd": "d1854c8a028fc7e65033c246d3baa66c2e1a1d9f19cb8551991ab6920d1021ff",
     "tests/run_tests.gd": "c7c9fc324ed3e5d158b5741e3349dc56ca2beabe6f3e9f36202af70db63e69ea",
     "tests/runner_controls.gd": "0fbc2e0f70f6147e4bf40f52131d6b47fab2721b298935980e83be8f51475ef8",
     "tests/scene_interactions.gd": "bb8eba0bb9610fc96665bfc2a7d2803264ea613dbc4fcad05d4d388dd95dd595",
-    "tests/tilt_and_elevation.gd": "58174ea4a2c536fabb9496ff2fa4746f4d5aef4581583aed264303bfb41e85b7",
+    "tests/tilt_and_elevation.gd": "63c73f8e2a3eeed8260e9871c00e09936692270ccf1bcbc046b938a59b248916",
     "content/handoff_routes.json": "6ba0e70ed022c83437138d0f6b8656f248e2e090511f0828dbfee403a830b9f8",
     "tools/bootstrap_godot.py": "38a394048745e2b61b09fd0123b6065ed3955449a5fd01ee7ed90933611eec72",
-    "tools/build_android.py": "65e8dd84f4a1fc18c968fd2dc849fd29fc8e59b1ec422323b9212b1b54771112",
+    "tools/build_android.py": "0cc3fc5486e016ce762b835fbf1bf39a83b99b312111522503ae8f6843dfe74b",
     "tools/create_audio.py": "a20ea93b0d7e37a21d54ed9824fdcb9c087b5d5ee96702def51b1ad8067b9dd3",
     "tools/fetch_android_template.py": "7eb175f9af4ca5696d2aecb3271102e56f7f68577ca6cd7217f66d40d13d9892",
     "tools/prepare_cc0_assets.py": "54f2d29ea7db31d0589f1f030dbd97e974a2618ce36b7012592f24ac0fe8130e",
-    "tools/render_preview.py": "5b5a34449ab5bd719ee77359c384b098c384933f21efde0fed0f3b3dd35feb0f",
+    "tools/render_preview.py": "6245099a1190d7a2ecfc8fc8cf71818d089a77338fa3faf6ca484b43526c9712",
     "tools/sign_android.py": "26a8702f7db768c5372d2b347850d3e304ded3433daa14f408b85efbfd7e50b3",
-    "tools/verify_core.py": "d9ec30add9f478b6ecceaf5bc4d5f453924bd859b58f6984090e8ca365ec0387"
+    "tools/verify_core.py": "3de4486fef30ec8f7f04b7f7029b906ec22cc2ddeadce8077094ced9fa530d57"
   },
   "android_apk_built_by_this_check": false,
   "physical_device_tested_by_this_check": false,
@@ -35,6 +35,6 @@
     "Range, lane, line-of-sight and collider behavior require the separate scene checks.",
     "Route metadata checks do not prove physical traversability or camera readability.",
     "This core records a seed; the separate game scene generates encounters using its own seeded stream.",
-    "The core uses fixed 14 m/s progression; speed ramps are a later integration task."
+    "The core defaults to 14 m/s; the separate controls and scene suites verify variable course speed."
   ]
 }

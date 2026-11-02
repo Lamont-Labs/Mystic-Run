@@ -52,7 +52,7 @@ def main() -> int:
             "Range, lane, line-of-sight and collider behavior require the separate scene checks.",
             "Route metadata checks do not prove physical traversability or camera readability.",
             "This core records a seed; the separate game scene generates encounters using its own seeded stream.",
-            "The core uses fixed 14 m/s progression; speed ramps are a later integration task.",
+            "The core defaults to 14 m/s; the separate controls and scene suites verify variable course speed.",
         ],
     }
     output = root / "docs" / "verification_actual.json"

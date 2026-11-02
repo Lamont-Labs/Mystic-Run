@@ -1,77 +1,49 @@
-# Mystic Run 0.4.0 — movement and interface overhaul
+# Mystic Run 0.5.0 — Current gameplay contract
 
 November 2, 2026 · Lamont Labs
 
-The owner's current direction supersedes the original relay design: tilt to steer,
-a faster run, climbs and descents, one chosen character for the entire run, a
-proper opening screen, and an overhaul of gameplay presentation and navigation.
+This contract supersedes earlier relay navigation and 0.4.0’s separate Enter the City screen. The game remains an offline, portrait Android runner with Knight, Gargoyle and Witch selected before play.
 
-## Controls and run identity
+## Opening and setup
 
-- Portrait gravity input controls a continuous lateral target across the path.
-- A three-second ready countdown samples the comfortable holding angle.
-- The filter uses a 1.8-degree deadzone, exponential smoothing and bounded travel.
-  Low, Normal and High sensitivity require progressively less phone roll.
-- Pause offers Recenter Tilt; continuing recalibrates through a short countdown.
-- Invert Tilt, swipe steering and reduced camera motion are available in Settings.
-- Missing or invalid gravity readings fall back to accelerometer readings. If
-  neither sensor provides usable readings, steering falls back to swipes with
-  an explicit message; stale motion input decays toward neutral.
-- Swipe up to jump, down to slide, tap to strike, and use the signature power.
-- Knight, Gargoyle or Witch is chosen before starting. The live session locks
-  that character, rejects relay offers, and never spawns character handoff gates.
-  Legacy handoff core tests remain regression coverage for historical interfaces.
+The opening is an immediately usable main menu: title, the actual playable 3D runner, current mode and Run. Selecting a runner returns to this context and preserves the mode. A new profile starts with Endless; existing saved choices are respected. Modes also offers the finite Citadel, Spires and Rift expeditions. Journal and Settings stay outside active play.
 
-## Pacing and elevation
+The menu camera fits the runner into the reserved character area at the current aspect ratio. Menu and gameplay use the same model, equipment, materials and animation system. Illustration assets remain bundled as references and for existing supporting presentation.
 
-| Course | Initial pace | Ceiling | Length |
-| --- | --- | --- | --- |
-| Citadel Breakout | 18 m/s | 22 m/s | 650 m |
-| Skyward Escape | 19 m/s | 24 m/s | 900 m |
-| Fracture Protocol | 20 m/s | 24 m/s | 1,100 m |
-| Endless Run | 18.5 m/s | 24 m/s | Endless |
-| Guided Practice | 6 m/s | 6 m/s | Control-driven |
+## Controls and session
 
-The former 7 m/s opening ramp is removed. Normal courses gain speed with distance;
-uphill and downhill grades adjust pace inside a 17–24 m/s global envelope.
-Practice retains a gentle pace while teaching the inputs.
+- Continuous calibrated tilt is the default; swipe steering remains available as a sensor fallback or explicit setting.
+- Swipe up jumps; swipe down slides. Jump and slide buffers remain active.
+- Tap the open play area or Strike to attack. Power uses the selected runner’s signature skill.
+- One chosen character remains locked for the entire run. No teammate gates or mid-run replacements are spawned.
+- The shared elevation profile drives road deformation, physical runner height, props and the chase camera.
+- The 1.5-second ready cue holds progression still while calibrating. Tilt resume uses a 1.2-second ready cue.
+- Pause and nested settings preserve the active run and suspend gameplay timers. Recenter uses an explicit protected ready period.
 
-A continuous 640 m elevation profile includes an 11 m crown bridge, a descent
-into a -6 m valley, a second 7 m crest and another descent. The runner's world
-height, support surface, camera, props and rendered road use the same distance
-origin. Grade-aware camera aiming and character pitch make rises and drops visible.
-The gameplay motor remains at a fixed local forward origin while scenery scrolls;
-the support plane follows the local course height. Gaps and obstacles retain the
-explicit contact-envelope model; this is not a general terrain-physics sandbox.
+## First Endless run
 
-## Screens and presentation
+An unfinished first-run introduction teaches left, centre, jump, slide, a successful strike and the selected power. During this stretch the encounter director is held and damage is suppressed. The combat lesson introduces one approaching sentinel; a miss repositions the lesson target ahead for another attempt.
 
-Opening → Play hub → choose runner/course → ready countdown → run → results.
-Persistent Play, Runners, Courses and Journal navigation provides the main menu.
-Home starts the selected course directly. Pause preserves nested settings/controls
-history and offers Continue, Recenter and End Run.
+Completed lesson indices are saved and restored. Retry resumes the next unfinished lesson. Completing the power lesson clears tutorial targets, resumes encounters ahead of the runner and continues the same Endless session. It creates no separate completed-run record.
 
-The opening uses the existing original city artwork, large fantasy typography,
-a clear Enter the City action and animated motes. Home foregrounds the chosen
-runner. Gameplay uses a smaller HUD with health, distance, section, progress,
-pace, steering status and two combat controls. Course labels describe ascent,
-bridge, descent and valley sections instead of teammate changes.
+Skip dismisses the introduction and is saved separately from `practice_complete`. Standalone practice remains replayable through Settings → How to Play and retains its own practice-completion result. Finite expeditions begin directly, without consuming their short course distance on integrated lessons.
 
-The rendered world adds patterned weathered paving, structural bridge supports,
-lanterns and layered 3D architecture in front of the distant painted city. Character
-surfaces use lighting and specular response; embroidered cloth has restrained wind
-motion. Character lights follow the course elevation, and the camera frames the
-runner more closely. These are rendered scene changes, not a replacement title
-image presented as gameplay.
+## Combat readability
 
-## Evidence and limits
+Aligned, unobstructed enemies become warning candidates within 1.6 seconds of nominal approach at the current pace. Sentinels prepare their weapon as they approach. A gold target bracket is preparatory; the active mint bracket and Tap to Strike cue correspond to an accepted immediate or buffered attack.
 
-The automated suites check session rules, gestures, navigation, animation,
-synthetic motion samples, sensor loss, recentering, frame-rate independence,
-course continuity, surface alignment and single-character enforcement. Rendered
-frames use the actual Godot scene with a disclosed automated driver.
+For melee, the cue distance is `min(11, 5.1 + max(speed, 18.5) × 0.24)` metres. An input in the outer cue range waits until 5.1 metres, then resolves through the existing animation, height, range, line-of-sight and attack-token checks. Witch’s ranged cue remains 13 metres. Warning logic is not a guarantee of a full visible 1.6 seconds across every crest, occlusion or phone latency condition.
 
-Physical Android tilt orientation, control comfort, performance, thermal behavior
-and final visual approval remain device checks. The current characters and
-procedural environment still need further authored art work to meet the owner's
-premium production target. This revision does not claim Marvel Snap-level art.
+## HUD and results
+
+The persistent HUD prioritizes distance, compact health and relics, Pause, Strike and Power. District names appear briefly. Finite courses show exit progress. Routine speed, steering and ability-name diagnostics are hidden. Power communicates recharge around its action button. Pause, action and skip controls have larger canvas targets; physical dp and thumb comfort remain device checks.
+
+Results show distance, score/relics once, defeated sentinels and the personal best. Run Again preserves the selected setup. Change Runner, Change Route and Return Home remain available.
+
+## Playable presentation
+
+Five prebuilt 24-metre silhouettes—Cathedral Arcade, Open Crown Bridge, Ribbed Vault, Reliquary Court and Broken Works—share the same deck width, connections and elevation contract. A fixed twelve-piece phrase assigns these variants to eleven recycled visible instances. There are fifteen prebuilt theme/variant meshes. Runtime recycling swaps their mesh references; it does not construct new architecture per frame.
+
+Custom geometry uses clockwise front faces with outward normals. This fixes the reversed surfaces that previously presented the outline pass as black armor or scenery. The corrected material faces, shared 3D menu model, cloth and current chase-camera frames are the visual evidence for this revision.
+
+This is an incremental playable revision. Detailed production character art, higher quality authored environments, expanded animation and sustained Android performance remain open.

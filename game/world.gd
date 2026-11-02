@@ -3,6 +3,8 @@ extends Node3D
 const Geo = preload("res://game/geometry.gd")
 const WIDTH := 2.6
 const CHUNK := 24.0
+const PIECE_ORDER := [0,0,1,1,2,2,3,1,4,4,3,1]
+const PIECE_NAMES := ["CATHEDRAL ARCADE","OPEN CROWN BRIDGE","RIBBED VAULT","RELIQUARY COURT","BROKEN WORKS"]
 const PAINT = preload("res://assets/shaders/comic_world.gdshader")
 const CourseProfile=preload("res://core/course_profile.gd")
 
@@ -38,12 +40,14 @@ func configure() -> void:
 	materials.road.set_shader_parameter("pavement",true)
 	materials.road_alt.set_shader_parameter("pavement",true)
 	for kind in ["knight", "gargoyle", "witch"]:
-		var template: MeshInstance3D = _chunk_mesh(kind)
-		themes[kind] = template.mesh
-		template.free()
+		var pieces:Array[ArrayMesh]=[]
+		for variant in range(PIECE_NAMES.size()):
+			var template:MeshInstance3D=_chunk_mesh(kind,variant)
+			pieces.append(template.mesh);template.free()
+		themes[kind]=pieces
 	for index in range(11):
 		var node := MeshInstance3D.new()
-		node.mesh = themes[current_theme]
+		node.mesh = themes[current_theme][0]
 		add_child(node)
 		chunks.append(node)
 		node.extra_cull_margin=35.0
@@ -97,7 +101,7 @@ func _arch(geo: RefCounted, z: float, width: float, height: float, mat: Material
 		geo.cylinder((a+b)*.5,radius,direction.length(),mat,1,Vector3(0,0,-atan2(direction.x,direction.y)),8)
 
 
-func _chunk_mesh(kind: String) -> MeshInstance3D:
+func _chunk_mesh(kind: String, variant:int=0) -> MeshInstance3D:
 	var b=Geo.new()
 	var accent: Material=materials[{"knight":"amber","gargoyle":"teal","witch":"violet"}[kind]]
 	b.box(Vector3(0,-.38,-12),Vector3(9.4,.72,24),materials.dark)
@@ -122,7 +126,7 @@ func _chunk_mesh(kind: String) -> MeshInstance3D:
 		for z in [-3.0,-9.0,-15.0,-21.0]:
 			b.armor(Vector3(side*4.74,.53,z),Vector3(.23,1.14,.28),materials.gold,.75)
 			b.box(Vector3(side*4.74,.88,z-1.4),Vector3(.06,.07,3.0),materials.metal)
-		if kind=="knight":
+		if kind=="knight" and variant not in [1,3]:
 			b.armor(Vector3(side*5.90,3.25,-12),Vector3(.90,6.5,1.5),materials.stone,.85)
 			b.armor(Vector3(side*5.90,.25,-12),Vector3(1.55,.50,2.0),materials.metal)
 			b.armor(Vector3(side*5.90,6.5,-12),Vector3(1.20,.35,1.6),materials.gold)
@@ -131,24 +135,59 @@ func _chunk_mesh(kind: String) -> MeshInstance3D:
 			b.armor(Vector3(side*8.0,3.1,-12),Vector3(.5,6.4,1.0),materials.pale,.85)
 			# Buttresses and a pointed cathedral vault, open enough to read the sky.
 			b.box(Vector3(side*6.9,4.1,-12),Vector3(.32,5.3,.5),materials.pale,Vector3(0,0,-side*.40))
-		elif kind=="gargoyle":
+		elif kind=="gargoyle" and variant!=1:
 			b.cylinder(Vector3(side*6.6,-3.5,-12),1.9,7.5,materials.dark,.28,Vector3.ZERO,7)
 			b.cylinder(Vector3(side*6.6,2.6,-12),.45,5.2,materials.pale,.75,Vector3.ZERO,12)
 			b.ring(Vector3(side*6.6,5.4,-12),.95,.035,accent)
 			b.cylinder(Vector3(side*6.6,6.6,-12),.65,2.4,materials.dark,0,Vector3.ZERO,6)
 			b.cylinder(Vector3(side*10.2,1.0,-6),1.1,5.0,materials.stone,.35,Vector3(0,0,side*.16),7)
-		else:
+		elif kind=="witch" and variant!=1:
 			b.cylinder(Vector3(side*6.6,2.5,-12),.72,4.4,materials.stone,.2,Vector3(0,0,side*.22),6)
 			b.ring(Vector3(side*6.6,4.2,-12),1.1,.045,accent,Vector3(.8,0,side*.30))
 			b.ring(Vector3(side*6.6,4.2,-12),1.4,.02,materials.gold,Vector3(.8,0,side*.30))
 			b.cylinder(Vector3(side*6.6,.6,-12),.75,1.4,materials.gold,.20,Vector3(PI,0,0),6)
-	if kind=="knight":
+	if kind=="knight" and variant==0:
 		_arch(b,-12,5.9,6.8,materials.pale,.22)
 		_arch(b,-11.7,5.9,6.7,materials.gold,.055)
 	if kind=="witch":
 		b.ring(Vector3(0,.053,-12),1.7,.016,accent)
 		b.ring(Vector3(0,.054,-12),2.0,.012,materials.gold)
+	_decorate_piece(b,variant,accent)
 	return b.build()
+
+
+func _decorate_piece(b:RefCounted,variant:int,accent:Material) -> void:
+	# All pieces share the same 24 m deck, width and elevation contract.
+	# Architecture changes the silhouette without entering the playable corridor.
+	match variant:
+		1: # Open bridge: low parapets and a view across the city.
+			for side in [-1.0,1.0]:
+				for z in [-2.0,-22.0]:
+					b.armor(Vector3(side*5.8,1.4,z),Vector3(1.6,2.8,1.6),materials.stone,.72)
+					b.cylinder(Vector3(side*5.8,3.2,z),.44,.8,accent,.16,Vector3.ZERO,8)
+				b.box(Vector3(side*6.5,-1.5,-12),Vector3(.7,1.0,24),materials.dark)
+		2: # Ribbed nave: three vaults create a legible interior rhythm.
+			for z in [-3.0,-12.0,-21.0]:
+				_arch(b,z,7.4,6.0,materials.pale,.20)
+				_arch(b,z+.25,7.4,5.8,materials.gold,.045)
+				for side in [-1.0,1.0]:
+					b.armor(Vector3(side*7.4,1.6,z),Vector3(.7,3.2,.9),materials.stone,.8)
+			b.box(Vector3(0,9.25,-12),Vector3(.32,.22,24),materials.gold)
+		3: # Reliquary court: flank the route with raised, ringed shrines.
+			for side in [-1.0,1.0]:
+				b.cylinder(Vector3(side*7.4,-.1,-12),3.1,.7,materials.dark,1,Vector3.ZERO,12)
+				b.cylinder(Vector3(side*7.4,1.2,-12),1.8,2.0,materials.stone,.45,Vector3.ZERO,10)
+				b.cylinder(Vector3(side*7.4,2.8,-12),.65,2.4,materials.pale,.02,Vector3.ZERO,6)
+				b.ring(Vector3(side*7.4,3.8,-12),1.8,.055,accent,Vector3(PI/2,0,0))
+				b.ring(Vector3(side*7.4,3.8,-12),2.1,.025,materials.gold,Vector3(PI/2,0,0))
+		4: # Broken works: asymmetric outside structures frame the descent.
+			for side in [-1.0,1.0]:
+				var h:float=6.8 if side<0 else 10.2
+				b.armor(Vector3(side*7.2,h*.5,-6),Vector3(2.2,h,3.0),materials.dark,.74)
+				for tier in range(3):
+					b.box(Vector3(side*7.2,1.2+tier*2.4,-4.45),Vector3(1.7,.08,.08),accent)
+				b.box(Vector3(side*8.3,5.2,-15),Vector3(1.0,5.3,4.0),materials.stone,Vector3(0,0,side*.24))
+				b.cylinder(Vector3(side*6.5,8.1,-17),.48,4.0,materials.metal,.16,Vector3(0,0,side*.35),8)
 
 
 func set_theme(kind: String) -> void:
@@ -156,7 +195,7 @@ func set_theme(kind: String) -> void:
 		return
 	current_theme = kind
 	for chunk in chunks:
-		chunk.mesh = themes[kind]
+		chunk.mesh = themes[kind][int(chunk.get_meta("variant",0))]
 
 
 func update(distance: float, delta: float) -> void:
@@ -169,6 +208,12 @@ func update(distance: float, delta: float) -> void:
 	var offset := fposmod(distance, CHUNK)
 	for index in range(chunks.size()):
 		chunks[index].position.z = 24.0 + offset - index * CHUNK
+		var piece:int=floori((distance-chunks[index].position.z)/CHUNK)
+		var variant:int=PIECE_ORDER[posmod(piece,PIECE_ORDER.size())]
+		if int(chunks[index].get_meta("variant",-1))!=variant:
+			chunks[index].mesh=themes[current_theme][variant]
+			chunks[index].set_meta("variant",variant)
+			chunks[index].set_meta("piece_name",PIECE_NAMES[variant])
 	for building in city_layers:
 		building.position.z=42.0+fposmod(distance,360.0)-float(building.get_meta("offset"))
 		if building.position.z>55:building.position.z-=360.0

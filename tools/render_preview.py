@@ -13,6 +13,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument('--godot', type=Path, required=True)
     parser.add_argument('--xvfb', default=shutil.which('Xvfb'))
+    parser.add_argument('--xorg-config', type=Path, help='Use an installed Xorg dummy driver when Xvfb is unavailable')
     parser.add_argument('--library-path')
     parser.add_argument('--drivers-path')
     parser.add_argument('--font-path')
@@ -24,7 +25,7 @@ def main():
     parser.add_argument('--screen', default='home')
     parser.add_argument('--navigation',action='store_true')
     args = parser.parse_args()
-    if not args.xvfb:
+    if not args.xvfb and not (args.xorg_config and shutil.which('Xorg')):
         raise SystemExit('Xvfb is required for actual rendered previews')
     root = Path(__file__).resolve().parents[1]
     args.output.mkdir(parents=True, exist_ok=True)
@@ -41,6 +42,8 @@ def main():
     if args.drivers_path:
         env['LIBGL_DRIVERS_PATH'] = args.drivers_path
     xcommand = [args.xvfb,f':{display}','-screen','0','720x1280x24','-ac','-nolisten','unix','-nolisten','local','-listen','tcp','-extension','MIT-SHM']
+    if args.xorg_config:
+        xcommand = [shutil.which('Xorg'),f':{display}','-config',str(args.xorg_config.resolve()),'-noreset','-ac','-nolisten','unix','-nolisten','local','-listen','tcp','-extension','MIT-SHM','-logfile',str((args.output/'xorg.log').resolve())]
     if args.font_path:
         xcommand += ['-fp',args.font_path]
     with (args.output/'display.log').open('w') as xlog:

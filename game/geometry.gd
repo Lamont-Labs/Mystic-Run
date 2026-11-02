@@ -104,7 +104,10 @@ func triangle(a: Vector3, b: Vector3, c: Vector3, mat: Material) -> void:
 		tool.begin(Mesh.PRIMITIVE_TRIANGLES)
 		buckets[key] = {"tool": tool, "material": mat}
 	var normal := (b - a).cross(c - a).normalized()
-	for vertex in [a, b, c]:
+	# Godot front faces are clockwise. Keep the outward normal from the authored
+	# right-handed triangle, then reverse its raster winding. Otherwise the
+	# outline pass becomes the visible face of armor and architecture.
+	for vertex in [c, b, a]:
 		buckets[key]["tool"].set_normal(normal)
 		buckets[key]["tool"].add_vertex(vertex)
 

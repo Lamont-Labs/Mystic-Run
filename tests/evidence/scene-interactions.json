@@ -1,6 +1,6 @@
 {
-  "checks": 112,
+  "checks": 138,
   "failed": 0,
   "failures": [],
-  "scope": "Native Godot GUI hit testing, touch/drag/tap delivery, screen history, physical runner actions, finite finish and practice. Scripted desktop input; no phone comfort or latency claim."
+  "scope": "Native GUI clicks, touch gestures, direct launch/retry, runner and mode continuity, finite completion, standalone practice, persistent integrated lessons, truthful skip, combat warning/buffering and bounded five-piece scenery. Scripted desktop input; no phone comfort or latency claim."
 }
