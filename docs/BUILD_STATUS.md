@@ -2,7 +2,7 @@
 
 November 2, 2026 · Lamont Labs
 
-The next playable revision implements the November 2 UX research in the existing Godot Android game. The 0.4.0 signed build remains the previous distribution baseline until a 0.5.0 signed artifact is recorded below.
+The next playable revision implements the November 2 UX research in the existing Godot Android game. The previous distribution baseline was signed build 0.4.0 / 1008. The new verified artifact is recorded below.
 
 Implemented: direct opening-menu Run; the playable 3D character in menu/selection; runner selection returning to the same setup; Endless first for new profiles; protected integrated first-Endless lessons with retry/save progress and an honest skip state; preparatory enemy warnings and buffered active strikes; a smaller gameplay HUD; temporary district labels; visible power recharge; clearer results; and five authored architecture silhouettes per theme in the existing eleven-instance pool.
 
@@ -23,3 +23,15 @@ The hero and scenery still use the existing base meshes plus procedural equipmen
 ![Actual 0.5.0 chase-camera frame](previews/gameplay-0.5.0.jpg)
 
 ![Actual 0.5.0 runner selection](previews/runners-0.5.0.jpg)
+
+## Verified Android artifact
+
+- APK: `Mystic_Run_0.5.0_GitHub_Build1010.apk`; version 0.5.0 / 1010; arm64; 38,320,587 bytes.
+- SHA-256: `72752b4a8f6b188c0cfc0507639a853e029c63c06c7acb5b9d36054915305f30`.
+- Compilation source: `ef919ae421e80ddb4718fb009b0940996df6fd68`.
+- [Successful GitHub compilation](https://github.com/Lamont-Labs/Mystic-Run/actions/runs/41539637667).
+- All 94 runtime source and asset hashes in the compilation manifest match the local reviewed implementation.
+- Preserved owner certificate, package/version, APK signature, ZIP integrity, unchanged packaged game payload, six notices, APK 16 KB alignment and native ELF 16 KB alignment verified.
+- Signed-archive reconstruction was checked byte-for-byte; the publisher uses `.github/android-releases/build1010.json` to publish the exact signed artifact.
+- Release tag: `v0.5.0-build1010`. The GitHub Release manifest and SHA256SUMS identify the published bytes.
+- Physical Android installation, sensors, touch comfort, sustained performance and final art approval remain device/owner checks.
