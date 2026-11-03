@@ -2,7 +2,7 @@
 
 **Current revision: 0.6.0.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.
 
-[Earlier Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay guide](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build and verification](docs/BUILD_STATUS.md) · [Google Play preparation](docs/GOOGLE_PLAY_READINESS.md)
+[Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay guide](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build and verification](docs/BUILD_STATUS.md) · [Google Play preparation](docs/GOOGLE_PLAY_READINESS.md)
 
 Tilt to steer, or use the separate thumb pad. Swipe up to jump, down to slide, and left or right to strike. Each runner has one special-attack button. Choose a runner for a whole run and try Endless or the Citadel, Spires and Rift expeditions.
 
@@ -19,7 +19,7 @@ python3 tools/bootstrap_godot.py --cache ../engine
 python3 tools/verify_core.py --godot ../engine/Godot_v4.7.2-stable_linux.x86_64
 ```
 
-GitHub checks cover progression, gestures, navigation, tilt/elevation, animation and basic-only scene runs for all three characters. Android compilation is followed by separate owner signing. The Android Play Bundle export preset is a starting configuration and has not yet been validated as a production bundle.
+GitHub checks cover progression, gestures, navigation, tilt/elevation, animation and basic-only scene runs for all three characters. Android compilation is followed by separate owner signing. An unsigned engineering Play bundle has passed bundletool validation; production identity, signing and device checks remain.
 
 ## Art and motion
 
