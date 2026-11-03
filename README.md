@@ -1,8 +1,8 @@
 # Mystic Run — Android runner
 
-**Current revision: 0.6.1.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.
+**Current revision: 0.6.1 / Knight preview build 1016.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.
 
-[Download 0.6.1 / build 1015 APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.6.1-build1015/Mystic_Run_0.6.1_GitHub_Build1015.apk) · [Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay guide](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build and verification](docs/BUILD_STATUS.md) · [Google Play preparation](docs/GOOGLE_PLAY_READINESS.md)
+[Download Knight preview / build 1016 APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.6.1-build1016/Mystic_Run_0.6.1_Knight_Preview_Build1016.apk) · [Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay guide](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build and verification](docs/BUILD_STATUS.md) · [Google Play preparation](docs/GOOGLE_PLAY_READINESS.md)
 
 Tilt to steer, or use the separate thumb pad. Swipe up to jump, down to slide, and left or right to strike. Each runner has one special-attack button. Choose a runner for a whole run and try Endless or the Citadel, Spires and Rift expeditions.
 
@@ -23,6 +23,8 @@ GitHub checks cover progression, gestures, navigation, tilt/elevation, animation
 
 ## Art and motion
 
+Build 1016 introduces the first exported, weighted Knight replacement, with a visible face, open rounded helmet, curved armor, gloves, boots, sword, shield, blinking eyes and a moving coral plume. It is a first art pass below the concept-sheet finish; Gargoyle and Witch retain their preceding treatment. [Actual engine frames and implementation](docs/AUTHORED_KNIGHT_FIRST_PASS.md).
+
 The 0.6.1 visual revision adds a floating storybook castle city, rounded towers, colorful balloons, larger character heads, a pointed Witch hat, friendly Gargoyle features, star capes, springy landings and a consistent purple-and-gold interface. Controls, progression, encounter timing and saved-game rules are unchanged.
 
-The actual playable 3D runner appears in the menu. Humanoid source meshes and motion are Quaternius CC0; custom equipment, architecture, interface, game systems and synthesized audio are in this repository. Distant city art and character illustrations were generated for Mystic Run. See `assets/ART_PROVENANCE.json`, `assets/models/quaternius/PROVENANCE.json` and bundled notices.
+The actual playable 3D runner appears in the menu. The Knight uses a newly authored mesh on a Quaternius CC0 skeleton; Gargoyle/Witch base meshes and the source motion library are Quaternius CC0. Custom equipment, architecture, interface, game systems and synthesized audio are in this repository. Distant city art and character illustrations were generated for Mystic Run. See `assets/ART_PROVENANCE.json`, `assets/models/quaternius/PROVENANCE.json`, `assets/characters/knight/PROVENANCE.json` and bundled notices.
