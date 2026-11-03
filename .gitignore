@@ -9,3 +9,5 @@ tests/results.json
 __pycache__/
 *.pyc
 .signing/
+art/**/*.blend
+art/**/*.blend1

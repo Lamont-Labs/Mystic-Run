@@ -4,6 +4,7 @@ const Geo = preload("res://game/geometry.gd")
 const Motion = preload("res://game/rig_motion.gd")
 const BODY_SHADER = preload("res://assets/shaders/comic_body.gdshader")
 const OUTLINE = preload("res://assets/shaders/ink_outline.gdshader")
+const AUTHORED_SHADER = preload("res://assets/shaders/authored_character.gdshader")
 var identity: String = "knight"
 var body: Node3D
 var skeleton: Skeleton3D
@@ -29,6 +30,8 @@ var mats: Dictionary = {}
 var was_airborne:bool=false
 var landing_spring:float=0.0
 var cape_fabric:ShaderMaterial
+var authored_mesh:MeshInstance3D
+var blink_clock:float=0.0
 
 func configure(kind: String) -> void:
 	identity=kind
@@ -76,11 +79,19 @@ func _build() -> void:
 	body.scale=Vector3.ONE*base_scale
 	add_child(body)
 	var gender := "Female" if identity=="witch" else "Male"
-	var model: Node3D=(load("res://assets/models/quaternius/base/Superhero_"+gender+"_FullBody.gltf") as PackedScene).instantiate()
+	var model_path:String="res://assets/characters/knight/knight.glb" if identity=="knight" else "res://assets/models/quaternius/base/Superhero_"+gender+"_FullBody.gltf"
+	var model: Node3D=(load(model_path) as PackedScene).instantiate()
 	body.add_child(model)
 	skeleton=model.find_child("Skeleton3D",true,false)
 	for child in skeleton.get_children():
 		if child is MeshInstance3D:
+			if identity=="knight":
+				authored_mesh=child
+				var authored_material:=ShaderMaterial.new()
+				authored_material.shader=AUTHORED_SHADER
+				authored_material.set_shader_parameter("sentinel_palette",false)
+				child.material_override=authored_material
+				continue
 			var material := ShaderMaterial.new()
 			material.shader=BODY_SHADER
 			material.set_shader_parameter("character_kind",["knight","gargoyle","witch"].find(identity))
@@ -93,11 +104,13 @@ func _build() -> void:
 			if child.name=="Eyes": child.material_override=_paint("b3ecff",0,1.0) if identity!="witch" else _paint("7448a8")
 			if identity=="knight" and child.name in ["Eyes","Eyebrows"]: child.visible=false
 	var head_index:int=skeleton.find_bone("Head")
-	if head_index>=0:skeleton.set_bone_pose_scale(head_index,Vector3.ONE*1.36)
+	if head_index>=0 and identity!="knight":skeleton.set_bone_pose_scale(head_index,Vector3.ONE*1.36)
 	motion=Motion.new()
 	motion.configure(skeleton,identity)
 	match identity:
-		"knight": _knight()
+		"knight":
+			mats.gold.next_pass=null
+			_build_cape(.38,1.43,.46,-.18)
 		"gargoyle": _gargoyle()
 		"witch": _witch()
 	motion.advance(0.1,false,false,false,identity)
@@ -113,6 +126,8 @@ func sentinel() -> void:
 		if child is MeshInstance3D and child.material_override is ShaderMaterial:
 			child.material_override.set_shader_parameter("base_color",Color("8454bd"))
 			child.material_override.set_shader_parameter("highlight_color",Color("ea5b88"))
+	if is_instance_valid(authored_mesh):
+		authored_mesh.material_override.set_shader_parameter("sentinel_palette",true)
 	set_meta("sentinel",true)
 
 
@@ -130,69 +145,6 @@ func _shell(geo: RefCounted, levels: Array, material: Material, sides: int=12, c
 			var v3:=center+Vector3(sin(n)*b.x,b.y,cos(n)*b.z)
 			geo.triangle(v0,v1,v2,material)
 			geo.triangle(v1,v3,v2,material)
-
-func _knight() -> void:
-	var chest=Geo.new()
-	_shell(chest,[Vector3(.17,1.02,.115),Vector3(.20,1.12,.14),Vector3(.28,1.35,.19),Vector3(.235,1.46,.14)],mats.steel)
-	_shell(chest,[Vector3(.17,1.02,.125),Vector3(.18,1.065,.125)],mats.gold)
-	for side in [-1.0,1.0]:
-		chest.armor(Vector3(side*.135,1.34,.16),Vector3(.24,.16,.065),mats.edge,.8)
-		Geo.segment(_attachment("spine_03"),Vector3(side*.23,1.40,.15),Vector3(0,1.23,.19),.014,mats.gold)
-	chest.sphere(Vector3(0,1.31,.204),Vector3(.09,.11,.038),mats.glow)
-	_add(chest,"spine_03")
-	var helmet=Geo.new()
-	_shell(helmet,[Vector3(.065,1.56,.10),Vector3(.115,1.63,.13),Vector3(.135,1.74,.14),Vector3(.10,1.84,.105),Vector3(.008,1.87,.02)],mats.steel,10,Vector3(0,0,-.006))
-	helmet.armor(Vector3(0,1.713,.137),Vector3(.225,.052,.025),mats.dark)
-	for side in [-1.0,1.0]:
-		helmet.armor(Vector3(side*.056,1.716,.156),Vector3(.086,.014,.014),mats.glow)
-		helmet.armor(Vector3(side*.082,1.62,.10),Vector3(.038,.15,.08),mats.gold,.6)
-		helmet.cylinder(Vector3(side*.08,1.87,.005),.022,.20,mats.gold,0,Vector3(0,0,-side*.5),6)
-	helmet.armor(Vector3(0,1.79,.13),Vector3(.026,.18,.06),mats.gold)
-	_add(helmet,"Head")
-	for side in ["l","r"]:
-		var sign_value:=1.0 if side=="l" else -1.0
-		var shoulder=skeleton.get_bone_global_rest(skeleton.find_bone("upperarm_"+side)).origin
-		var elbow=skeleton.get_bone_global_rest(skeleton.find_bone("lowerarm_"+side)).origin
-		var hand=skeleton.get_bone_global_rest(skeleton.find_bone("hand_"+side)).origin
-		var pauldron=Geo.new()
-		pauldron.sphere(shoulder+Vector3(sign_value*.045,.015,0),Vector3(.29,.22,.29),mats.steel,16)
-		pauldron.armor(shoulder+Vector3(sign_value*.04,.087,0),Vector3(.25,.07,.25),mats.gold)
-		pauldron.cylinder(shoulder+Vector3(sign_value*.055,.19,0),.027,.20,mats.edge,0,Vector3(0,0,-sign_value*.3),6)
-		_add(pauldron,"upperarm_"+side)
-		var bracer=Geo.new()
-		bracer.sphere(elbow.lerp(hand,.58),Vector3(.22,.15,.17),mats.steel,16)
-		bracer.armor(elbow.lerp(hand,.55)+Vector3(0,0,.065),Vector3(.19,.10,.065),mats.edge,.65)
-		_add(bracer,"lowerarm_"+side)
-		var thigh=skeleton.get_bone_global_rest(skeleton.find_bone("thigh_"+side)).origin
-		var knee=skeleton.get_bone_global_rest(skeleton.find_bone("calf_"+side)).origin
-		var foot=skeleton.get_bone_global_rest(skeleton.find_bone("foot_"+side)).origin
-		var leg=Geo.new()
-		leg.armor(thigh.lerp(knee,.38)+Vector3(0,0,.065),Vector3(.20,.31,.13),mats.steel,.70)
-		_add(leg,"thigh_"+side)
-		var shin=Geo.new()
-		shin.armor(knee.lerp(foot,.40)+Vector3(0,0,.06),Vector3(.20,.32,.15),mats.steel,.64)
-		shin.armor(knee+Vector3(0,0,.07),Vector3(.21,.14,.15),mats.gold,.60)
-		_add(shin,"calf_"+side)
-		var boot=Geo.new()
-		boot.armor(foot+Vector3(0,-.01,.07),Vector3(.18,.16,.35),mats.steel,.7)
-		_add(boot,"foot_"+side)
-	var weapon_parent:=_attachment("hand_r")
-	var hand_at:=skeleton.get_bone_global_rest(skeleton.find_bone("hand_r")).origin
-	var sword=Geo.new()
-	sword.cylinder(hand_at+Vector3(0,0,.06),.025,.18,mats.dark,1,Vector3(PI/2,0,0))
-	sword.armor(hand_at+Vector3(0,0,.19),Vector3(.31,.045,.06),mats.gold)
-	# Broad, pointed energy blade in a real grip; local +Z is the character's front.
-	sword.triangle(hand_at+Vector3(-.07,0,.22),hand_at+Vector3(0,.022,1.12),hand_at+Vector3(.07,0,.22),mats.edge)
-	sword.triangle(hand_at+Vector3(-.07,0,.22),hand_at+Vector3(.07,0,.22),hand_at+Vector3(0,-.022,1.12),mats.steel)
-	Geo.segment(weapon_parent,hand_at+Vector3(0,.024,.25),hand_at+Vector3(0,.024,1.05),.012,mats.glow)
-	weapon_parent.add_child(sword.build())
-	var shield=Geo.new()
-	var left:=skeleton.get_bone_global_rest(skeleton.find_bone("lowerarm_l")).origin
-	shield.armor(left+Vector3(.09,0,.05),Vector3(.10,.50,.39),mats.gold,.65)
-	shield.armor(left+Vector3(.15,0,.05),Vector3(.07,.43,.33),mats.steel,.65)
-	shield.ring(left+Vector3(.194,.025,.05),.13,.014,mats.glow,Vector3(0,0,PI/2))
-	_add(shield,"lowerarm_l")
-	_build_cape(.44,1.42,.38,-.15)
 
 func _gargoyle() -> void:
 	var head=Geo.new()
@@ -304,6 +256,11 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 
 func animate(delta: float) -> void:
 	clock+=delta
+	if is_instance_valid(authored_mesh):
+		blink_clock=fposmod(blink_clock+delta,4.1)
+		var blink_amount:float=maxf(0.0,1.0-absf(blink_clock-3.75)/.085)
+		authored_mesh.set_blend_shape_value(0,0.0 if reduced_motion else blink_amount)
+		authored_mesh.set_blend_shape_value(1,0.0 if reduced_motion else sin(clock*5.5)*.55)
 	attack_time=maxf(0,attack_time-delta)
 	celebration_left=maxf(0,celebration_left-delta);traversal_left=maxf(0,traversal_left-delta)
 	power_time=maxf(0,power_time-delta)

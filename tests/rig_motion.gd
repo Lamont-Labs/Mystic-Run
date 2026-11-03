@@ -13,6 +13,29 @@ func run() -> void:
 		await process_frame
 		hero.moving=true
 		var skeleton: Skeleton3D=hero.skeleton
+		if kind=="knight":
+			var mesh:MeshInstance3D=hero.authored_mesh
+			check(is_instance_valid(mesh) and mesh.mesh.get_surface_count()==1,"Knight: authored mesh uses one main material surface")
+			check(mesh.mesh.get_blend_shape_count()==2 and str(mesh.mesh.get_blend_shape_name(0))=="Blink" and str(mesh.mesh.get_blend_shape_name(1))=="PlumeSway","Knight: expression and plume morph targets survive import")
+			var arrays:Array=mesh.mesh.surface_get_arrays(0)
+			var vertices:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
+			var indices:PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
+			var weights:PackedFloat32Array=arrays[Mesh.ARRAY_WEIGHTS]
+			var joints:PackedInt32Array=arrays[Mesh.ARRAY_BONES]
+			var valid_skin:bool=weights.size()==vertices.size()*4 and joints.size()==weights.size()
+			for vertex in range(vertices.size()):
+				var total:float=0.0
+				for influence in range(4):
+					var at:int=vertex*4+influence
+					if at<weights.size():
+						total+=weights[at]
+						valid_skin=valid_skin and weights[at]>=0.0 and joints[at]>=0 and joints[at]<mesh.skin.get_bind_count()
+				valid_skin=valid_skin and absf(total-1.0)<.002 and vertices[vertex].is_finite()
+			check(valid_skin,"Knight: finite vertices and normalized weights reference valid skin bindings")
+			check(indices.size()/3<=25000,"Knight: source mesh stays within the first-pass 25,000 triangle ceiling")
+			var sentinel=load("res://game/hero.gd").new();sentinel.configure("knight");root.add_child(sentinel);sentinel.sentinel()
+			check(sentinel.authored_mesh.material_override.get_shader_parameter("sentinel_palette")==true and mesh.material_override.get_shader_parameter("sentinel_palette")==false,"Knight: enemy recoloring does not modify the playable material")
+			sentinel.queue_free();await process_frame
 		var thigh:=skeleton.find_bone("thigh_l")
 		var first: Quaternion=skeleton.get_bone_pose_rotation(thigh)
 		var excursion:=0.0
@@ -55,7 +78,7 @@ func run() -> void:
 		hero.queue_free()
 		await process_frame
 	load("res://game/rig_motion.gd").release_shared()
-	var report: Dictionary={"checks":checks,"failures":failures,"failed":failures.size(),"scope":"Authored motion sampling, upper-body combat, target proportions, slide clearance; no physical-phone test"}
+	var report: Dictionary={"checks":checks,"failures":failures,"failed":failures.size(),"scope":"Authored Knight import/skin/material isolation, motion sampling, upper-body combat, target proportions, slide clearance; no physical-phone test"}
 	FileAccess.open("res://tests/evidence/rig-motion.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("RIG_MOTION_QA ",JSON.stringify(report))
 	quit(0 if failures.is_empty() else 1)

@@ -20,7 +20,13 @@ void fragment(){
  float hem=1.0-smoothstep(0.012,0.022,abs(v-0.94));
  vec2 p=vec2(u,(v-0.44)*2.3);
  float angle=atan(p.x,-p.y);
- float star_radius=mix(0.16,0.40,abs(mod(angle*5.0/3.14159265+1.0,2.0)-1.0));
+ float sector=3.14159265/5.0;
+ float a=mod(angle+6.28318530,6.28318530);
+ float index=floor(a/sector);
+ float local_angle=a-index*sector;
+ float r0=mix(0.40,0.18,mod(index,2.0));
+ float r1=mix(0.18,0.40,mod(index,2.0));
+ float star_radius=r0*r1*sin(sector)/(r1*sin(sector-local_angle)+r0*sin(local_angle));
  float star=1.0-smoothstep(star_radius,star_radius+0.018,length(p));
  float trim=clamp(edge+hem+star,0.0,1.0);
  ALBEDO=mix(cloth_color.rgb*folds,vec3(1.0,0.83,0.29),trim)*0.82;

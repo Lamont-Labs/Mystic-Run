@@ -1,0 +1,57 @@
+[
+  {
+    "name": "core",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "runner_controls",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "adventure",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "scene_interactions",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "tilt_and_elevation",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "rig_motion",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "run_knight",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "run_gargoyle",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "run_witch",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "android_policy",
+    "passed": true,
+    "exit_code": 0
+  },
+  {
+    "name": "release_records",
+    "passed": true,
+    "exit_code": 0
+  }
+]
