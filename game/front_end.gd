@@ -4,10 +4,10 @@ signal intent(action: String, value: String)
 const Courses=preload("res://core/course_catalog.gd")
 const Progress=preload("res://core/progression.gd")
 const Secrets=preload("res://core/secret_catalog.gd")
-const INK:=Color("111422")
-const GOLD:=Color("ffd16b")
-const WHITE:=Color("f1efff")
-const MUTED:=Color("c7d8ec")
+const INK:=Color("302459")
+const GOLD:=Color("ffcf58")
+const WHITE:=Color("fffbed")
+const MUTED:=Color("eadfff")
 const ACCENTS:={"knight":Color("65e8ef"),"gargoyle":Color("76e1be"),"witch":Color("be91ff")}
 const HEROES:={
  "knight":{"role":"THE VANGUARD","power":"SUNBURST","detail":"Swipe a sword strike. Sunburst sends a golden shockwave through nearby enemies.","cooldown":"8 SEC RECHARGE"},
@@ -16,7 +16,7 @@ const HEROES:={
 class TreasureStamp:
 	extends Control
 	var owned:bool=false
-	var tint:=Color("ffd16b")
+	var tint:=Color("ffcf58")
 	var font:Font
 	func _draw() -> void:
 		var centre:=size*.5;draw_circle(centre,35,Color(tint,.14))
@@ -56,9 +56,9 @@ var bottom_inset: float=18
 func _ready() -> void:
 	set_anchors_and_offsets_preset(Control.PRESET_FULL_RECT)
 	mouse_filter=Control.MOUSE_FILTER_IGNORE
-	city=load("res://assets/environment/citadel-matte-v1.png")
+	city=load("res://assets/environment/cloud-castle-v2.jpg")
 	var g:=Gradient.new()
-	g.colors=PackedColorArray([Color(.045,.065,.16,.14),Color(.045,.065,.16,.94)])
+	g.colors=PackedColorArray([Color(.18,.14,.37,.02),Color(.20,.13,.37,.92)])
 	shade=GradientTexture2D.new();shade.gradient=g;shade.fill_from=Vector2.ZERO;shade.fill_to=Vector2(0,1)
 	frame=VBoxContainer.new();frame.add_theme_constant_override("separation",18)
 	add_child(frame)
@@ -116,11 +116,11 @@ func show_screen(value: String, hero: String, route: String, data: Dictionary, e
 
 func _style(primary: bool=false, selected_card: bool=false) -> StyleBoxFlat:
 	var s:=StyleBoxFlat.new()
-	s.bg_color=GOLD if primary else Color("1b2a49",.94)
-	s.border_color=ACCENTS[selected] if selected_card else Color("718bb0",.6)
-	s.set_border_width_all(2 if selected_card else 1)
-	s.shadow_color=Color(0,0,0,.25);s.shadow_size=8;s.shadow_offset=Vector2(0,4)
-	s.set_corner_radius_all(24)
+	s.bg_color=GOLD if primary else Color("534080",.95)
+	s.border_color=ACCENTS[selected] if selected_card else Color("d7bbf2",.9)
+	s.set_border_width_all(4 if selected_card else 2)
+	s.shadow_color=Color("302459",.55);s.shadow_size=3;s.shadow_offset=Vector2(0,7)
+	s.set_corner_radius_all(28)
 	s.content_margin_left=20;s.content_margin_right=20;s.content_margin_top=14;s.content_margin_bottom=14
 	return s
 
@@ -128,6 +128,9 @@ func _text(parent: Node, value: String, point_size: int=26, color: Color=WHITE, 
 	var label:=Label.new();label.text=value
 	label.add_theme_font_override("font",title_font if display else body_font)
 	label.add_theme_font_size_override("font_size",point_size);label.add_theme_color_override("font_color",color)
+	if display:
+		label.add_theme_color_override("font_outline_color",INK);label.add_theme_constant_override("outline_size",7)
+		label.add_theme_color_override("font_shadow_color",Color("302459",.6));label.add_theme_constant_override("shadow_offset_y",4)
 	label.autowrap_mode=TextServer.AUTOWRAP_WORD_SMART
 	label.mouse_filter=Control.MOUSE_FILTER_IGNORE;parent.add_child(label)
 	return label
@@ -137,7 +140,7 @@ func _button(parent: Node, id: String, text: String, action: String, value: Stri
 	b.add_theme_font_override("font",title_font if primary else body_font);b.add_theme_font_size_override("font_size",36 if primary else 23)
 	b.add_theme_color_override("font_color",INK if primary else WHITE)
 	b.add_theme_stylebox_override("normal",_style(primary))
-	var pressed:=_style(primary,true);pressed.bg_color=Color("d0fbff") if primary else Color("2d2c50")
+	var pressed:=_style(primary,true);pressed.bg_color=Color("d0fbff") if primary else Color("7956a4")
 	b.add_theme_stylebox_override("pressed",pressed);b.add_theme_stylebox_override("hover",pressed)
 	var focused:=_style(primary,true);b.add_theme_stylebox_override("focus",focused)
 	b.button_down.connect(func():
@@ -180,7 +183,7 @@ func _opening() -> void:
 	_home()
 
 func _home() -> void:
-	var title:=_text(content,"MYSTIC RUN",92,WHITE,true)
+	var title:=_text(content,"MYSTIC RUN",92,GOLD,true)
 	title.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	var line:=_text(content,"BIG MAGIC. LITTLE TROUBLE.",17,GOLD)
 	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
@@ -368,16 +371,16 @@ func _draw() -> void:
 	if screen in ["opening","home","team"]:
 		# The actual playable hero and 3D district remain visible behind the menu.
 		draw_texture_rect(shade,Rect2(Vector2.ZERO,size),false)
-		draw_rect(Rect2(0,0,size.x,200),Color("080c1c",.20))
+		draw_rect(Rect2(0,0,size.x,200),Color("3d3970",.04))
 	elif screen=="pause" or screen in ["settings","howto","credits"] and profile.get("in_run",false):
-		draw_rect(Rect2(Vector2.ZERO,size),Color("080c1c",.76))
+		draw_rect(Rect2(Vector2.ZERO,size),Color("32214f",.80))
 	else:
 		var source:=Vector2(city.get_width(),city.get_height())
 		var scale_value:=maxf(size.x/source.x,size.y/source.y)
 		var region_size:=size/scale_value
 		draw_texture_rect_region(city,Rect2(Vector2.ZERO,size),Rect2((source-region_size)*.5,region_size))
 		draw_texture_rect(shade,Rect2(Vector2.ZERO,size),false)
-		draw_rect(Rect2(Vector2.ZERO,size),Color("0b1027",.14 if screen=="opening" else .30))
+		draw_rect(Rect2(Vector2.ZERO,size),Color("3e2c64",.08 if screen=="opening" else .30))
 	if screen in ["opening","home"]:
 			for i in range(24):
 				var at:=Vector2(fposmod(i*137.7+sin(visual_clock*.2+i)*24,size.x),fposmod(i*79.3-visual_clock*(4+i%4),size.y))

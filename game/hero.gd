@@ -26,6 +26,9 @@ var swipe_direction:int=1
 var celebration_left:float=0
 var traversal_left:float=0
 var mats: Dictionary = {}
+var was_airborne:bool=false
+var landing_spring:float=0.0
+var cape_fabric:ShaderMaterial
 
 func configure(kind: String) -> void:
 	identity=kind
@@ -38,9 +41,9 @@ func _paint(color: String, metal: float=0.0, emission: float=0.0) -> StandardMat
 	var mat := StandardMaterial3D.new()
 	mat.albedo_color=Color(color)
 	mat.diffuse_mode=BaseMaterial3D.DIFFUSE_BURLEY
-	mat.specular_mode=BaseMaterial3D.SPECULAR_SCHLICK_GGX
-	mat.metallic=metal
-	mat.roughness=0.32 if metal>0.4 else 0.78
+	mat.specular_mode=BaseMaterial3D.SPECULAR_DISABLED
+	mat.metallic=metal*.25
+	mat.roughness=0.46 if metal>0.4 else 0.72
 	if emission>0:
 		mat.emission_enabled=true
 		mat.emission=Color(color)
@@ -66,7 +69,7 @@ func _add(geometry: RefCounted, bone: String) -> Node3D:
 	return result
 
 func _build() -> void:
-	mats={"steel":_paint("658fc1",0.40),"edge":_paint("b4e1ef",0.32),"dark":_paint("25375a",0.20),"gold":_paint("f1c365",0.38),"cloth":_paint("694896"),"stone":_paint("6485a4" if identity=="gargoyle" else "8aaed2"),"glow":_paint("5de9f2",0.25,1.5)}
+	mats={"steel":_paint("38a8ed",0.40),"edge":_paint("eefaff",0.32),"dark":_paint("264586",0.20),"gold":_paint("ffd45a",0.38),"cloth":_paint({"knight":"ff775b","gargoyle":"b176e6","witch":"9554ce"}[identity]),"stone":_paint("57c9b7" if identity=="gargoyle" else "a4d8ed"),"glow":_paint("b2ffff",0.25,.65)}
 	body=Node3D.new()
 	body.rotation.y=PI
 	base_scale=1.16 if identity=="gargoyle" else 1.08
@@ -81,7 +84,7 @@ func _build() -> void:
 			var material := ShaderMaterial.new()
 			material.shader=BODY_SHADER
 			material.set_shader_parameter("character_kind",["knight","gargoyle","witch"].find(identity))
-			material.set_shader_parameter("base_color",Color("3c658f") if identity=="knight" else Color("3e667e") if identity=="gargoyle" else Color("6b438a"))
+			material.set_shader_parameter("base_color",Color("3f8fd4") if identity=="knight" else Color("55bda8") if identity=="gargoyle" else Color("ae69dc"))
 			material.set_shader_parameter("highlight_color",accent())
 			var outline := ShaderMaterial.new()
 			outline.shader=OUTLINE
@@ -90,7 +93,7 @@ func _build() -> void:
 			if child.name=="Eyes": child.material_override=_paint("b3ecff",0,1.0) if identity!="witch" else _paint("7448a8")
 			if identity=="knight" and child.name in ["Eyes","Eyebrows"]: child.visible=false
 	var head_index:int=skeleton.find_bone("Head")
-	if head_index>=0:skeleton.set_bone_pose_scale(head_index,Vector3.ONE*1.12)
+	if head_index>=0:skeleton.set_bone_pose_scale(head_index,Vector3.ONE*1.36)
 	motion=Motion.new()
 	motion.configure(skeleton,identity)
 	match identity:
@@ -104,11 +107,11 @@ func sentinel() -> void:
 	base_scale*=.87;body.scale=Vector3.ONE*base_scale
 	for key in ["steel","edge","gold","cloth","glow"]:
 		var material: StandardMaterial3D=mats[key]
-		material.albedo_color=Color({"steel":"242b43","edge":"4d5170","gold":"744959","cloth":"4e203c","glow":"ec5d89"}[key])
+		material.albedo_color=Color({"steel":"8454bd","edge":"e6bcff","gold":"ffc05b","cloth":"f276a6","glow":"ffb3d6"}[key])
 		if key=="glow": material.emission=Color("f45b8b")
 	for child in skeleton.get_children():
 		if child is MeshInstance3D and child.material_override is ShaderMaterial:
-			child.material_override.set_shader_parameter("base_color",Color("20283e"))
+			child.material_override.set_shader_parameter("base_color",Color("8454bd"))
 			child.material_override.set_shader_parameter("highlight_color",Color("ea5b88"))
 	set_meta("sentinel",true)
 
@@ -199,6 +202,11 @@ func _gargoyle() -> void:
 		head.sphere(Vector3(side*.048,1.705,.117),Vector3(.045,.016,.018),mats.glow)
 		head.cylinder(Vector3(side*.14,1.705,-.01),.038,.18,mats.stone,0,Vector3(0,0,side*1.15),6)
 		head.cylinder(Vector3(side*.037,1.635,.11),.012,.07,mats.gold,0,Vector3(PI,0,0),6)
+	# Oversized friendly eyes and cheeks read at the chase-camera scale.
+	for side in [-1.0,1.0]:
+		head.sphere(Vector3(side*.078,1.72,.127),Vector3(.104,.088,.045),mats.edge,16)
+		head.sphere(Vector3(side*.069,1.718,.153),Vector3(.038,.050,.016),mats.dark,12)
+		head.sphere(Vector3(side*.114,1.66,.087),Vector3(.10,.074,.052),mats.stone,16)
 	_add(head,"Head")
 	var belt=Geo.new()
 	_shell(belt,[Vector3(.17,.83,.13),Vector3(.21,1.02,.14)],mats.cloth)
@@ -211,7 +219,7 @@ func _gargoyle() -> void:
 		var web=Geo.new()
 		var origin:=Vector3.ZERO
 		var tips: Array[Vector3]=[Vector3(side*.53,.73,-.25),Vector3(side*1.13,.49,-.36),Vector3(side*1.09,-.12,-.49),Vector3(side*.62,-.58,-.40),Vector3(side*.12,-.56,-.17)]
-		var membrane:=_paint("49325c")
+		var membrane:=_paint("b176e6")
 		membrane.cull_mode=BaseMaterial3D.CULL_DISABLED
 		membrane.next_pass=null
 		for i in range(tips.size()-1):
@@ -242,6 +250,12 @@ func _witch() -> void:
 	var crown=Geo.new()
 	crown.ring(Vector3(0,1.79,-.07),.18,.012,gold,Vector3(PI/2,0,0))
 	for side in [-1.0,1.0]: crown.cylinder(Vector3(side*.09,1.82,.02),.018,.16,gold,0,Vector3(0,0,-side*.35),6)
+	# A broad brim and a crooked candy-purple point give the Witch a clear silhouette.
+	crown.cylinder(Vector3(0,1.845,-.015),.37,.055,mats.cloth,1,Vector3.ZERO,24)
+	crown.cylinder(Vector3(0,2.04,-.025),.22,.38,mats.cloth,.25,Vector3(0,0,-.14),16)
+	crown.cylinder(Vector3(.055,2.23,-.025),.065,.16,mats.cloth,0,Vector3(0,0,-.65),12)
+	crown.ring(Vector3(0,1.88,-.015),.205,.026,mats.gold)
+	crown.sphere(Vector3(.10,2.285,-.02),Vector3.ONE*.075,mats.gold,12)
 	_add(crown,"Head")
 	var hair: Node3D=(load("res://assets/models/quaternius/hair/Hair_Long.gltf") as PackedScene).instantiate()
 	_attachment("Head").add_child(hair)
@@ -283,8 +297,8 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 	var fabric:MeshInstance3D=geo.build()
 	var woven:=ShaderMaterial.new();woven.shader=preload("res://assets/shaders/embroidered_cloth.gdshader")
 	woven.set_shader_parameter("half_width",width);woven.set_shader_parameter("top",top);woven.set_shader_parameter("bottom",bottom)
-	woven.set_shader_parameter("cloth_color",Color("743b9e") if identity=="knight" else Color("84456f"))
-	fabric.material_override=woven;cape.add_child(fabric)
+	woven.set_shader_parameter("cloth_color",Color("ff715d") if identity=="knight" else Color("a653df"))
+	cape_fabric=woven;fabric.material_override=woven;cape.add_child(fabric)
 	Geo.segment(cape,Vector3(-width*.60,top,z),Vector3(-width*1.18,bottom,z-.42),.009,mats.gold)
 	Geo.segment(cape,Vector3(width*.60,top,z),Vector3(width*1.18,bottom,z-.42),.009,mats.gold)
 
@@ -301,17 +315,23 @@ func animate(delta: float) -> void:
 	skeleton.force_update_all_bone_transforms()
 	var special:float=sin(clampf(power_time/.7,0,1)*PI);var cheer:float=0 if reduced_motion else sin(celebration_left*11)*minf(1,celebration_left*2)
 	var stride:float=sin(clock*13*motion.locomotion_rate)
-	body.position.y=(absf(stride)*.035 if moving and not airborne and not sliding else sin(clock*2)*.018)+absf(cheer)*.12
-	body.scale=Vector3(base_scale*(1+special*.09),base_scale*(1-special*.075),base_scale*(1+special*.09))
+	if was_airborne and not airborne:landing_spring=.24
+	was_airborne=airborne;landing_spring=maxf(0,landing_spring-delta)
+	var spring:float=0 if reduced_motion else sin(landing_spring/.24*PI)*.11
+	var bounce:float=0 if reduced_motion or not moving or airborne or sliding else absf(stride)*.075
+	var squash:float=0 if reduced_motion or not moving or airborne or sliding else cos(clock*26*motion.locomotion_rate)*.025
+	body.position.y=bounce+(0.0 if reduced_motion else sin(clock*2)*.014)+absf(cheer)*.16
+	body.scale=Vector3(base_scale*1.12*(1+special*.10+spring-squash*.5),base_scale*.98*(1-special*.08-spring+squash),base_scale*1.12*(1+special*.10+spring-squash*.5))
+	if is_instance_valid(cape_fabric):cape_fabric.set_shader_parameter("motion_amount",0.0 if reduced_motion else 1.0)
 	body.rotation.y=facing+sin(attack_time/.4*PI)*swipe_direction*.24+cheer*.08
 	body.rotation.x=lerpf(body.rotation.x,(-.12 if sliding else -.035 if moving else 0)+special*.08,1-exp(-delta*14))
 	body.visible=not (identity=="witch" and traversal_left>.3 and traversal_left<.47)
-	body.rotation.z=lerpf(body.rotation.z,-lean*.09,1-exp(-delta*10))
+	body.rotation.z=lerpf(body.rotation.z,-lean*.17,1-exp(-delta*10))
 	for index in range(wings.size()):
 		var sign_value:=1.0 if index==0 else -1.0
 		wings[index].rotation.y=sign_value*((.08 if airborne or traversal_left>0 else 1.48 if sliding else 1.02)+sin(clock*(9 if airborne or traversal_left>0 else 4))*(.22 if airborne or traversal_left>0 else .12))
 		wings[index].rotation.z=lerpf(wings[index].rotation.z,sign_value*-.32 if sliding else 0.0,1-exp(-delta*14))
-	if is_instance_valid(cape): cape.rotation.x=sin(clock*6)*.018
+	if is_instance_valid(cape): cape.rotation.x=0 if reduced_motion else sin(clock*7)*.045
 	if is_instance_valid(aura):
 		aura.position.y=1.32+sin(clock*2.4)*.04
 		aura.rotation.y+=delta*1.4

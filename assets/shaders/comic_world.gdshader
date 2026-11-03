@@ -1,5 +1,5 @@
 shader_type spatial;
-render_mode world_vertex_coords, diffuse_burley;
+render_mode world_vertex_coords, diffuse_burley, specular_disabled;
 uniform vec4 paint : source_color = vec4(0.1,0.15,0.25,1.0);
 uniform float glow = 0.0;
 uniform float metal = 0.0;
@@ -40,25 +40,21 @@ void fragment(){
    if(abs(logical_position.x-gaps[i].x)<gaps[i].z && abs(logical_position.z-gaps[i].y)<gaps[i].w)discard;
   }
  }
- float grain=noise(stone_position*4.0);
- float cloud=noise(stone_position*0.68);
- float fine=noise(stone_position*25.0);
- float texture_value=0.72+cloud*0.28+grain*0.12+fine*0.055;
- vec3 color=paint.rgb*texture_value;
- float weather=smoothstep(0.48,0.80,noise(stone_position*0.22));
- color=mix(color,color*vec3(0.74,0.94,0.92),weather*0.32*(1.0-metal));
+ // Broad painted surfaces replace the weathered dark-fantasy texture.
+ vec3 color=paint.rgb;
  if(pavement){
   vec2 p=vec2((stone_position.x+4.5)/1.5,stone_position.z/3.0);
   p.x+=mod(floor(p.y),2.0)*0.5;
   vec2 cell=floor(p);vec2 local=fract(p);
   vec2 edges=min(local,1.0-local);
-  float seam=1.0-smoothstep(0.008,0.026,min(edges.x,edges.y));
+  float seam=1.0-smoothstep(0.006,0.020,min(edges.x,edges.y));
   float tile=hash(vec3(cell,1.0));
-  color*=mix(0.87,1.10,tile)*(1.0-seam*0.48);
-  color=mix(color,color*vec3(1.10,1.02,0.90),tile*0.25);
+  color*=mix(0.96,1.04,tile)*(1.0-seam*0.18);
  }
- ALBEDO=color;
- ROUGHNESS=clamp(0.80-grain*0.13-metal*0.36,0.22,0.95);
- METALLIC=metal;SPECULAR=0.32;
- EMISSION=paint.rgb*glow;
+ // Compatibility rendering has a narrow output range. Reserve the brightest
+ // values for collectibles, windows and action cues instead of broad walls.
+ ALBEDO=color*0.70;
+ ROUGHNESS=0.68;
+ METALLIC=metal*0.15;SPECULAR=0.22;
+ EMISSION=paint.rgb*glow*0.30;
 }

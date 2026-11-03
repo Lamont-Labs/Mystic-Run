@@ -24,7 +24,7 @@ func _input(event:InputEvent) -> void:
 	else:axis=clampf((local.x-size.x*.5)/(size.x*.36),-1,1);queue_redraw()
 	get_viewport().set_input_as_handled()
 func _draw() -> void:
-	var centre:=size*Vector2(.5,.42);var style:=StyleBoxFlat.new();style.bg_color=Color("14213b",.72);style.border_color=Color(accent,.4);style.set_border_width_all(2);style.set_corner_radius_all(26)
+	var centre:=size*Vector2(.5,.42);var style:=StyleBoxFlat.new();style.bg_color=Color("534080",.90);style.border_color=Color(accent,.7);style.set_border_width_all(2);style.set_corner_radius_all(26)
 	draw_style_box(style,Rect2(Vector2.ZERO,size))
 	for sign_value in [-1,1]:
 		var at:Vector2=centre+Vector2(sign_value*size.x*.34,0)

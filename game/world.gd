@@ -23,6 +23,8 @@ var secret_level:String=""
 var reduced_motion:bool=false
 var secret_meshes:Dictionary={}
 var lanterns:Array[Node3D]=[]
+var sky_props:Array[Node3D]=[]
+var sky_birds:Array[Node3D]=[]
 
 
 func _paint(hex: String, metal: float=0.0, glow: float=0.0) -> ShaderMaterial:
@@ -36,11 +38,11 @@ func _paint(hex: String, metal: float=0.0, glow: float=0.0) -> ShaderMaterial:
 
 func configure() -> void:
 	materials = {
-		"cloud":_paint("ddd5ec"),"stone":_paint("565b83"),"pale":_paint("8b87b3"),"dark":_paint("242d4f"),
-		"metal":_paint("4b5471",.35),"gold":_paint("e8b960",.24),
-		"amber":_paint("eea556",.10,.55),"teal":_paint("4cb5ca",.10,.70),
-		"violet":_paint("a064e5",.10,.70),"red":_paint("f36779",.10,.65),
-		"void":_paint("080b1c"),"road":_paint("78758f"),"road_alt":_paint("737c95"),
+		"cloud":_paint("fff9f2"),"stone":_paint("b4a0dc"),"pale":_paint("f7dfb8"),"dark":_paint("6466b2"),
+		"metal":_paint("65b9d2",.35),"gold":_paint("ffce63",.24),
+		"amber":_paint("ffcc4e",.10,.55),"teal":_paint("4ee3cc",.10,.70),
+		"violet":_paint("c17aff",.10,.70),"red":_paint("ff6c7f",.10,.65),
+		"roof":_paint("ff7e8b"),"grass":_paint("67d39a"),"leaves":_paint("99e79a"),"pink":_paint("ffadd6"),"void":_paint("599ac8"),"road":_paint("d9b58b"),"road_alt":_paint("d3ae83"),
 	}
 	materials.road.set_shader_parameter("pavement",true)
 	materials.road_alt.set_shader_parameter("pavement",true)
@@ -62,45 +64,45 @@ func configure() -> void:
 	_build_dust()
 	_build_city_layers()
 	_build_lanterns()
+	_build_sky_props()
 
 
 func _build_city_layers() -> void:
-	# Rendered architecture provides midground parallax in front of the matte.
+	# Rounded, candy-colored turrets and floating gardens frame the same course.
 	for side in [-1.0,1.0]:
 		for variant in range(3):
-			var g=Geo.new()
-			var x:float=side*(14.0+variant*5.2)
-			var h:float=13.0+variant*6.5
-			g.cylinder(Vector3(x,h*.5-5,0),2.75,h,materials.stone,.78,Vector3.ZERO,12)
-			g.cylinder(Vector3(x,-5,0),3.8,1.1,materials.dark,.88,Vector3.ZERO,12)
+			var g=Geo.new();var x:float=side*(15.0+variant*5.5);var h:float=10.0+variant*5.0
+			g.cylinder(Vector3(x,-4.2,0),4.0,5.0,materials.stone,1.45,Vector3.ZERO,12)
+			g.cylinder(Vector3(x,-1.6,0),5.0,.55,materials.grass,1,Vector3.ZERO,20)
+			g.cylinder(Vector3(x,h*.5-1.5,0),2.8,h,materials.pale,1,Vector3.ZERO,20)
 			for tier in range(3):
-				var y:float=-2+tier*5.0
-				g.cylinder(Vector3(x,y,0),2.85,.26,materials.metal,1.0,Vector3.ZERO,12)
-				for offset in [-1.4,0.0,1.4]:
-					g.armor(Vector3(x+offset,y+1.9,2.55),Vector3(.40,2.6,.12),materials.dark,.72)
-					g.box(Vector3(x+offset,y+1.9,2.62),Vector3(.09,1.8,.04),materials.amber if variant!=1 else materials.teal)
-					g.cylinder(Vector3(x+offset,y+3.35,2.55),.22,.60,materials.gold,0.0,Vector3.ZERO,6)
-			g.cylinder(Vector3(x,h-1,0),2.5,8.0,materials.dark,0.0,Vector3.ZERO,8)
-			g.cylinder(Vector3(x,h+3.4,0),.12,2.2,materials.gold,0.0,Vector3.ZERO,8)
-			for corner in [-1.0,1.0]:
-				g.armor(Vector3(x+corner*2.5,h*.45-4,2.65),Vector3(.52,h*.9,.65),materials.pale,.75)
-				g.cylinder(Vector3(x+corner*2.5,h-3.6,2.65),.58,3.0,materials.gold,0.0,Vector3.ZERO,6)
-			# The far bank links towers with flying buttresses below the playable bridge.
-			g.box(Vector3(side*9.0,-4.8,0),Vector3(10.0,.65,1.0),materials.dark,Vector3(0,0,-side*.32))
+				var y:float=.4+tier*h*.28
+				g.cylinder(Vector3(x,y,0),2.95,.26,materials.gold,1,Vector3.ZERO,20)
+				for offset in [-1.35,0.0,1.35]:
+					g.armor(Vector3(x+offset,y+1.2,2.62),Vector3(.56,1.65,.15),materials.stone,.8)
+					g.sphere(Vector3(x+offset,y+1.35,2.73),Vector3(.38,.9,.055),materials.amber,16)
+			g.cylinder(Vector3(x,h-.2,0),3.35,4.5,materials.roof,0,Vector3.ZERO,20)
+			g.ring(Vector3(x,h-2.4,0),3.28,.10,materials.gold)
+			g.sphere(Vector3(x,h+2.15,0),Vector3.ONE*.48,materials.gold,16)
+			g.cylinder(Vector3(x,h+3,0),.045,1.5,materials.gold,1,Vector3.ZERO,8)
+			g.triangle(Vector3(x,h+3.7,0),Vector3(x+side*1.8,h+3.3,0),Vector3(x,h+2.95,0),materials.pink)
+			for tree in range(2):
+				var at:=Vector3(x+side*(3.5+tree*.65),-.8,1.6-tree*3)
+				g.cylinder(at+Vector3(0,1,0),.18,2.5,materials.gold,1,Vector3(0,0,side*.14),10)
+				g.sphere(at+Vector3(0,2.8,0),Vector3(3,2.6,2.8),materials.leaves,16)
+				g.sphere(at+Vector3(.8,3.1,.3),Vector3(1.7,1.6,1.7),materials.grass,16)
 			var template:MeshInstance3D=g.build()
 			for repeat in range(3):
 				var node:=MeshInstance3D.new();node.mesh=template.mesh;node.extra_cull_margin=50
-				node.set_meta("offset",variant*40+repeat*120+(18 if side>0 else 0))
-				add_child(node);city_layers.append(node)
+				node.set_meta("offset",variant*40+repeat*120+(18 if side>0 else 0));add_child(node);city_layers.append(node)
 			template.free()
-
 
 func _arch(geo: RefCounted, z: float, width: float, height: float, mat: Material, radius: float=.13) -> void:
 	var points: Array[Vector3]=[]
 	for i in range(17):
 		var t:=float(i)/16
 		var x:=lerpf(-width,width,t)
-		var y:=height*(1.0-pow(absf(t*2-1),.60))
+		var y:=height*sqrt(maxf(0.0,1.0-pow(t*2-1,2.0)))
 		points.append(Vector3(x,3.2+y,z))
 	for i in range(points.size()-1):
 		var a:=points[i]
@@ -109,10 +111,17 @@ func _arch(geo: RefCounted, z: float, width: float, height: float, mat: Material
 		geo.cylinder((a+b)*.5,radius,direction.length(),mat,1,Vector3(0,0,-atan2(direction.x,direction.y)),8)
 
 
+func _deck(b:RefCounted) -> void:
+	# Subdivide the decorative deck so its terrain warp follows the paving.
+	# A single 24 m face cut through the tiles on curved climbs and descents.
+	for strip in range(16):
+		b.box(Vector3(0,-.44,-.75-strip*1.5),Vector3(9.4,.72,1.5),materials.stone)
+
+
 func _chunk_mesh(kind: String, variant:int=0) -> MeshInstance3D:
 	var b=Geo.new()
 	var accent: Material=materials[{"knight":"amber","gargoyle":"teal","witch":"violet"}[kind]]
-	b.box(Vector3(0,-.38,-12),Vector3(9.4,.72,24),materials.dark)
+	_deck(b)
 	for row in range(8):
 		var z: float=-1.5-row*3.0
 		for column in range(3):
@@ -139,9 +148,9 @@ func _chunk_mesh(kind: String, variant:int=0) -> MeshInstance3D:
 			b.armor(Vector3(side*5.90,.25,-12),Vector3(1.55,.50,2.0),materials.metal)
 			b.armor(Vector3(side*5.90,6.5,-12),Vector3(1.20,.35,1.6),materials.gold)
 			for xoff in [-.22,.22]: b.box(Vector3(side*5.90+xoff,3.4,-11.22),Vector3(.035,4.7,.028),accent)
-			b.cylinder(Vector3(side*5.9,8.0,-12),.52,3.0,materials.dark,0,Vector3.ZERO,8)
+			b.cylinder(Vector3(side*5.9,8.0,-12),.52,3.0,materials.roof,0,Vector3.ZERO,16)
 			b.armor(Vector3(side*8.0,3.1,-12),Vector3(.5,6.4,1.0),materials.pale,.85)
-			# Buttresses and a pointed cathedral vault, open enough to read the sky.
+			# Rounded castle vaults remain open enough to read the sky and hazards.
 			b.box(Vector3(side*6.9,4.1,-12),Vector3(.32,5.3,.5),materials.pale,Vector3(0,0,-side*.40))
 		elif kind=="gargoyle" and variant!=1:
 			b.cylinder(Vector3(side*6.6,-3.5,-12),1.9,7.5,materials.dark,.28,Vector3.ZERO,7)
@@ -229,6 +238,16 @@ func update(distance: float, delta: float) -> void:
 		lanterns[i].position.z=14-fposmod(i*19.0-distance*.8,160.0)
 		lanterns[i].position.y=5.5+(i%3)*1.8+(0.0 if reduced_motion else sin(elapsed*1.4+i)*.45)
 		lanterns[i].rotation.z=0 if reduced_motion else sin(elapsed*1.8+i)*.12
+	for prop in sky_props:
+		var i:int=prop.get_meta("index")
+		prop.position.z=-24.0-fposmod(i*37.0-distance*.25,210.0)
+		prop.position.y=12.0+(i%3)*4.0+(0.0 if reduced_motion else sin(elapsed*.9+i)*.65)
+		prop.rotation.z=0.0 if reduced_motion else sin(elapsed*1.2+i)*.055
+	for i in range(sky_birds.size()):
+		var bird:Node3D=sky_birds[i]
+		var t:float=0.0 if reduced_motion else elapsed
+		bird.position=Vector3(sin(t*.12+i*1.7)*24,18+(i%3)*3+sin(t*1.2+i)*.3,-55-i*17)
+		bird.rotation.z=sin(t*5.0+i)*.15
 	for building in city_layers:
 		building.position.z=42.0+fposmod(distance,360.0)-float(building.get_meta("offset"))
 		if building.position.z>55:building.position.z-=360.0
@@ -247,18 +266,18 @@ func _build_horizon() -> void:
 	# nearby arches, road, props, characters and effects are rendered in 3D.
 	var plate:=MeshInstance3D.new()
 	var quad:=QuadMesh.new()
-	quad.size=Vector2(440,440*2.0/3.0)
+	quad.size=Vector2(360,540)
 	plate.mesh=quad
 	var matte:=StandardMaterial3D.new()
 	matte.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
 	matte.disable_fog=true
-	matte.albedo_texture=load("res://assets/environment/citadel-matte-v1.png")
-	matte.albedo_color=Color(.80,.79,.87,1.0)
+	matte.albedo_texture=load("res://assets/environment/cloud-castle-v2.jpg")
+	matte.albedo_color=Color.WHITE
 	plate.material_override=matte
-	plate.position=Vector3(0,61,-235)
+	plate.position=Vector3(0,-20,-235)
 	add_child(plate)
 	machine = Node3D.new()
-	machine.position = Vector3(0, 33, -145)
+	machine.position = Vector3(0, 39, -170)
 	add_child(machine)
 	var rings = Geo.new()
 	rings.ring(Vector3.ZERO, 15.0, 0.45, materials["gold"], Vector3(PI / 2, 0.35, 0))
@@ -267,7 +286,7 @@ func _build_horizon() -> void:
 	for index in range(12):
 		var angle := index * TAU / 12
 		rings.box(Vector3(sin(angle) * 15.0, cos(angle) * 15.0, 0), Vector3(1.0, 2.0, 0.8), materials["pale"], Vector3(0, 0, -angle))
-	rings.sphere(Vector3.ZERO, Vector3.ONE * 5.0, materials["teal"])
+	rings.sphere(Vector3.ZERO, Vector3.ONE * 3.7, materials["teal"])
 	machine.add_child(rings.build())
 
 
@@ -323,7 +342,7 @@ func prop(kind: String) -> Node3D:
 			b.ring(Vector3(0, 1.5, 0), 0.70, 0.06, materials["gold"], Vector3(0.25, 0, 0.1))
 			b.cylinder(Vector3(0, 1.0, 0), 0.22, 0.35, materials["red"], 0.0)
 		"barrier":
-			b.box(Vector3(0, 0.55, 0), Vector3(2.05, 1.10, 0.65), materials["dark"])
+			b.armor(Vector3(0, 0.55, 0), Vector3(2.05, 1.10, 0.65), materials["roof"],.86)
 			b.box(Vector3(0, 1.13, 0), Vector3(2.1, 0.07, 0.7), materials["red"])
 			for side in [-1.0, 1.0]:
 				b.cylinder(Vector3(side * 0.65, 1.36, 0), 0.12, 0.5, materials["metal"], 0.0)
@@ -373,7 +392,7 @@ func prop(kind: String) -> Node3D:
 
 func _secret_mesh(kind:String,level:int=0) -> MeshInstance3D:
 	var b=Geo.new();var glow:Material=materials[{"knight":"amber","gargoyle":"teal","witch":"violet"}[kind]]
-	b.box(Vector3(0,-.42,-12),Vector3(9.4,.8,24),materials.dark)
+	_deck(b)
 	for row in range(8):
 		for col in range(3):b.armor(Vector3((col-1)*3.0,0,-1.5-row*3),Vector3(2.97,.08,2.97),materials.road,.98)
 	for side in [-1.0,1.0]:
@@ -457,3 +476,20 @@ func _decorate_secret_level(b:RefCounted,kind:String,level:int,glow:Material) ->
 			b.ring(Vector3(0,8.6,-12),3.2,.13,accent,Vector3(PI/2,0,0))
 			b.ring(Vector3(0,8.6,-12),2.6,.04,materials.gold,Vector3(PI/2,0,0))
 			for star in range(5):_star(b,Vector3((star-2)*1.3,7.6+sin(star)*.4,-12),.35,glow)
+
+
+func _build_sky_props() -> void:
+	# Decorative meshes stay outside the playable corridor and never own collision.
+	for index in range(6):
+		var g=Geo.new();var colour:Material=materials[["pink","teal","roof"][index%3]]
+		g.sphere(Vector3.ZERO,Vector3(2.6,3.1,2.6),colour,20)
+		g.ring(Vector3(0,-.25,0),1.28,.075,materials.gold)
+		for side in [-1.0,1.0]:g.cylinder(Vector3(side*.42,-1.8,0),.035,1.6,materials.gold)
+		g.armor(Vector3(0,-2.35,0),Vector3(1.15,.62,.86),materials.pale,.92)
+		var balloon:Node3D=g.build();balloon.position.x=(-1 if index%2 else 1)*(16+index%3*7)
+		balloon.set_meta("index",index);add_child(balloon);sky_props.append(balloon)
+	for i in range(6):
+		var g=Geo.new()
+		g.triangle(Vector3.ZERO,Vector3(-.75,.22,.1),Vector3(-.22,.04,-.12),materials.cloud)
+		g.triangle(Vector3.ZERO,Vector3(.22,.04,-.12),Vector3(.75,.22,.1),materials.cloud)
+		var bird:Node3D=g.build();add_child(bird);sky_birds.append(bird)

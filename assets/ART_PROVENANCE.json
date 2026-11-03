@@ -23,8 +23,16 @@
       "path": "assets/environment/citadel-matte-v1.png",
       "sha256": "d4b4441c6711db47b436658799b0e67059bb6b6dae1b08ce50528f9e86fce325",
       "role": "Distant environment matte painting; foreground gameplay is rendered in 3D"
+    },
+    {
+      "path": "assets/environment/cloud-castle-v2.jpg",
+      "sha256": "4e369607f7bd43a4da8ef4e6c2ee8fe842c351a7949c8d00209d915c13f53a56",
+      "role": "Original generated floating castle city, recovered from the preceding visual-direction work; used as a distant matte, with playable 3D geometry in front",
+      "source_png_sha256": "1c5a3023fe571bdf44849569a04c3ebb4d075c60d82afd71aeb6d93df46d89ce",
+      "processing": "JPEG runtime encoding only; source dimensions and composition preserved."
     }
   ],
-  "direction": "Original dark fantasy and future technology; midnight navy, violet, antique gold, cyan rim light; mature heroic proportions, polished comic illustration. Knight: closed angular helm, cyan visor, gold layered armor, violet cape, shield and energy sword. Gargoyle: blue-gray stone, horns, cyan fissures and violet bat wings. Witch: silver hair, armored violet clothing, gold crescent halo and crystal staff. Environment: floating gothic citadels over violet mist with gold windows and cyan conduits.",
-  "references": "Temple Run informs movement readability; Marvel Snap informs illustration finish and color hierarchy. No franchise characters, logos, assets, screenshots or card UI are copied."
+  "references": "Temple Run informs movement readability; Marvel Snap informs illustration finish and color hierarchy. No franchise characters, logos, assets, screenshots or card UI are copied.",
+  "historical_visual_direction": "Original dark fantasy and future technology; midnight navy, violet, antique gold, cyan rim light; mature heroic proportions, polished comic illustration. Knight: closed angular helm, cyan visor, gold layered armor, violet cape, shield and energy sword. Gargoyle: blue-gray stone, horns, cyan fissures and violet bat wings. Witch: silver hair, armored violet clothing, gold crescent halo and crystal staff. Environment: floating gothic citadels over violet mist with gold windows and cyan conduits.",
+  "direction": "Playful cartoon fantasy: sunny cyan sky, peach paving, rounded lavender-and-cream castle turrets, coral roofs, mint gardens, hot-air balloons, broad silhouettes, oversized heads, clean toon materials, star capes and springy cosmetic motion. Knight, Gargoyle and Witch retain their identities and gameplay."
 }

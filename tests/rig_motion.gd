@@ -40,6 +40,18 @@ func run() -> void:
 		hero.airborne=true
 		for frame in range(24): hero.animate(1.0/60)
 		check(skeleton.get_bone_global_pose(skeleton.find_bone("Head")).origin.y>1.0,kind+": jump restores an upright torso")
+		# The cartoon landing affects presentation only and must settle cleanly.
+		hero.airborne=false;hero.moving=false
+		var lowest_scale:float=hero.body.scale.y
+		for frame in range(40):
+			hero.animate(1.0/60)
+			lowest_scale=minf(lowest_scale,hero.body.scale.y)
+		check(lowest_scale<hero.body.scale.y*.95 and hero.body.scale.is_finite(),kind+": landing squash settles to a finite resting scale")
+		hero.reduced_motion=true;hero.celebrate()
+		for frame in range(12):hero.animate(1.0/60)
+		var decorative_motion_stopped:bool=is_zero_approx(hero.body.position.y)
+		if is_instance_valid(hero.cape):decorative_motion_stopped=decorative_motion_stopped and is_zero_approx(hero.cape.rotation.x) and is_zero_approx(hero.cape_fabric.get_shader_parameter("motion_amount"))
+		check(decorative_motion_stopped,kind+": reduced motion stops decorative bounce and cape flutter")
 		hero.queue_free()
 		await process_frame
 	load("res://game/rig_motion.gd").release_shared()

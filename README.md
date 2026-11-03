@@ -1,6 +1,6 @@
 # Mystic Run — Android runner
 
-**Current revision: 0.6.0.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.
+**Current revision: 0.6.1.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.
 
 [Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay guide](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build and verification](docs/BUILD_STATUS.md) · [Google Play preparation](docs/GOOGLE_PLAY_READINESS.md)
 
@@ -22,5 +22,7 @@ python3 tools/verify_core.py --godot ../engine/Godot_v4.7.2-stable_linux.x86_64
 GitHub checks cover progression, gestures, navigation, tilt/elevation, animation and basic-only scene runs for all three characters. Android compilation is followed by separate owner signing. An unsigned engineering Play bundle has passed bundletool validation; production identity, signing and device checks remain.
 
 ## Art and motion
+
+The 0.6.1 visual revision adds a floating storybook castle city, rounded towers, colorful balloons, larger character heads, a pointed Witch hat, friendly Gargoyle features, star capes, springy landings and a consistent purple-and-gold interface. Controls, progression, encounter timing and saved-game rules are unchanged.
 
 The actual playable 3D runner appears in the menu. Humanoid source meshes and motion are Quaternius CC0; custom equipment, architecture, interface, game systems and synthesized audio are in this repository. Distant city art and character illustrations were generated for Mystic Run. See `assets/ART_PROVENANCE.json`, `assets/models/quaternius/PROVENANCE.json` and bundled notices.

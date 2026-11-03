@@ -1,0 +1,35 @@
+{
+  "version": "0.6.1",
+  "assertions": {
+    "core": 427,
+    "gesture_course": 38,
+    "adventure_progression": 125,
+    "navigation": 148,
+    "tilt_elevation": 35,
+    "animation": 24
+  },
+  "total_unique_assertions": 797,
+  "failures": 0,
+  "android_policy_tests": 4,
+  "release_reconstruction_tests": 6,
+  "source_sha256": {
+    "game/comic_presentation.gd": "e86f84a4e1deef10babc78b1e59c6ea9f084a7238b175cce4fbd577e725eebfd",
+    "game/encounter_director.gd": "14a1ea54cc3f00d9acb14968b7942802e6d21855dd2229f487cab1ab05f5724d",
+    "game/front_end.gd": "15ed82b80e3566bf28dc1d2983b3a0b0882c7a6f550523c2fa1cd07ac0125925",
+    "game/geometry.gd": "7b355dd13e288ed19b05d33176e3f420035ca1af48969a169a076e543a7cc486",
+    "game/gesture_input.gd": "bac4c7b673f52522ec3ed3fe9610c7ef8826dab47fcec617515c13da9da9cde1",
+    "game/hero.gd": "9ad5a1dbb5596cb6b1958673bb9bcf7029ab3ed07cb30a1ef9930ff27f73633f",
+    "game/hud.gd": "6dbb41a21cd1cdc2067d5cce2126615510d7660f9c7e54569511e429b00fdac6",
+    "game/main.gd": "19167fd233c20ec90c2fab8ad278a10ac853a4c3b054618b67e6eadde9982011",
+    "game/rig_motion.gd": "36282cddbbe44b488da0f3d856c592152ad6a9e846c2e4f1a7e963924dee5127",
+    "game/steering_pad.gd": "fa5510b13ac2e90f0f97b955cc3950551c2f0885ff877be448de3ef7ae8a0969",
+    "game/world.gd": "b75e3d36d87f76423730597a749ebe3420f7ef5495817594e067a79a7e13d5cb",
+    "assets/shaders/comic_body.gdshader": "3defcb26594332007e453c50268fa3cebd9e52f5b2c979168092c3091f0192c9",
+    "assets/shaders/comic_world.gdshader": "5bec0e7fbc2533a8b4a024354c39faffdc6952e26c0e59e5c597c377e190a4eb",
+    "assets/shaders/embroidered_cloth.gdshader": "7d3023e4df3ee3bb2b3681345caa26aae091ddbed5e55cb375d32eec8416b3ec",
+    "assets/shaders/ink_outline.gdshader": "32796727d127f00126c27ad42806ba716baf9d110273a2f0915ee5e8580e5194"
+  },
+  "physical_device_tested": false,
+  "owner_visual_approval": false,
+  "rendered_navigation_checks": 148
+}

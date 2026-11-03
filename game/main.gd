@@ -197,35 +197,36 @@ func _setup_environment() -> void:
 	environment.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
 	var sky_material := ProceduralSkyMaterial.new()
-	sky_material.sky_top_color = Color("384c86")
-	sky_material.sky_horizon_color = Color("b6a3ca")
-	sky_material.ground_bottom_color = Color("050b16")
-	sky_material.ground_horizon_color = Color("342d51")
+	sky_material.sky_top_color = Color("35b9ef")
+	sky_material.sky_horizon_color = Color("dcf6ff")
+	sky_material.ground_bottom_color = Color("72bfe7")
+	sky_material.ground_horizon_color = Color("c3eaff")
 	sky_material.sky_curve = 0.22
 	sky.sky_material = sky_material
 	environment.sky = sky
 	environment.ambient_light_source = Environment.AMBIENT_SOURCE_COLOR
-	environment.ambient_light_color = Color("b8b8df")
-	environment.ambient_light_energy = 0.92
+	environment.ambient_light_color = Color("fff1e8")
+	environment.ambient_light_energy = 0.30
 	environment.fog_enabled = true
-	environment.fog_light_color = Color("7476a3")
-	environment.fog_light_energy = 0.55
-	environment.fog_density = 0.0017
+	environment.fog_light_color = Color("b8eaff")
+	environment.fog_light_energy = 0.80
+	environment.fog_density = 0.0009
 	environment.tonemap_mode = Environment.TONE_MAPPER_FILMIC
 	var node := WorldEnvironment.new()
 	node.environment = environment
 	add_child(node)
 	key_light = DirectionalLight3D.new()
 	key_light.rotation_degrees = Vector3(-42, -27, 0)
-	key_light.light_color = Color("ffddb2")
-	key_light.light_energy = 1.2
+	key_light.light_color = Color("fff1d6")
+	key_light.light_energy = 0.32
 	key_light.shadow_enabled = true
+	key_light.shadow_opacity = 0.70
 	key_light.directional_shadow_max_distance = 65
 	add_child(key_light)
 	var fill := DirectionalLight3D.new()
 	fill.rotation_degrees = Vector3(-24, 148, 0)
-	fill.light_color = Color("83b4d2")
-	fill.light_energy = 0.78
+	fill.light_color = Color("bbddff")
+	fill.light_energy = 0.08
 	add_child(fill)
 	camera = Camera3D.new()
 	camera.fov = 65
@@ -238,15 +239,15 @@ func _setup_environment() -> void:
 	hero_key=hero_light
 	hero_light.position = Vector3(2.6,3.5,3.0)
 	hero_light.omni_range = 8.0
-	hero_light.light_energy = 1.1
-	hero_light.light_color = Color("e7ceb0")
+	hero_light.light_energy = 0.20
+	hero_light.light_color = Color("fff0db")
 	add_child(hero_light)
 	var rim := OmniLight3D.new()
 	hero_rim=rim
 	rim.position = Vector3(-2.5,3.2,-1.0)
 	rim.omni_range = 6.0
-	rim.light_color = Color("7ea6cf")
-	rim.light_energy = 1.4
+	rim.light_color = Color("95dfff")
+	rim.light_energy = 0.12
 	add_child(rim)
 
 

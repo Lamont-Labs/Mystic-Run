@@ -88,7 +88,7 @@ func _ready() -> void:
 	front=FrontEnd.new();front.title_font=title_font;front.body_font=ui_font;front.portraits=portraits;add_child(front);front.intent.connect(func(a:String,v:String):intent.emit(a,v))
 	_layout();refresh()
 func _style(active:bool,circle:bool=false) -> StyleBoxFlat:
-	var s:=StyleBoxFlat.new();s.bg_color=Color("35647d",.95) if active else Color("192b49",.92);s.border_color=Color("83e7e7");s.set_border_width_all(2);s.set_corner_radius_all(80 if circle else 24);return s
+	var s:=StyleBoxFlat.new();s.bg_color=Color("ae77de",.98) if active else Color("594184",.95);s.border_color=Color("ffe5a4");s.set_border_width_all(3);s.shadow_color=Color("302459",.5);s.shadow_size=3;s.shadow_offset=Vector2(0,5);s.set_corner_radius_all(80 if circle else 24);return s
 func _notification(what:int) -> void:
 	if what==NOTIFICATION_RESIZED and not labels.is_empty():_layout()
 func _place(key:String,at:Vector2,dimensions:Vector2,align:HorizontalAlignment=HORIZONTAL_ALIGNMENT_LEFT) -> void:
