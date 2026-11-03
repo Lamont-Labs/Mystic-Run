@@ -23,6 +23,9 @@ jobs:
       - name: Verify gesture and course rules
         run: |
           "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/runner_controls.gd
+      - name: Verify progression, gesture combat and all nine secret routes
+        run: |
+          "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/adventure.gd
       - name: Verify scene controls and physics
         run: |
           "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/scene_interactions.gd
@@ -38,7 +41,7 @@ jobs:
           import os,subprocess
           binary=os.path.join(os.environ['RUNNER_TEMP'],'runner-godot','Godot_v4.7.2-stable_linux.x86_64')
           for character in ['knight','gargoyle','witch']:
-              subprocess.run([binary,'--headless','--path','.','--','--qa','--qa-ticks=3600','--character='+character],check=True,timeout=95)
+              subprocess.run([binary,'--headless','--path','.','--','--qa','--qa-basic','--qa-ticks=3600','--character='+character],check=True,timeout=95)
           PY
       - name: Preserve verification evidence
         if: always()

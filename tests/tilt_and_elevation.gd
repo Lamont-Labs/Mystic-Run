@@ -48,7 +48,7 @@ func run() -> void:
 	check(Profile.grade_at(75)>.1 and Profile.grade_at(190)<-.1,"The course includes positive and negative grades")
 	check(absf(Profile.height_at(639.99)-Profile.height_at(640.01))<.001,"Repeating elevation has no boundary step")
 	var game=load("res://scenes/main.tscn").instantiate()
-	game.testing=true;game.profile.settings.control_mode="swipe"
+	game.testing=true;game.profile.settings.control_mode="thumb"
 	root.add_child(game)
 	await physics_frame
 	game.course_id="endless";game._start_run();game.countdown_left=.001

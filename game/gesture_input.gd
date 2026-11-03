@@ -37,6 +37,6 @@ func feed(event: InputEvent, viewport_width: float, now: float) -> String:
 		elif absf(movement.y)>absf(movement.x)*1.1: action="jump" if movement.y<0 else "slide"
 		if not action.is_empty(): touch.used=true
 	if end:
-		if not touch.used and movement.length()<threshold*.65 and now-float(touch.time)<.30: action="attack"
+		# Ordinary taps do not attack; horizontal swipes own basic combat.
 		touches.erase(id)
 	return action

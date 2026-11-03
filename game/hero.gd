@@ -19,6 +19,12 @@ var airborne: bool = false
 var moving: bool = false
 var lean: float = 0.0
 var threat_intensity:float=0.0
+var facing:float=PI
+var reduced_motion:bool=false
+var base_scale:float=1.08
+var swipe_direction:int=1
+var celebration_left:float=0
+var traversal_left:float=0
 var mats: Dictionary = {}
 
 func configure(kind: String) -> void:
@@ -60,10 +66,11 @@ func _add(geometry: RefCounted, bone: String) -> Node3D:
 	return result
 
 func _build() -> void:
-	mats={"steel":_paint("526b8b",0.65),"edge":_paint("96bdd0",0.6),"dark":_paint("171d36",0.25),"gold":_paint("d3a45e",0.6),"cloth":_paint("47305e"),"stone":_paint("637f99"),"glow":_paint("5de9f2",0.25,1.5)}
+	mats={"steel":_paint("658fc1",0.40),"edge":_paint("b4e1ef",0.32),"dark":_paint("25375a",0.20),"gold":_paint("f1c365",0.38),"cloth":_paint("694896"),"stone":_paint("8aaed2"),"glow":_paint("5de9f2",0.25,1.5)}
 	body=Node3D.new()
 	body.rotation.y=PI
-	body.scale=Vector3.ONE*(1.16 if identity=="gargoyle" else 1.08)
+	base_scale=1.16 if identity=="gargoyle" else 1.08
+	body.scale=Vector3.ONE*base_scale
 	add_child(body)
 	var gender := "Female" if identity=="witch" else "Male"
 	var model: Node3D=(load("res://assets/models/quaternius/base/Superhero_"+gender+"_FullBody.gltf") as PackedScene).instantiate()
@@ -74,7 +81,7 @@ func _build() -> void:
 			var material := ShaderMaterial.new()
 			material.shader=BODY_SHADER
 			material.set_shader_parameter("character_kind",["knight","gargoyle","witch"].find(identity))
-			material.set_shader_parameter("base_color",Color("26374c") if identity=="knight" else Color("425d79") if identity=="gargoyle" else Color("38224f"))
+			material.set_shader_parameter("base_color",Color("3c658f") if identity=="knight" else Color("7199b8") if identity=="gargoyle" else Color("6b438a"))
 			material.set_shader_parameter("highlight_color",accent())
 			var outline := ShaderMaterial.new()
 			outline.shader=OUTLINE
@@ -82,6 +89,8 @@ func _build() -> void:
 			child.material_override=material
 			if child.name=="Eyes": child.material_override=_paint("b3ecff",0,1.0) if identity!="witch" else _paint("7448a8")
 			if identity=="knight" and child.name in ["Eyes","Eyebrows"]: child.visible=false
+	var head_index:int=skeleton.find_bone("Head")
+	if head_index>=0:skeleton.set_bone_pose_scale(head_index,Vector3.ONE*1.12)
 	motion=Motion.new()
 	motion.configure(skeleton,identity)
 	match identity:
@@ -91,8 +100,8 @@ func _build() -> void:
 	motion.advance(0.1,false,false,false,identity)
 
 func sentinel() -> void:
-	body.rotation.y=0
-	body.scale*=.87
+	facing=0;body.rotation.y=0
+	base_scale*=.87;body.scale=Vector3.ONE*base_scale
 	for key in ["steel","edge","gold","cloth","glow"]:
 		var material: StandardMaterial3D=mats[key]
 		material.albedo_color=Color({"steel":"242b43","edge":"4d5170","gold":"744959","cloth":"4e203c","glow":"ec5d89"}[key])
@@ -274,7 +283,7 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 	var fabric:MeshInstance3D=geo.build()
 	var woven:=ShaderMaterial.new();woven.shader=preload("res://assets/shaders/embroidered_cloth.gdshader")
 	woven.set_shader_parameter("half_width",width);woven.set_shader_parameter("top",top);woven.set_shader_parameter("bottom",bottom)
-	woven.set_shader_parameter("cloth_color",Color("442363") if identity=="knight" else Color("40214f"))
+	woven.set_shader_parameter("cloth_color",Color("743b9e") if identity=="knight" else Color("84456f"))
 	fabric.material_override=woven;cape.add_child(fabric)
 	Geo.segment(cape,Vector3(-width*.60,top,z),Vector3(-width*1.18,bottom,z-.42),.009,mats.gold)
 	Geo.segment(cape,Vector3(width*.60,top,z),Vector3(width*1.18,bottom,z-.42),.009,mats.gold)
@@ -282,6 +291,7 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 func animate(delta: float) -> void:
 	clock+=delta
 	attack_time=maxf(0,attack_time-delta)
+	celebration_left=maxf(0,celebration_left-delta);traversal_left=maxf(0,traversal_left-delta)
 	power_time=maxf(0,power_time-delta)
 	motion.advance(delta,moving,airborne,sliding,identity)
 	if get_meta("sentinel",false):
@@ -289,20 +299,31 @@ func animate(delta: float) -> void:
 		skeleton.set_bone_pose_rotation(arm,skeleton.get_bone_pose_rotation(arm)*Quaternion(Vector3.RIGHT,-.9*threat_intensity))
 		body.rotation.x=-.08*threat_intensity
 	skeleton.force_update_all_bone_transforms()
+	var special:float=sin(clampf(power_time/.7,0,1)*PI);var cheer:float=0 if reduced_motion else sin(celebration_left*11)*minf(1,celebration_left*2)
+	var stride:float=sin(clock*13*motion.locomotion_rate)
+	body.position.y=(absf(stride)*.035 if moving and not airborne and not sliding else sin(clock*2)*.018)+absf(cheer)*.12
+	body.scale=Vector3(base_scale*(1+special*.09),base_scale*(1-special*.075),base_scale*(1+special*.09))
+	body.rotation.y=facing+sin(attack_time/.4*PI)*swipe_direction*.24+cheer*.08
+	body.rotation.x=lerpf(body.rotation.x,(-.12 if sliding else -.035 if moving else 0)+special*.08,1-exp(-delta*14))
+	body.visible=not (identity=="witch" and traversal_left>.3 and traversal_left<.47)
 	body.rotation.z=lerpf(body.rotation.z,-lean*.09,1-exp(-delta*10))
 	for index in range(wings.size()):
 		var sign_value:=1.0 if index==0 else -1.0
-		wings[index].rotation.y=sign_value*((.08 if airborne else 1.48 if sliding else 1.12)+sin(clock*(7 if airborne else 2))*(.18 if airborne else .04))
+		wings[index].rotation.y=sign_value*((.08 if airborne or traversal_left>0 else 1.48 if sliding else 1.02)+sin(clock*(9 if airborne or traversal_left>0 else 4))*(.22 if airborne or traversal_left>0 else .12))
 		wings[index].rotation.z=lerpf(wings[index].rotation.z,sign_value*-.32 if sliding else 0.0,1-exp(-delta*14))
 	if is_instance_valid(cape): cape.rotation.x=sin(clock*6)*.018
 	if is_instance_valid(aura):
 		aura.position.y=1.32+sin(clock*2.4)*.04
 		aura.rotation.y+=delta*1.4
 
-func attack() -> void:
-	attack_time=.4
+func attack(direction:int=1) -> void:
+	swipe_direction=direction;attack_time=.4
 	motion.strike()
 
 func power() -> void:
 	power_time=.7
 	motion.power()
+
+
+func celebrate() -> void:celebration_left=.75
+func traverse() -> void:traversal_left=.7;celebrate()

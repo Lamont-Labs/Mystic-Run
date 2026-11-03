@@ -27,12 +27,15 @@ func touch(action: String) -> void:
 	var at:=Vector2(game.ui.size.x*.48,game.ui.size.y*.58)
 	var down:=InputEventScreenTouch.new();down.index=7;down.position=at;down.pressed=true
 	root.push_input(down,true);await frames(1)
-	var offset:Vector2={"left":Vector2(-100,0),"right":Vector2(100,0),"jump":Vector2(0,-100),"slide":Vector2(0,100),"attack":Vector2.ZERO}[action]
+	var offset:Vector2={"left":Vector2(-100,0),"right":Vector2(100,0),"jump":Vector2(0,-100),"slide":Vector2(0,100),"attack":Vector2(100,0)}[action]
 	if action!="attack":
 		var drag:=InputEventScreenDrag.new();drag.index=7;drag.position=at+offset;drag.relative=offset
 		root.push_input(drag,true);await frames(1)
 	var up:=InputEventScreenTouch.new();up.index=7;up.position=at+offset;up.pressed=false
 	root.push_input(up,true);await frames(3)
+func steer(direction:int) -> void:
+	var event:=InputEventKey.new();event.pressed=true;event.keycode=KEY_LEFT if direction<0 else KEY_RIGHT
+	root.push_input(event,true);await frames(4)
 func capture(name: String) -> void:
 	await frames(4)
 	await game._capture("navigation-"+name)
@@ -46,7 +49,7 @@ func begin_route() -> void:
 	await frames(5)
 	check(game.ui.mode=="game","The countdown hands control to the runner")
 func run() -> void:
-	game=load("res://scenes/main.tscn").instantiate();game.testing=true;game.profile.settings.control_mode="swipe";game.profile.practice_complete=true
+	game=load("res://scenes/main.tscn").instantiate();game.testing=true;game.profile.settings.control_mode="thumb";game.profile.practice_complete=true
 	root.add_child(game);await frames(5)
 	check(game.ui.mode=="opening","Launch opens the cinematic opening screen")
 	await capture("opening")
@@ -58,6 +61,9 @@ func run() -> void:
 	await click("gargoyle");check(game.selected=="gargoyle","Roster selection changes the starting runner")
 	await capture("team")
 	await click("nav_records");check(game.ui.mode=="records","Records tab opens the saved journal")
+	await click("collection");check(game.ui.mode=="collection","The nine-treasure collection opens from Journal")
+	await click("back");await click("achievements");check(game.ui.mode=="achievements","The achievement gallery opens from Journal")
+	await click("back")
 	await capture("records-empty")
 	await click("settings");check(game.ui.mode=="settings","Header opens settings")
 	var before:bool=game.profile.settings.music
@@ -75,7 +81,7 @@ func run() -> void:
 	check(game.core.character_locked and not game.core.offer_route("forbidden","witch",120),"A live run rejects teammate handoffs")
 	check(not game.rows.any(func(row):return row.kind=="gate"),"The live course never spawns character gates")
 	var attacks_before:int=game.qa_attacks
-	await touch("left");check(game.lane==0,"A real touch swipe steers before finger release")
+	await steer(-1);check(game.lane==0,"A real keyboard direction steers the runner")
 	var framed:=true
 	for frame in range(15):
 		await frames(1)
@@ -83,11 +89,11 @@ func run() -> void:
 		framed=framed and projected.x>=0 and projected.x<=game.ui.size.x
 	check(framed,"Portrait lane changes keep the runner centre in frame")
 	check(absf(game.motor.position.x+2.6)<.05,"Lane change settles in a bounded time")
-	check(game.qa_attacks==attacks_before,"Releasing a swipe does not also strike")
-	await touch("right");await frames(15);check(game.lane==1,"Steering back to the centre works")
+	check(game.qa_attacks==attacks_before,"Steering inputs do not also strike")
+	await steer(1);await frames(15);check(game.lane==1,"Steering back to the centre works")
 	await touch("jump");await frames(10);check(game.motor.position.y>.6,"Swipe up produces a physical jump")
 	var rising:float=game.motor.velocity.y
-	await touch("attack");check(game.qa_attacks>attacks_before,"Tapping the open play area strikes")
+	await touch("attack");check(game.qa_attacks>attacks_before,"A horizontal touch swipe performs a basic strike")
 	check(game.motor.velocity.y>rising-3,"A Gargoyle basic strike does not force an airborne slam")
 	await touch("slide");await frames(16);check(game.sliding_left>0,"Swipe down lands into a slide")
 	await capture("run")
@@ -104,9 +110,11 @@ func run() -> void:
 	await capture("records-saved")
 	await click("nav_team");await click("witch");await click("nav_routes");await click("route_citadel");await begin_route()
 	var z:float=game.motor.position.z;var x:float=game.motor.position.x
+	game._add_row("enemy",game.lane,game.distance+10);game._update_rows(0)
+	var defeated_before:int=game.defeated
 	await click("power");await frames(8)
-	check(absf(game.motor.position.x-x)>1,"Witch blink chooses a clear neighbouring lane")
-	check(absf(game.motor.position.z-z)<.001,"Witch blink does not create forward/backward rubber-banding")
+	check(game.defeated>defeated_before,"Witch Starfall resolves an actual enemy hit")
+	check(absf(game.motor.position.z-z)<.001 and absf(game.motor.position.x-x)<.001,"A combat special does not act as the locked traversal ability")
 	game.core.distance_mm=650000;await frames(3)
 	check(game.ui.mode=="results" and game.core.phase=="completed","Reaching the expedition finish produces a clear result")
 	check(game.profile.route_records.citadel.clears==1,"A completed expedition records its clear")
@@ -114,7 +122,7 @@ func run() -> void:
 	await click("home");await click("settings");await click("howto");await click("practice")
 	game.countdown_left=.01;await frames(5)
 	check(game.course_id=="training" and game.training_step==0,"Practice starts its interactive first step")
-	await touch("left");await frames(14);await touch("right");await frames(14)
+	await steer(-1);await frames(14);await steer(1);await frames(14)
 	await touch("jump");await frames(8);await touch("slide");await frames(20)
 	check(game.training_step==4,"Practice observes actual steering, jump and slide inputs")
 	await capture("practice")
@@ -136,7 +144,7 @@ func run() -> void:
 	game._select_character("knight");game.course_id="endless";game._start_run();game.countdown_left=.001
 	game.set_physics_process(true);await frames(6)
 	check(game.guided_intro and game.course_id=="endless" and game.rows.is_empty(),"A first Endless run teaches controls in a protected opening")
-	await touch("left");await frames(14);await touch("right");await frames(14)
+	await steer(-1);await frames(14);await steer(1);await frames(14)
 	check(game.profile.intro_lessons==2,"Completed introduction lessons are retained for a later attempt")
 	game._start_run();game.countdown_left=.001;await frames(6)
 	check(game.guided_intro and game.training_step==2,"Retry resumes the first unfinished lesson")
