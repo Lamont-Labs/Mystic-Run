@@ -12,7 +12,7 @@ Reviewed November 2, 2026. This checklist records engineering work and outstandi
 ## Before a Play submission
 
 1. Decide the production application ID and versioning. The current development APK uses `com.lamontlabs.knightgargoylewitch.dev`; changing an already-published application ID creates a different app and must be reconciled with the owner's actual Play listing.
-2. Rebuild the release AAB with the confirmed production application ID and version code, sign it using the appropriate upload key, then verify its manifest, signing identity, Play Integrity and 16 KB compatibility. Do not substitute or disclose the preserved development key.
+2. Rebuild the release AAB with the confirmed production application ID and version code, sign it using the appropriate upload key, then verify its manifest, signing identity and 16 KB compatibility. Do not substitute or disclose the preserved development key.
 3. Publish `privacy-policy.html` on a publicly accessible, stable HTTPS page. Add the actual URL to the in-app notice and the Play listing. Re-review the notice and Data safety answers if any SDK, network access, advertising, account or purchase behavior changes.
 4. Complete the actual Play Console declarations, including Data safety, advertising, target audience, content rating, app access and store listing. Complete developer identity and account requirements as applicable.
 5. If this is a personal developer account created after November 13, 2023, check whether Google requires the 12-tester, 14-day closed test before production access. Account and existing-listing status have not been verified.
