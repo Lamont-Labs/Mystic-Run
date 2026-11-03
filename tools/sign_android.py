@@ -12,6 +12,7 @@ import tempfile
 import zipfile
 
 from build_android import run
+from android_policy import inspect_package
 
 PACKAGE='com.lamontlabs.knightgargoylewitch.dev'
 OWNER_CERTIFICATE='f5ee5d42ec692e402b52c0457be35c24fe1f92229005002155f675040dddb9c9'
@@ -87,6 +88,7 @@ def main():
         raise RuntimeError('Signed APK certificate did not match the preserved identity')
     run([sdk/'zipalign','-c','-P','16','4',output],timeout=30)
     metadata=run([sdk/'aapt','dump','badging',output],timeout=30)
+    android_policy=inspect_package(metadata)
     package=re.search(r"package: name='([^']+)' versionCode='([^']+)' versionName='([^']+)'",metadata)
     if not package or package.groups()!=(PACKAGE,str(manifest['version_code']),manifest['version_name']):
         raise RuntimeError('Signing changed the expected package or version')
@@ -105,6 +107,7 @@ def main():
             raise RuntimeError('Required bundled notices are missing')
     signed=dict(manifest)
     signed.update({
+        **android_policy,
         'apk':output.name,'bytes':output.stat().st_size,'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
         'unsigned_apk_sha256':manifest['sha256'],'certificate_sha256':OWNER_CERTIFICATE,
         'signature_verified':True,'requires_owner_signing':False,'preserved_keystore_matched':True,

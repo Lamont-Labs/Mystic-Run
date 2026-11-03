@@ -1,37 +1,18 @@
-# Mystic Run 0.5.0 development status
+# Mystic Run 0.6.0 development status
 
 November 2, 2026 · Lamont Labs
 
-The next playable revision implements the November 2 UX research in the existing Godot Android game. The previous distribution baseline was signed build 0.4.0 / 1008. The new verified artifact is recorded below.
-
-Implemented: direct opening-menu Run; the playable 3D character in menu/selection; runner selection returning to the same setup; Endless first for new profiles; protected integrated first-Endless lessons with retry/save progress and an honest skip state; preparatory enemy warnings and buffered active strikes; a smaller gameplay HUD; temporary district labels; visible power recharge; clearer results; and five authored architecture silhouettes per theme in the existing eleven-instance pool.
-
-A rendering defect was corrected in the custom triangle builder: authored outward normals are retained while winding is reversed to Godot’s clockwise front-face convention. This exposes the intended armor and environment materials instead of their black outline pass.
+The game implements swipe-based strikes, character specials, earned traversal powers, nine optional secret routes and unique treasures, fourteen achievements and persistent mastery. Brighter colors, animated runners, floating lanterns, star pickups and comic feedback make the game more playful. See the [gameplay guide](GAMEPLAY_AND_NAVIGATION.md).
 
 ## Verification
 
-Local verification: **656 assertions passed** (427 core, 38 gesture/course, 138 native navigation/experience, 35 tilt/elevation and 18 animation). The navigation suite also passed all 138 checks with actual rendered GUI hit testing. Three 3,600-tick runs each covered about 1.31 km with zero damage, deaths, handoffs or off-screen runner-centre ticks. A separate rendered Knight run covered 603 m. Menu, roster, pause, results, expedition and fracture frames were inspected at 540 × 960 and 540 × 1170 desktop viewports. Exact Android provenance is recorded after compilation and signing. Automated tests and software-rendered desktop frames are evidence of implemented behavior. They do not establish Android sensor orientation, touch comfort, sustained frame pacing, thermals or owner approval of the premium visual target.
+Local tests passed **791 Godot assertions**: 427 core, 38 gesture/course, 125 adventure/progression, 148 native navigation, 35 tilt/elevation and 18 animation. The navigation suite also passed with actual rendered desktop GUI hit testing. Each of the three runners completed a scripted 3,600-tick basic-only run of about 1.31 km with zero damage, deaths, handoffs or off-screen runner-centre ticks. Four Android manifest-policy guard cases and six signed-archive reconstruction tests passed.
 
-## Remaining quality work
+Actual desktop frames of the home screen and three distinct secret-room themes were inspected. Secret-room renders grant mastery only in memory for the test. These checks do not establish physical Android touch comfort, sensor orientation, battery life, sustained frame pacing or final art approval.
 
-The hero and scenery still use the existing base meshes plus procedural equipment and architecture. This revision improves their rendering, presentation and variety. It does not establish finished production character art or a premium visual-quality approval. The next art benchmark remains one polished hero, sentinel and coherent 60–90-second district judged from the chase camera in motion.
 
-## Reviewed gameplay frames
+## Android and Play status
 
-![Actual 0.5.0 opening/menu](previews/menu-0.5.0.jpg)
+A signed **local development APK** was built from source commit `9f9e5364a8de4bee301e87d9670dd9ffb11aff9a`: version 0.6.0 / 1011, 38,349,720 bytes, SHA-256 `49653f1ea53e848269e25fc658093fa408350117e528ea76304534df2d8bbcb0`. All 100 packaged runtime source and asset hashes matched the reviewed files. The APK uses the existing owner signing identity and passes signature, ZIP integrity, unchanged payload, bundled notices, 16 KB archive alignment and 16 KB native ELF segment alignment checks. Its packaged manifest targets API 36, supports API 24 and later, and declares vibration as its only permission. It has not been installed on a physical Android device.
 
-![Actual 0.5.0 chase-camera frame](previews/gameplay-0.5.0.jpg)
-
-![Actual 0.5.0 runner selection](previews/runners-0.5.0.jpg)
-
-## Verified Android artifact
-
-- APK: `Mystic_Run_0.5.0_GitHub_Build1010.apk`; version 0.5.0 / 1010; arm64; 38,320,587 bytes.
-- SHA-256: `72752b4a8f6b188c0cfc0507639a853e029c63c06c7acb5b9d36054915305f30`.
-- Compilation source: `ef919ae421e80ddb4718fb009b0940996df6fd68`.
-- [Successful GitHub compilation](https://github.com/Lamont-Labs/Mystic-Run/actions/runs/41539637667).
-- All 94 runtime source and asset hashes in the compilation manifest match the local reviewed implementation.
-- Preserved owner certificate, package/version, APK signature, ZIP integrity, unchanged packaged game payload, six notices, APK 16 KB alignment and native ELF 16 KB alignment verified.
-- Signed-archive reconstruction was checked byte-for-byte; the publisher uses `.github/android-releases/build1010.json` to publish the exact signed artifact.
-- Release tag: `v0.5.0-build1010`. The GitHub Release manifest and SHA256SUMS identify the published bytes.
-- Physical Android installation, sensors, touch comfort, sustained performance and final art approval remain device/owner checks.
+This 0.6.0 APK was compiled and signed locally; it has not been published as a GitHub release. The remote branch contains an earlier 0.6.0 checkpoint, while the final source and this local build record are in the local working repository. A production AAB, public privacy-policy URL, Play Console declarations, applicable closed testing and actual device validation remain open. See [Google Play preparation](GOOGLE_PLAY_READINESS.md).

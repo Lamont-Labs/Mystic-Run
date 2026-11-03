@@ -35,9 +35,11 @@ jobs:
           log-accepted-android-sdk-licenses: false
           packages: ''
       - name: Install Android SDK packages
-        run: sdkmanager 'platform-tools' 'build-tools;35.0.1' 'platforms;android-35'
+        run: sdkmanager 'platform-tools' 'build-tools;35.0.1' 'platforms;android-36'
       - name: Check gameplay core
         run: python3 tools/verify_core.py --godot "$(cat "${RUNNER_TEMP}/godot-path")"
+      - name: Check Android manifest policy guards
+        run: python3 -m unittest discover -s tools -p test_android_policy.py
       - name: Compile and inspect unsigned APK
         run: |
           python3 tools/build_android.py --unsigned --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --version-code "$((1000 + GITHUB_RUN_NUMBER))" --version-name 0.6.0

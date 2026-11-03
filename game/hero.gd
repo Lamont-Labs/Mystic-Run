@@ -66,7 +66,7 @@ func _add(geometry: RefCounted, bone: String) -> Node3D:
 	return result
 
 func _build() -> void:
-	mats={"steel":_paint("658fc1",0.40),"edge":_paint("b4e1ef",0.32),"dark":_paint("25375a",0.20),"gold":_paint("f1c365",0.38),"cloth":_paint("694896"),"stone":_paint("8aaed2"),"glow":_paint("5de9f2",0.25,1.5)}
+	mats={"steel":_paint("658fc1",0.40),"edge":_paint("b4e1ef",0.32),"dark":_paint("25375a",0.20),"gold":_paint("f1c365",0.38),"cloth":_paint("694896"),"stone":_paint("6485a4" if identity=="gargoyle" else "8aaed2"),"glow":_paint("5de9f2",0.25,1.5)}
 	body=Node3D.new()
 	body.rotation.y=PI
 	base_scale=1.16 if identity=="gargoyle" else 1.08
@@ -81,7 +81,7 @@ func _build() -> void:
 			var material := ShaderMaterial.new()
 			material.shader=BODY_SHADER
 			material.set_shader_parameter("character_kind",["knight","gargoyle","witch"].find(identity))
-			material.set_shader_parameter("base_color",Color("3c658f") if identity=="knight" else Color("7199b8") if identity=="gargoyle" else Color("6b438a"))
+			material.set_shader_parameter("base_color",Color("3c658f") if identity=="knight" else Color("3e667e") if identity=="gargoyle" else Color("6b438a"))
 			material.set_shader_parameter("highlight_color",accent())
 			var outline := ShaderMaterial.new()
 			outline.shader=OUTLINE

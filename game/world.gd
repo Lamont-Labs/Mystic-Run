@@ -19,6 +19,7 @@ var course_bend: float = 0.0
 var flat_course: bool = false
 var city_layers: Array[MeshInstance3D] = []
 var secret_theme:String=""
+var secret_level:String=""
 var reduced_motion:bool=false
 var secret_meshes:Dictionary={}
 var lanterns:Array[Node3D]=[]
@@ -49,7 +50,8 @@ func configure() -> void:
 			var template:MeshInstance3D=_chunk_mesh(kind,variant)
 			pieces.append(template.mesh);template.free()
 		themes[kind]=pieces
-		var chamber:MeshInstance3D=_secret_mesh(kind);secret_meshes[kind]=chamber.mesh;chamber.free()
+		for level in range(3):
+			var chamber:MeshInstance3D=_secret_mesh(kind,level);secret_meshes[["citadel","spires","rift"][level]+"/"+kind]=chamber.mesh;chamber.free()
 	for index in range(11):
 		var node := MeshInstance3D.new()
 		node.mesh = themes[current_theme][0]
@@ -220,7 +222,8 @@ func update(distance: float, delta: float) -> void:
 			chunks[index].mesh=themes[current_theme][variant]
 			chunks[index].set_meta("variant",variant)
 			chunks[index].set_meta("piece_name",PIECE_NAMES[variant])
-		var intended:Mesh=secret_meshes[secret_theme] if secret_meshes.has(secret_theme) else themes[current_theme][variant]
+		var secret_key:String=secret_level+"/"+secret_theme
+		var intended:Mesh=secret_meshes[secret_key] if secret_meshes.has(secret_key) else themes[current_theme][variant]
 		if chunks[index].mesh!=intended:chunks[index].mesh=intended
 	for i in range(lanterns.size()):
 		lanterns[i].position.z=14-fposmod(i*19.0-distance*.8,160.0)
@@ -368,7 +371,7 @@ func prop(kind: String) -> Node3D:
 	return root
 
 
-func _secret_mesh(kind:String) -> MeshInstance3D:
+func _secret_mesh(kind:String,level:int=0) -> MeshInstance3D:
 	var b=Geo.new();var glow:Material=materials[{"knight":"amber","gargoyle":"teal","witch":"violet"}[kind]]
 	b.box(Vector3(0,-.42,-12),Vector3(9.4,.8,24),materials.dark)
 	for row in range(8):
@@ -399,6 +402,7 @@ func _secret_mesh(kind:String) -> MeshInstance3D:
 		for z in [-2.0,-14.0]:_arch(b,z,6.2,5.8,materials.gold,.18)
 	elif kind=="gargoyle":_arch(b,-12,8.5,8,glow,.09)
 	else:b.ring(Vector3(0,.06,-12),3.4,.04,glow);b.ring(Vector3(0,.07,-12),2.7,.025,materials.gold)
+	_decorate_secret_level(b,kind,level,glow)
 	return b.build()
 
 func _build_lanterns() -> void:
@@ -426,3 +430,30 @@ func _star(b:RefCounted,at:Vector3,radius:float,material:Material) -> void:
 			var first:Vector3=at+Vector3(sin(a)*r0,cos(a)*r0,0);var second:Vector3=at+Vector3(sin(c)*r1,cos(c)*r1,0);var centre:Vector3=at+Vector3(0,0,side*radius*.25)
 			if side>0:b.triangle(second,first,centre,material)
 			else:b.triangle(first,second,centre,material)
+
+func _decorate_secret_level(b:RefCounted,kind:String,level:int,glow:Material) -> void:
+	# Each character/level pair has its own authored mesh and physical treasure ID.
+	if level==0:
+		for side in [-1.0,1.0]:
+			for z in [-2.0,-22.0]:
+				b.armor(Vector3(side*8.4,4,z),Vector3(1.5,8,1.4),materials.pale,.82)
+				if kind=="gargoyle":
+					b.cylinder(Vector3(side*7.0,5.2,z),.8,1.2,materials.gold,.55,Vector3.ZERO,10)
+					b.sphere(Vector3(side*7.0,4.5,z),Vector3.ONE*.25,glow)
+				elif kind=="witch":
+					for shelf in range(4):
+						b.box(Vector3(side*7.0,1.1+shelf*.9,z),Vector3(1.5,.12,1.3),materials.gold)
+						for book in range(4):b.box(Vector3(side*7.0+(book-1.5)*.25,1.4+shelf*.9,z),Vector3(.16,.55,.8),glow if book%2 else materials.pale)
+	else:
+		var accent:Material=materials.teal if level==1 else materials.violet
+		for side in [-1.0,1.0]:
+			for z in [-4.0,-12.0,-20.0]:
+				b.cylinder(Vector3(side*9.5,1.4,z),1.4,3,materials.pale,0,Vector3(PI,0,0),5)
+				b.ring(Vector3(side*9.5,3.4,z),1.4,.08,accent,Vector3(PI/2,0,.35 if level==1 else -.35))
+		if level==1:
+			b.ring(Vector3(0,9.4,-12),2.7,.12,materials.gold,Vector3(PI/2,0,0))
+			_star(b,Vector3(0,9.4,-12),1.2,glow)
+		else:
+			b.ring(Vector3(0,8.6,-12),3.2,.13,accent,Vector3(PI/2,0,0))
+			b.ring(Vector3(0,8.6,-12),2.6,.04,materials.gold,Vector3(PI/2,0,0))
+			for star in range(5):_star(b,Vector3((star-2)*1.3,7.6+sin(star)*.4,-12),.35,glow)

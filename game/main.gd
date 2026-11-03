@@ -89,6 +89,7 @@ var run_badges:Array[String]=[]
 var mastery_enemy_offset:int=0
 var mastery_shard_offset:int=0
 var qa_use_specials:bool=true
+var profile_error:String=""
 var training_step:int=0
 var guided_intro: bool=false
 var menu_clear_rows:Array[Dictionary]=[]
@@ -120,6 +121,7 @@ var menu_capture: bool = false
 var anchor: Node3D
 var quitting: bool = false
 var testing: bool = false
+var test_profile_root:String=""
 var starting_character: String = "knight"
 var qa_incidents: Array[Dictionary] = []
 var qa_jump_count: int = 0
@@ -321,6 +323,7 @@ func _sync_front() -> void:
 	profile["progress"]=progression
 	ui.profile_data=profile.duplicate(true)
 	ui.profile_data["in_run"]=core.phase=="paused"
+	ui.profile_data["reset_error"]=profile_error
 	ui.selected=selected
 	ui.course_id=course_id
 	ui.refresh()
@@ -365,7 +368,7 @@ func _start_run() -> void:
 	effects.clear()
 	core=Core.new()
 	secret_state.clear();spawned_secrets.clear();run_treasures.clear();run_badges.clear()
-	world.secret_theme="";manual_steering=false;run_damage=0;combo=0;combo_left=0;unprotected_start=0;mastery_enemy_offset=0;mastery_shard_offset=0
+	world.secret_theme="";world.secret_level="";manual_steering=false;run_damage=0;combo=0;combo_left=0;unprotected_start=0;mastery_enemy_offset=0;mastery_shard_offset=0
 	ui.thumb_pad.reset()
 	starting_character=selected
 	if qa and selected=="gargoyle":qa_target_sequence=[1,2,0,2,1,0]
@@ -885,9 +888,12 @@ func _intent(action: String, value: String="") -> void:
 			run_outcome="abandoned";failure_detail="You ended the run. Your progress up to this point is in your journal.";core.fail_run("abandoned");_end_run()
 		"reset_progress":
 			if core.phase=="paused" or ui.mode!="reset_confirm":return
+			var previous_profile:Dictionary=profile.duplicate(true);var previous_progress:Dictionary=progression.duplicate(true)
 			progression=Progress.fresh();profile.best=0;profile.runs=0;profile.relics=0;profile.history=[];profile.route_records={}
 			profile.practice_complete=false;profile.intro_dismissed=false;profile.intro_lessons=0
-			_save_profile();DirAccess.remove_absolute(OS.get_user_data_dir()+"/profile-v1.previous.json")
+			if not _save_profile(true):
+				profile=previous_profile;progression=previous_progress;profile_error="Couldn't clear the local save. Check free storage and try again.";_sync_front();return
+			profile_error=""
 			_open_screen("home",true)
 		"settings":_open_screen("settings")
 		"credits":_open_screen("credits")
@@ -1019,20 +1025,28 @@ func _load_profile() -> void:
 			break
 
 
-func _save_profile() -> void:
-	if testing:return
-	var temporary := "user://profile-v1.pending.json"
+func _save_profile(clear_backup:bool=false) -> bool:
+	if testing and test_profile_root.is_empty():return true
+	var root := test_profile_root if testing else OS.get_user_data_dir()
+	var temporary := root+"/profile-v1.pending.json"
 	var file := FileAccess.open(temporary,FileAccess.WRITE)
 	if file == null:
-		return
+		return false
 	profile["progress"]=progression
 	file.store_string(JSON.stringify(profile))
+	file.flush()
+	var write_error:Error=file.get_error()
 	file.close()
-	var root := OS.get_user_data_dir()
-	if FileAccess.file_exists("user://profile-v1.json"):
-		DirAccess.remove_absolute(root+"/profile-v1.previous.json")
-		DirAccess.rename_absolute(root+"/profile-v1.json",root+"/profile-v1.previous.json")
-	DirAccess.rename_absolute(root+"/profile-v1.pending.json",root+"/profile-v1.json")
+	if write_error!=OK:return false
+	if FileAccess.file_exists(root+"/profile-v1.previous.json") and DirAccess.remove_absolute(root+"/profile-v1.previous.json")!=OK:return false
+	if FileAccess.file_exists(root+"/profile-v1.json"):
+		if DirAccess.rename_absolute(root+"/profile-v1.json",root+"/profile-v1.previous.json")!=OK:return false
+	if DirAccess.rename_absolute(root+"/profile-v1.pending.json",root+"/profile-v1.json")!=OK:
+		DirAccess.rename_absolute(root+"/profile-v1.previous.json",root+"/profile-v1.json")
+		return false
+	if clear_backup and FileAccess.file_exists(root+"/profile-v1.previous.json"):
+		return DirAccess.remove_absolute(root+"/profile-v1.previous.json")==OK
+	return true
 
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -1223,7 +1237,7 @@ func _enter_secret(entry:Dictionary) -> bool:
 	if Secrets.room(str(entry.get("level","")),selected).get("id","")!=entry.get("id",""):return false
 	if course_id!="endless" and entry.get("level","")!=course_id:return false
 	secret_state=entry.duplicate(true);secret_state["start"]=distance;secret_state["end"]=distance+96
-	_clear_course_rows();world.secret_theme=selected;heroes[selected].traverse()
+	_clear_course_rows();world.secret_theme=selected;world.secret_level=str(entry.level);heroes[selected].traverse()
 	ui.message(str(entry.title)+"!",2.5);_sound("handoff",1.25);_pulse(heroes[selected].accent(),motor.position+Vector3(0,.2,0),2.0)
 	for i in range(16):_add_row("shard",int(entry.lane) if i<5 else 1,distance+8+i*3)
 	_add_row("enemy",2,distance+34);_add_row("beam",0,distance+42);_add_row("artifact",1,distance+62)
@@ -1232,7 +1246,7 @@ func _enter_secret(entry:Dictionary) -> bool:
 func _update_secret_route() -> void:
 	if secret_state.is_empty():return
 	if distance>=float(secret_state.end):
-		_clear_course_rows();secret_state.clear();world.secret_theme="";next_row=distance+42;row_index=0
+		_clear_course_rows();secret_state.clear();world.secret_theme="";world.secret_level="";next_row=distance+42;row_index=0
 		ui.secret_hint="";ui.message("BACK TO THE ADVENTURE!",1.4);return
 	ui.secret_hint="FOLLOW THE STARS TO THE TREASURE!" if distance<float(secret_state.start)+50 else "STEER INTO THE FLOATING TREASURE!" if not run_treasures.has(str(secret_state.id)) else "TREASURE FOUND!"
 

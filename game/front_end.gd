@@ -185,7 +185,7 @@ func _home() -> void:
 	var line:=_text(content,"BIG MAGIC. LITTLE TROUBLE.",17,GOLD)
 	line.horizontal_alignment=HORIZONTAL_ALIGNMENT_CENTER
 	var stage:=Control.new();stage.mouse_filter=Control.MOUSE_FILTER_IGNORE
-	stage.custom_minimum_size.y=clampf(size.y*.25,210,330);content.add_child(stage)
+	stage.custom_minimum_size.y=clampf(size.y-930,250,630);content.add_child(stage)
 	stage_control=stage
 	var hero:=_panel(content,true)
 	var row:=HBoxContainer.new();hero.add_child(row)
@@ -207,7 +207,7 @@ func _team() -> void:
 	for kind in ["knight","gargoyle","witch"]:
 		var b:=_button(row,kind,kind.to_upper(),"character",kind,false,96);b.add_theme_font_override("font",title_font);b.add_theme_font_size_override("font_size",30)
 		if kind==selected:b.add_theme_stylebox_override("normal",_style(false,true))
-	var stage:=Control.new();stage.custom_minimum_size.y=clampf(size.y*.20,190,280);stage.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(stage);stage_control=stage
+	var stage:=Control.new();stage.custom_minimum_size.y=clampf(size.y-1200,200,420);stage.mouse_filter=Control.MOUSE_FILTER_IGNORE;content.add_child(stage);stage_control=stage
 	var hero:=_panel(content,true);var progress:Dictionary=_progress()
 	_text(hero,selected.to_upper()+" · "+HEROES[selected].power,37,WHITE,true)
 	_text(hero,HEROES[selected].detail,22,MUTED)
@@ -355,6 +355,7 @@ func _privacy() -> void:
 func _reset_confirm() -> void:
 	_heading("START A FRESH ADVENTURE?","CLEAR LOCAL PROGRESS")
 	_text(content,"This removes run records, mastery, unlocked abilities, badges, treasures and lessons from this phone, including the previous-save backup. Control, audio and reduced-motion settings stay. This cannot be undone.",25,MUTED)
+	if not str(profile.get("reset_error","")).is_empty():_text(content,str(profile.reset_error),24,GOLD)
 	_button(actions,"confirm_clear","YES, CLEAR MY PROGRESS","reset_progress");_button(actions,"cancel_clear","KEEP MY ADVENTURE","back","",true)
 func _animate_page() -> void:
 	if is_instance_valid(page_tween):page_tween.kill()
