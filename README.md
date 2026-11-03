@@ -2,7 +2,7 @@
 
 **Current revision: 0.6.1.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.
 
-[Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay guide](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build and verification](docs/BUILD_STATUS.md) · [Google Play preparation](docs/GOOGLE_PLAY_READINESS.md)
+[Download 0.6.1 / build 1015 APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.6.1-build1015/Mystic_Run_0.6.1_GitHub_Build1015.apk) · [Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay guide](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build and verification](docs/BUILD_STATUS.md) · [Google Play preparation](docs/GOOGLE_PLAY_READINESS.md)
 
 Tilt to steer, or use the separate thumb pad. Swipe up to jump, down to slide, and left or right to strike. Each runner has one special-attack button. Choose a runner for a whole run and try Endless or the Citadel, Spires and Rift expeditions.
 
