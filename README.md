@@ -1,16 +1,14 @@
 # Mystic Run — Android runner
 
-**Current revision: 0.5.0.** A direct opening-to-run flow, the playable 3D runner in the menu, an Endless default for new profiles, integrated first-run lessons, earlier combat preparation, a smaller HUD and five authored architecture variants.
+**Current revision: 0.6.0.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.
 
-[Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay contract](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build status](docs/BUILD_STATUS.md)
+[Earlier Android releases](https://github.com/Lamont-Labs/Mystic-Run/releases) · [Gameplay guide](docs/GAMEPLAY_AND_NAVIGATION.md) · [Build and verification](docs/BUILD_STATUS.md) · [Google Play preparation](docs/GOOGLE_PLAY_READINESS.md)
 
-Choose Knight, Gargoyle or Witch before starting. Tilt to steer continuously, swipe up to jump, down to slide, tap to strike, and use the selected runner’s power. One character stays with you through climbs, bridges and descents. Existing runner choices, mode choices, settings and records are loaded; a new profile begins with Endless.
+Tilt to steer, or use the separate thumb pad. Swipe up to jump, down to slide, and left or right to strike. Each runner has one special-attack button. Choose a runner for a whole run and try Endless or the Citadel, Spires and Rift expeditions.
 
-The opening is the main menu. Press Run directly, change a runner without choosing a course again, or select an optional finite expedition through Modes. The first Endless run teaches controls in a protected stretch and continues into the same run. Lessons survive retries and saves. Skip is remembered separately from completed practice. Guided practice remains under Settings → How to Play.
+Earn character mastery XP from ordinary runs to unlock each runner's traversal ability. Look for that character's portal, align with it and swipe up to find a secret route. Each expedition has a different chamber and treasure for each character: nine treasures in all. The journal tracks discoveries and fourteen achievements.
 
-The game works offline. Its Android package and preserved owner signing certificate support installation over the existing development build.
-
-This is a development alpha. The premium production-art target remains open, and desktop verification does not establish physical Android sensor behavior or sustained phone performance.
+The game works offline and saves progress on the device. This is a development build. The separately signed APK is for direct installation; a production Google Play bundle, store listing and device validation remain to be completed.
 
 ## Develop and verify
 
@@ -21,10 +19,8 @@ python3 tools/bootstrap_godot.py --cache ../engine
 python3 tools/verify_core.py --godot ../engine/Godot_v4.7.2-stable_linux.x86_64
 ```
 
-GitHub checks cover the core, gestures, native navigation, tilt/elevation, animation and three-character scene runs. Android compilation and owner signing are separate. Check the APK’s manifest for its exact compilation source and signature evidence.
+GitHub checks cover progression, gestures, navigation, tilt/elevation, animation and basic-only scene runs for all three characters. Android compilation is followed by separate owner signing. The Android Play Bundle export preset is a starting configuration and has not yet been validated as a production bundle.
 
 ## Art and motion
 
-Character illustrations and distant city art were generated for Mystic Run. Humanoid source meshes and authored motion are Quaternius CC0. Custom equipment, cloth, architecture, interface, game systems and synthesized audio are in this repository. Version 0.5.0 corrects clockwise surface winding for custom geometry, which previously let the black outline pass cover armor and scenery.
-
-See `assets/ART_PROVENANCE.json`, `assets/models/quaternius/PROVENANCE.json`, `docs/ART_DIRECTION.md` and the bundled licenses.
+The actual playable 3D runner appears in the menu. Humanoid source meshes and motion are Quaternius CC0; custom equipment, architecture, interface, game systems and synthesized audio are in this repository. Distant city art and character illustrations were generated for Mystic Run. See `assets/ART_PROVENANCE.json`, `assets/models/quaternius/PROVENANCE.json` and bundled notices.

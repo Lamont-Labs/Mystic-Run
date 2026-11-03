@@ -1,49 +1,28 @@
-# Mystic Run 0.5.0 — Current gameplay contract
+# Mystic Run 0.6.0 — Gameplay and navigation
 
 November 2, 2026 · Lamont Labs
 
-This contract supersedes earlier relay navigation and 0.4.0’s separate Enter the City screen. The game remains an offline, portrait Android runner with Knight, Gargoyle and Witch selected before play.
+Mystic Run is an offline portrait runner. Pick the Knight, Gargoyle or Witch on the home screen; that character stays with you for the whole run. Choose Endless or a finite Citadel, Spires or Rift expedition. The first Endless run teaches the controls in a protected stretch; lessons may be skipped and replayed from Settings.
 
-## Opening and setup
+## Controls
 
-The opening is an immediately usable main menu: title, the actual playable 3D runner, current mode and Run. Selecting a runner returns to this context and preserves the mode. A new profile starts with Endless; existing saved choices are respected. Modes also offers the finite Citadel, Spires and Rift expeditions. Journal and Settings stay outside active play.
+- Tilt to steer continuously, or select the separate thumb steering pad. The pad owns its touch so steering cannot trigger an attack.
+- Swipe up to jump, down to slide, and left or right to perform a basic strike. A tap does not attack; there is no basic-attack button.
+- Use the special button for Sunburst (Knight), Stone Pop (Gargoyle) or Starfall (Witch). These combat abilities are available from the beginning and recharge independently.
+- Pause releases held input. Tilt is recalibrated on resume. Reduced motion softens decorative menu and effect animations while preserving necessary movement cues.
 
-The menu camera fits the runner into the reserved character area at the current aspect ratio. Menu and gameplay use the same model, equipment, materials and animation system. Illustration assets remain bundled as references and for existing supporting presentation.
+An approaching enemy gets a preparatory bracket, then an active strike cue. Basic attacks are buffered in the outer cue range and require the appropriate range, lane, height and clear line of sight. Specials resolve actual targets instead of advancing the runner or switching character.
 
-## Controls and session
+## Mastery and secrets
 
-- Continuous calibrated tilt is the default; swipe steering remains available as a sensor fallback or explicit setting.
-- Swipe up jumps; swipe down slides. Jump and slide buffers remain active.
-- Tap the open play area or Strike to attack. Power uses the selected runner’s signature skill.
-- One chosen character remains locked for the entire run. No teammate gates or mid-run replacements are spawned.
-- The shared elevation profile drives road deformation, physical runner height, props and the chase camera.
-- The 1.5-second ready cue holds progression still while calibrating. Tilt resume uses a 1.2-second ready cue.
-- Pause and nested settings preserve the active run and suspend gameplay timers. Recenter uses an explicit protected ready period.
+Runs award each character mastery XP from unprotected distance, earned stars, defeated enemies, newly discovered treasure and course clears. The protected lesson stretch and practice sentinel grant no mastery. At 60 XP, the chosen character unlocks Sunbreak, Skyglide or Riftwalk. These contextual traversal abilities are distinct from combat specials and are optional for the ordinary route.
 
-## First Endless run
+Each expedition contains one portal for each runner, accessible only with that runner's earned traversal ability. Align with the portal's lane and swipe up to enter. Endless cycles through the three districts and their corresponding portals. Each 96-metre pocket has stars, an encounter, a physical treasure and its own level-and-runner architecture; its exit rejoins the ordinary route. Treasures are awarded once, including on replay. The journal records all nine and fourteen achievements; saves migrate and sanitize older profiles.
 
-An unfinished first-run introduction teaches left, centre, jump, slide, a successful strike and the selected power. During this stretch the encounter director is held and damage is suppressed. The combat lesson introduces one approaching sentinel; a miss repositions the lesson target ahead for another attempt.
+## Feedback and results
 
-Completed lesson indices are saved and restored. Retry resumes the next unfinished lesson. Completing the power lesson clears tutorial targets, resumes encounters ahead of the runner and continues the same Endless session. It creates no separate completed-run record.
+Star pickups, combo pop-ups, lively motion, a special recharge ring and bright landmarks add energy and make actions easier to read. Results show distance, score, mastery XP, newly unlocked abilities, discoveries and badges. Replay a route or change runner from the results screen. Settings includes an offline privacy notice and a confirmation flow to clear saved progress while retaining preferences.
 
-Skip dismisses the introduction and is saved separately from `practice_complete`. Standalone practice remains replayable through Settings → How to Play and retains its own practice-completion result. Finite expeditions begin directly, without consuming their short course distance on integrated lessons.
+## Testing boundaries
 
-## Combat readability
-
-Aligned, unobstructed enemies become warning candidates within 1.6 seconds of nominal approach at the current pace. Sentinels prepare their weapon as they approach. A gold target bracket is preparatory; the active mint bracket and Tap to Strike cue correspond to an accepted immediate or buffered attack.
-
-For melee, the cue distance is `min(11, 5.1 + max(speed, 18.5) × 0.24)` metres. An input in the outer cue range waits until 5.1 metres, then resolves through the existing animation, height, range, line-of-sight and attack-token checks. Witch’s ranged cue remains 13 metres. Warning logic is not a guarantee of a full visible 1.6 seconds across every crest, occlusion or phone latency condition.
-
-## HUD and results
-
-The persistent HUD prioritizes distance, compact health and relics, Pause, Strike and Power. District names appear briefly. Finite courses show exit progress. Routine speed, steering and ability-name diagnostics are hidden. Power communicates recharge around its action button. Pause, action and skip controls have larger canvas targets; physical dp and thumb comfort remain device checks.
-
-Results show distance, score/relics once, defeated sentinels and the personal best. Run Again preserves the selected setup. Change Runner, Change Route and Return Home remain available.
-
-## Playable presentation
-
-Five prebuilt 24-metre silhouettes—Cathedral Arcade, Open Crown Bridge, Ribbed Vault, Reliquary Court and Broken Works—share the same deck width, connections and elevation contract. A fixed twelve-piece phrase assigns these variants to eleven recycled visible instances. There are fifteen prebuilt theme/variant meshes. Runtime recycling swaps their mesh references; it does not construct new architecture per frame.
-
-Custom geometry uses clockwise front faces with outward normals. This fixes the reversed surfaces that previously presented the outline pass as black armor or scenery. The corrected material faces, shared 3D menu model, cloth and current chase-camera frames are the visual evidence for this revision.
-
-This is an incremental playable revision. Detailed production character art, higher quality authored environments, expanded animation and sustained Android performance remain open.
+Automated scene tests exercise all nine rooms, treasure pickup, exit, controls, progression, saves and achievements. Actual desktop renders include a scripted temporary mastery unlock to inspect secret chambers. These checks are not measurements of Android touch comfort, sensor orientation, device performance or final visual approval.

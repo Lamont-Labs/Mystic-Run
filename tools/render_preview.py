@@ -24,6 +24,9 @@ def main():
     parser.add_argument('--resolution', default='540x960')
     parser.add_argument('--screen', default='home')
     parser.add_argument('--navigation',action='store_true')
+    parser.add_argument('--script', help='Run a game-owned preview script instead of the menu capture')
+    parser.add_argument('--movie', type=Path, help='Optional Godot movie output (.avi)')
+    parser.add_argument('--level', choices=['citadel','spires','rift'], default='citadel')
     args = parser.parse_args()
     if not args.xvfb and not (args.xorg_config and shutil.which('Xorg')):
         raise SystemExit('Xvfb is required for actual rendered previews')
@@ -62,12 +65,18 @@ def main():
             command = [str(args.godot),'--path',str(root),'--audio-driver','Dummy','--resolution',args.resolution]
             if args.navigation:
                 command += ['--script','res://tests/gameplay_navigation.gd']
-            if not args.qa_ticks and not args.navigation:
+            elif args.script:
+                command += ['--script',args.script]
+            if args.movie:
+                command += ['--write-movie',str(args.movie.resolve()),'--fixed-fps','30','--disable-vsync']
+            elif args.script:
+                command += ['--fixed-fps','30','--disable-vsync']
+            if not args.qa_ticks and not args.navigation and not args.script:
                 command += ['--quit-after',str(args.frames)]
-            command += ['--',f'--capture-dir={args.output}',f'--character={args.character}']
-            command += ['--qa',f'--qa-ticks={args.qa_ticks}'] if args.qa_ticks else [] if args.navigation else ['--qa-menu',f'--screen={args.screen}']
+            command += ['--',f'--capture-dir={args.output}',f'--character={args.character}',f'--level={args.level}',f'--preview-frames={args.frames}',f'--screen={args.screen}']
+            command += ['--qa',f'--qa-ticks={args.qa_ticks}'] if args.qa_ticks else [] if args.navigation or args.script else ['--qa-menu',f'--screen={args.screen}']
             with (args.output/'game.log').open('w') as log:
-                run = subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=360 if args.qa_ticks or args.navigation else 60)
+                run = subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=360 if args.qa_ticks or args.navigation or args.script else 60)
             print(f'Render exit={run.returncode}; output={args.output}')
             return run.returncode
         finally:

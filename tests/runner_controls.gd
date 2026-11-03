@@ -15,7 +15,7 @@ func drag(at:Vector2,index:int=0) -> InputEventScreenDrag:
 func _initialize() -> void:
 	var gesture:=Gesture.new()
 	gesture.feed(finger(Vector2(300,600),true),720,0)
-	check(gesture.feed(finger(Vector2(302,600),false),720,.10)=="attack","A short open-area tap strikes")
+	check(gesture.feed(finger(Vector2(302,600),false),720,.10)=="","A short open-area tap has no combat action")
 	gesture.feed(finger(Vector2(300,600),true),720,1)
 	check(gesture.feed(finger(Vector2(300,600),false),720,1.5)=="","A held touch is not mistaken for a tap")
 	gesture.feed(finger(Vector2(300,600),true),720,2)

@@ -18,6 +18,11 @@ var elapsed: float = 0.0
 var course_bend: float = 0.0
 var flat_course: bool = false
 var city_layers: Array[MeshInstance3D] = []
+var secret_theme:String=""
+var secret_level:String=""
+var reduced_motion:bool=false
+var secret_meshes:Dictionary={}
+var lanterns:Array[Node3D]=[]
 
 
 func _paint(hex: String, metal: float=0.0, glow: float=0.0) -> ShaderMaterial:
@@ -31,11 +36,11 @@ func _paint(hex: String, metal: float=0.0, glow: float=0.0) -> ShaderMaterial:
 
 func configure() -> void:
 	materials = {
-		"stone":_paint("292a48"),"pale":_paint("4c4a6b"),"dark":_paint("141c32"),
-		"metal":_paint("4b5471",.35),"gold":_paint("ac8957",.30),
+		"cloud":_paint("ddd5ec"),"stone":_paint("565b83"),"pale":_paint("8b87b3"),"dark":_paint("242d4f"),
+		"metal":_paint("4b5471",.35),"gold":_paint("e8b960",.24),
 		"amber":_paint("eea556",.10,.55),"teal":_paint("4cb5ca",.10,.70),
 		"violet":_paint("a064e5",.10,.70),"red":_paint("f36779",.10,.65),
-		"void":_paint("080b1c"),"road":_paint("555364"),"road_alt":_paint("525161"),
+		"void":_paint("080b1c"),"road":_paint("78758f"),"road_alt":_paint("737c95"),
 	}
 	materials.road.set_shader_parameter("pavement",true)
 	materials.road_alt.set_shader_parameter("pavement",true)
@@ -45,6 +50,8 @@ func configure() -> void:
 			var template:MeshInstance3D=_chunk_mesh(kind,variant)
 			pieces.append(template.mesh);template.free()
 		themes[kind]=pieces
+		for level in range(3):
+			var chamber:MeshInstance3D=_secret_mesh(kind,level);secret_meshes[["citadel","spires","rift"][level]+"/"+kind]=chamber.mesh;chamber.free()
 	for index in range(11):
 		var node := MeshInstance3D.new()
 		node.mesh = themes[current_theme][0]
@@ -54,6 +61,7 @@ func configure() -> void:
 	_build_horizon()
 	_build_dust()
 	_build_city_layers()
+	_build_lanterns()
 
 
 func _build_city_layers() -> void:
@@ -214,6 +222,13 @@ func update(distance: float, delta: float) -> void:
 			chunks[index].mesh=themes[current_theme][variant]
 			chunks[index].set_meta("variant",variant)
 			chunks[index].set_meta("piece_name",PIECE_NAMES[variant])
+		var secret_key:String=secret_level+"/"+secret_theme
+		var intended:Mesh=secret_meshes[secret_key] if secret_meshes.has(secret_key) else themes[current_theme][variant]
+		if chunks[index].mesh!=intended:chunks[index].mesh=intended
+	for i in range(lanterns.size()):
+		lanterns[i].position.z=14-fposmod(i*19.0-distance*.8,160.0)
+		lanterns[i].position.y=5.5+(i%3)*1.8+(0.0 if reduced_motion else sin(elapsed*1.4+i)*.45)
+		lanterns[i].rotation.z=0 if reduced_motion else sin(elapsed*1.8+i)*.12
 	for building in city_layers:
 		building.position.z=42.0+fposmod(distance,360.0)-float(building.get_meta("offset"))
 		if building.position.z>55:building.position.z-=360.0
@@ -324,9 +339,13 @@ func prop(kind: String) -> Node3D:
 				b.box(Vector3(0,.07,side*1.87),Vector3(2.47,.05,.07),materials.red)
 				b.box(Vector3(side*1.25,-.06,0),Vector3(.09,.21,3.7),materials.dark)
 		"shard":
-			b.cylinder(Vector3(0, 1.0, 0), 0.14, 0.36, materials["amber"], 0.0, Vector3.ZERO, 4)
-			b.cylinder(Vector3(0, 0.64, 0), 0.14, 0.36, materials["gold"], 0.0, Vector3(PI, 0, 0), 4)
-			b.ring(Vector3(0, 0.82, 0), 0.24, 0.015, materials["amber"])
+			_star(b,Vector3(0,1.02,0),.28,materials.amber)
+			b.ring(Vector3(0,1.02,0),.38,.02,materials.gold,Vector3(PI/2,0,0))
+		"artifact":
+			b.armor(Vector3(0,.8,0),Vector3(.85,.65,.65),materials.gold,.85)
+			b.armor(Vector3(0,1.16,0),Vector3(.95,.16,.75),materials.teal,.82)
+			_star(b,Vector3(0,1.65,0),.48,materials.amber)
+			b.ring(Vector3(0,1.65,0),.65,.035,materials.violet,Vector3(PI/2,0,0))
 		"gate":
 			for index in range(3):
 				var x := (index - 1) * WIDTH
@@ -350,3 +369,91 @@ func prop(kind: String) -> Node3D:
 	for child in root.get_children():
 		if child is MeshInstance3D:child.extra_cull_margin=35.0
 	return root
+
+
+func _secret_mesh(kind:String,level:int=0) -> MeshInstance3D:
+	var b=Geo.new();var glow:Material=materials[{"knight":"amber","gargoyle":"teal","witch":"violet"}[kind]]
+	b.box(Vector3(0,-.42,-12),Vector3(9.4,.8,24),materials.dark)
+	for row in range(8):
+		for col in range(3):b.armor(Vector3((col-1)*3.0,0,-1.5-row*3),Vector3(2.97,.08,2.97),materials.road,.98)
+	for side in [-1.0,1.0]:
+		b.box(Vector3(side*4.5,.06,-12),Vector3(.10,.10,24),glow)
+		if kind=="knight":
+			b.armor(Vector3(side*6.2,3.4,-12),Vector3(1.4,6.8,24),materials.stone,.92)
+			for z in [-4.0,-16.0]:
+				b.ring(Vector3(side*5.4,4.8,z),2,.22,materials.gold,Vector3(0,0,PI/2))
+				b.ring(Vector3(side*5.35,4.8,z),1.55,.045,glow,Vector3(0,0,PI/2))
+				for tooth in range(12):
+					var a:float=TAU*tooth/12;b.box(Vector3(side*5.4,4.8+cos(a)*2.1,z+sin(a)*2.1),Vector3(.4,.5,.45),materials.gold,Vector3(a,0,0))
+		elif kind=="gargoyle":
+			for z in [-4.0,-16.0]:
+				b.cylinder(Vector3(side*7.2,1,z),2.4,2.5,materials.pale,.5,Vector3(PI,0,0),8)
+				b.ring(Vector3(side*7.2,2.4,z),2,.05,glow)
+				for cloud in range(3):b.sphere(Vector3(side*(6.0+cloud*.7),3+sin(cloud)*.3,z),Vector3(1.8,1,1.8),materials.cloud,12)
+				b.cylinder(Vector3(side*7.2,5,z),.25,4,materials.gold,0,Vector3.ZERO,6)
+		else:
+			for z in [-3.0,-11.0,-19.0]:
+				b.cylinder(Vector3(side*6.3,1.2,z),.10,2.4,materials.metal)
+				b.sphere(Vector3(side*6.3,2.7,z),Vector3(.8,1,.8),glow,12)
+				b.ring(Vector3(side*6.3,2.8,z),.8,.05,materials.gold,Vector3(.4,0,0))
+				b.cylinder(Vector3(side*6.3,4.2,z),.5,1.8,materials.pale,0,Vector3.ZERO,6)
+			b.ring(Vector3(side*7,6,-12),2.5,.12,glow,Vector3(PI/2,0,0))
+	if kind=="knight":
+		for z in [-2.0,-14.0]:_arch(b,z,6.2,5.8,materials.gold,.18)
+	elif kind=="gargoyle":_arch(b,-12,8.5,8,glow,.09)
+	else:b.ring(Vector3(0,.06,-12),3.4,.04,glow);b.ring(Vector3(0,.07,-12),2.7,.025,materials.gold)
+	_decorate_secret_level(b,kind,level,glow)
+	return b.build()
+
+func _build_lanterns() -> void:
+	for index in range(9):
+		var b=Geo.new();var colour:Material=materials[["teal","amber","violet"][index%3]]
+		b.sphere(Vector3.ZERO,Vector3(.60,.88,.60),colour,12);b.cylinder(Vector3(0,-.5,0),.15,.18,materials.gold)
+		b.cylinder(Vector3(0,-.78,0),.016,.45,materials.gold);b.ring(Vector3.ZERO,.34,.025,materials.gold,Vector3(.2,0,.2))
+		var node:Node3D=b.build();node.position.x=(-1.0 if index%2 else 1.0)*(8.0+index%3*2.3)
+		add_child(node);lanterns.append(node)
+
+func secret_portal(hero:String,unlocked:bool) -> Node3D:
+	var b=Geo.new();var root:=Node3D.new()
+	var light:Material=materials[{"knight":"amber","gargoyle":"teal","witch":"violet"}[hero]] if unlocked else materials.metal
+	for side in [-1.0,1.0]:
+		b.armor(Vector3(side*1.03,1.5,0),Vector3(.24,3,.38),materials.gold,.85);b.sphere(Vector3(side*1.03,3.12,0),Vector3.ONE*.40,light)
+	b.ring(Vector3(0,1.7,0),1.08,.075,light,Vector3(PI/2,0,0));b.ring(Vector3(0,1.7,0),1.23,.025,materials.gold,Vector3(PI/2,0,0));root.add_child(b.build())
+	var label:=Label3D.new();label.text="SECRET!" if unlocked else "LOCKED";label.font=load("res://assets/fonts/bangers.ttf");label.font_size=52;label.pixel_size=.008
+	label.position=Vector3(0,3.7,0);label.billboard=BaseMaterial3D.BILLBOARD_ENABLED;label.modulate=Color("ffe6a0") if unlocked else Color("c3cbdb");root.add_child(label)
+	return root
+
+func _star(b:RefCounted,at:Vector3,radius:float,material:Material) -> void:
+	for side in [-1.0,1.0]:
+		for i in range(10):
+			var a:float=TAU*i/10;var c:float=TAU*(i+1)/10;var r0:float=radius if i%2==0 else radius*.45;var r1:float=radius if (i+1)%2==0 else radius*.45
+			var first:Vector3=at+Vector3(sin(a)*r0,cos(a)*r0,0);var second:Vector3=at+Vector3(sin(c)*r1,cos(c)*r1,0);var centre:Vector3=at+Vector3(0,0,side*radius*.25)
+			if side>0:b.triangle(second,first,centre,material)
+			else:b.triangle(first,second,centre,material)
+
+func _decorate_secret_level(b:RefCounted,kind:String,level:int,glow:Material) -> void:
+	# Each character/level pair has its own authored mesh and physical treasure ID.
+	if level==0:
+		for side in [-1.0,1.0]:
+			for z in [-2.0,-22.0]:
+				b.armor(Vector3(side*8.4,4,z),Vector3(1.5,8,1.4),materials.pale,.82)
+				if kind=="gargoyle":
+					b.cylinder(Vector3(side*7.0,5.2,z),.8,1.2,materials.gold,.55,Vector3.ZERO,10)
+					b.sphere(Vector3(side*7.0,4.5,z),Vector3.ONE*.25,glow)
+				elif kind=="witch":
+					for shelf in range(4):
+						b.box(Vector3(side*7.0,1.1+shelf*.9,z),Vector3(1.5,.12,1.3),materials.gold)
+						for book in range(4):b.box(Vector3(side*7.0+(book-1.5)*.25,1.4+shelf*.9,z),Vector3(.16,.55,.8),glow if book%2 else materials.pale)
+	else:
+		var accent:Material=materials.teal if level==1 else materials.violet
+		for side in [-1.0,1.0]:
+			for z in [-4.0,-12.0,-20.0]:
+				b.cylinder(Vector3(side*9.5,1.4,z),1.4,3,materials.pale,0,Vector3(PI,0,0),5)
+				b.ring(Vector3(side*9.5,3.4,z),1.4,.08,accent,Vector3(PI/2,0,.35 if level==1 else -.35))
+		if level==1:
+			b.ring(Vector3(0,9.4,-12),2.7,.12,materials.gold,Vector3(PI/2,0,0))
+			_star(b,Vector3(0,9.4,-12),1.2,glow)
+		else:
+			b.ring(Vector3(0,8.6,-12),3.2,.13,accent,Vector3(PI/2,0,0))
+			b.ring(Vector3(0,8.6,-12),2.6,.04,materials.gold,Vector3(PI/2,0,0))
+			for star in range(5):_star(b,Vector3((star-2)*1.3,7.6+sin(star)*.4,-12),.35,glow)

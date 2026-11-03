@@ -8,6 +8,7 @@ from pathlib import Path
 import re
 import subprocess
 import zipfile
+from android_policy import inspect_package
 
 
 def run(command, **kwargs):
@@ -23,8 +24,8 @@ def main():
     parser.add_argument('--sdk',type=Path,required=True)
     parser.add_argument('--keystore',type=Path)
     parser.add_argument('--unsigned',action='store_true',help='Compile without a key; output requires owner signing before installation')
-    parser.add_argument('--version-code',type=int,default=1010)
-    parser.add_argument('--version-name',default='0.5.0')
+    parser.add_argument('--version-code',type=int,default=1012)
+    parser.add_argument('--version-name',default='0.6.0')
     parser.add_argument('--output',type=Path)
     args=parser.parse_args()
     root=Path(__file__).resolve().parents[1]
@@ -93,6 +94,7 @@ def main():
         signature=run([tools/'apksigner','verify','--verbose','--print-certs',output],timeout=30)
     alignment=run([tools/'zipalign','-c','-P','16','4',output],timeout=30)
     metadata=run([tools/'aapt','dump','badging',output],timeout=30)
+    android_policy=inspect_package(metadata)
     package=re.search(r"package: name='([^']+)' versionCode='([^']+)' versionName='([^']+)'",metadata)
     if not package or package.group(1)!='com.lamontlabs.knightgargoylewitch.dev':
         raise RuntimeError('Unexpected package identity')
@@ -115,6 +117,7 @@ def main():
             raise RuntimeError('APK signing certificate does not match the preserved development keystore')
     source_paths=run(['git','ls-files'],cwd=root).splitlines() if(root/'.git').exists() else []
     manifest={
+        **android_policy,
         'apk':output.name,'bytes':output.stat().st_size,'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
         'package_id':package.group(1),'version_code':int(package.group(2)),'version_name':package.group(3),
         'certificate_sha256':certificate_sha,'signature_verified':not args.unsigned,'alignment_16k_verified':True,

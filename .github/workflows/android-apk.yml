@@ -44,7 +44,7 @@ jobs:
         env:
           RELAY_KEY_PASSWORD: ${{ secrets.RELAY_DEVELOPMENT_KEY_PASSWORD }}
         run: |
-          python3 tools/build_android.py --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --keystore "${RUNNER_TEMP}/owner-development.keystore" --version-code "$((1000 + GITHUB_RUN_NUMBER))" --version-name 0.5.0
+          python3 tools/build_android.py --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --keystore "${RUNNER_TEMP}/owner-development.keystore" --version-code "$((1000 + GITHUB_RUN_NUMBER))" --version-name 0.6.0
       - name: Preserve APK and evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
