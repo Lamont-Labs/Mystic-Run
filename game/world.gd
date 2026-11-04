@@ -7,6 +7,7 @@ const PIECE_ORDER := [0,0,1,1,2,2,3,1,4,4,3,1]
 const PIECE_NAMES := ["CATHEDRAL ARCADE","OPEN CROWN BRIDGE","RIBBED VAULT","RELIQUARY COURT","BROKEN WORKS"]
 const PAINT = preload("res://assets/shaders/comic_world.gdshader")
 const CourseProfile=preload("res://core/course_profile.gd")
+const AssetDistricts=preload("res://game/asset_districts.gd")
 
 var themes: Dictionary = {}
 var chunks: Array[MeshInstance3D] = []
@@ -17,7 +18,7 @@ var dust: MultiMeshInstance3D
 var elapsed: float = 0.0
 var course_bend: float = 0.0
 var flat_course: bool = false
-var city_layers: Array[MeshInstance3D] = []
+var districts: Node3D
 var secret_theme:String=""
 var secret_level:String=""
 var reduced_motion:bool=false
@@ -68,34 +69,9 @@ func configure() -> void:
 
 
 func _build_city_layers() -> void:
-	# Rounded, candy-colored turrets and floating gardens frame the same course.
-	for side in [-1.0,1.0]:
-		for variant in range(3):
-			var g=Geo.new();var x:float=side*(15.0+variant*5.5);var h:float=10.0+variant*5.0
-			g.cylinder(Vector3(x,-4.2,0),4.0,5.0,materials.stone,1.45,Vector3.ZERO,12)
-			g.cylinder(Vector3(x,-1.6,0),5.0,.55,materials.grass,1,Vector3.ZERO,20)
-			g.cylinder(Vector3(x,h*.5-1.5,0),2.8,h,materials.pale,1,Vector3.ZERO,20)
-			for tier in range(3):
-				var y:float=.4+tier*h*.28
-				g.cylinder(Vector3(x,y,0),2.95,.26,materials.gold,1,Vector3.ZERO,20)
-				for offset in [-1.35,0.0,1.35]:
-					g.armor(Vector3(x+offset,y+1.2,2.62),Vector3(.56,1.65,.15),materials.stone,.8)
-					g.sphere(Vector3(x+offset,y+1.35,2.73),Vector3(.38,.9,.055),materials.amber,16)
-			g.cylinder(Vector3(x,h-.2,0),3.35,4.5,materials.roof,0,Vector3.ZERO,20)
-			g.ring(Vector3(x,h-2.4,0),3.28,.10,materials.gold)
-			g.sphere(Vector3(x,h+2.15,0),Vector3.ONE*.48,materials.gold,16)
-			g.cylinder(Vector3(x,h+3,0),.045,1.5,materials.gold,1,Vector3.ZERO,8)
-			g.triangle(Vector3(x,h+3.7,0),Vector3(x+side*1.8,h+3.3,0),Vector3(x,h+2.95,0),materials.pink)
-			for tree in range(2):
-				var at:=Vector3(x+side*(3.5+tree*.65),-.8,1.6-tree*3)
-				g.cylinder(at+Vector3(0,1,0),.18,2.5,materials.gold,1,Vector3(0,0,side*.14),10)
-				g.sphere(at+Vector3(0,2.8,0),Vector3(3,2.6,2.8),materials.leaves,16)
-				g.sphere(at+Vector3(.8,3.1,.3),Vector3(1.7,1.6,1.7),materials.grass,16)
-			var template:MeshInstance3D=g.build()
-			for repeat in range(3):
-				var node:=MeshInstance3D.new();node.mesh=template.mesh;node.extra_cull_margin=50
-				node.set_meta("offset",variant*40+repeat*120+(18 if side>0 else 0));add_child(node);city_layers.append(node)
-			template.free()
+	districts=AssetDistricts.new()
+	add_child(districts)
+	districts.configure()
 
 func _arch(geo: RefCounted, z: float, width: float, height: float, mat: Material, radius: float=.13) -> void:
 	var points: Array[Vector3]=[]
@@ -248,9 +224,7 @@ func update(distance: float, delta: float) -> void:
 		var t:float=0.0 if reduced_motion else elapsed
 		bird.position=Vector3(sin(t*.12+i*1.7)*24,18+(i%3)*3+sin(t*1.2+i)*.3,-55-i*17)
 		bird.rotation.z=sin(t*5.0+i)*.15
-	for building in city_layers:
-		building.position.z=42.0+fposmod(distance,360.0)-float(building.get_meta("offset"))
-		if building.position.z>55:building.position.z-=360.0
+	districts.update_scenery(distance,delta,flat_course,reduced_motion,not secret_theme.is_empty())
 	if is_instance_valid(machine):
 		machine.rotation.z = sin(elapsed * 0.08) * 0.12
 		machine.rotation.y = elapsed * 0.02

@@ -1,3 +1,5 @@
+> Development: the first free-asset integration is available in `quality/free-asset-foundry`. See [implementation, verification and actual engine frames](docs/FREE_ASSET_FIRST_PLAYABLE.md). The published Android release below remains build 1016.
+
 # Mystic Run — Android runner
 
 **Current revision: 0.6.1 / Knight preview build 1016.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.

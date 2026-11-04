@@ -1,0 +1,240 @@
+{
+  "schema": 1,
+  "coverage_roots": [
+    "assets/models",
+    "assets/characters",
+    "assets/environment/kaykit"
+  ],
+  "assets": [
+    {
+      "cost_usd": 0,
+      "commercial_use": true,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "id": "quaternius-base-characters",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "sources": [
+        "https://quaternius.com/packs/universalbasecharacters.html",
+        "https://quaternius.itch.io/universal-base-characters"
+      ],
+      "edition": "Free Standard",
+      "license_evidence": {
+        "path": "assets/licenses/quaternius-CC0.txt",
+        "sha256": "0f4beaf0fe360a7732e58bbe3dbf60a2422367fbea60cb9ea4add968f383268e",
+        "bytes": 806
+      },
+      "modifications": [
+        "Retained humanoid meshes, skeletons, weights and hair from the free Standard edition.",
+        "Original material/image bindings removed by tools/prepare_cc0_assets.py; gameplay shaders supply styling."
+      ],
+      "derived_from": [],
+      "files": [
+        {
+          "path": "assets/models/quaternius/base/Superhero_Female_FullBody.bin",
+          "sha256": "3a8220a485b33d05d879115a50697728b45a151781106033afb8b8c243fca208",
+          "bytes": 990808
+        },
+        {
+          "path": "assets/models/quaternius/base/Superhero_Female_FullBody.gltf",
+          "sha256": "6bc4486cfdd3a9d1422e9eda8dcf061dce833bb9ada7625106f6b9a4606d1dd5",
+          "bytes": 21464
+        },
+        {
+          "path": "assets/models/quaternius/base/Superhero_Male_FullBody.bin",
+          "sha256": "459003f9745853ae562a85506a2b94dd56515c1f37728f9fa3d2ce1a3e4cd92f",
+          "bytes": 720076
+        },
+        {
+          "path": "assets/models/quaternius/base/Superhero_Male_FullBody.gltf",
+          "sha256": "5e58c0f46e5ff4e4783e1347cfa1874402bdb0e97b604ccc067d3f8559439811",
+          "bytes": 20962
+        },
+        {
+          "path": "assets/models/quaternius/hair/Hair_Long.bin",
+          "sha256": "13996da35c7afbf8cb5097da37207ee5b7c2e2904d4ab9e2ace9843030fff8d5",
+          "bytes": 115996
+        },
+        {
+          "path": "assets/models/quaternius/hair/Hair_Long.gltf",
+          "sha256": "2aa43aa9f8b1527de23ba499805f8fe4e884cfa535d32a88d4284f943f12e636",
+          "bytes": 1026
+        }
+      ]
+    },
+    {
+      "cost_usd": 0,
+      "commercial_use": true,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "id": "quaternius-runner-motion",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "sources": [
+        "https://quaternius.itch.io/universal-animation-library",
+        "https://quaternius.itch.io/universal-animation-library-2"
+      ],
+      "edition": "Free Standard",
+      "license_evidence": {
+        "path": "assets/licenses/quaternius-CC0.txt",
+        "sha256": "0f4beaf0fe360a7732e58bbe3dbf60a2422367fbea60cb9ea4add968f383268e",
+        "bytes": 806
+      },
+      "modifications": [
+        "Nine selected authored animation clips baked to one Godot library.",
+        "Existing runtime motion adapter retargets these clips without changing limb lengths."
+      ],
+      "derived_from": [],
+      "files": [
+        {
+          "path": "assets/models/quaternius/animations/runner-motion.res",
+          "sha256": "8f5d31ad7b4db269a5d45d54af530650e145cf92a0efa1d772ebed760ebef656",
+          "bytes": 132821
+        },
+        {
+          "path": "assets/models/quaternius/animations/source-rests.json",
+          "sha256": "2f3a4f27713cbf8759b0e554e342a8016002ae1c76af3b98129809a9cbdb41fd",
+          "bytes": 98856
+        }
+      ]
+    },
+    {
+      "cost_usd": 0,
+      "commercial_use": true,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "id": "mysticrun-authored-knight",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "sources": [
+        "tools/build_knight_asset.py",
+        "assets/characters/knight/PROVENANCE.json"
+      ],
+      "edition": "Original derivative",
+      "license_evidence": {
+        "path": "assets/licenses/lamont-labs-original.txt",
+        "sha256": "58459d395ec52d786935be1f9af3dfa7aa9b09d8533b5cbbd5e743560e1b3d17",
+        "bytes": 591
+      },
+      "modifications": [
+        "Original weighted character geometry, vertex-painted material regions and two facial/plume morph targets.",
+        "Retained CC0 humanoid skeleton; original body mesh not reused."
+      ],
+      "derived_from": [
+        "quaternius-base-characters"
+      ],
+      "files": [
+        {
+          "path": "assets/characters/knight/knight.glb",
+          "sha256": "553c19d508409460576f7bca7802debaabdca57b490b513dd206e23e17210131",
+          "bytes": 1333720
+        }
+      ]
+    },
+    {
+      "cost_usd": 0,
+      "commercial_use": true,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "id": "kaykit-medieval-districts",
+      "publisher": "Kay Lousberg / KayKit Game Assets",
+      "license": "CC0-1.0",
+      "sources": [
+        "https://github.com/KayKit-Game-Assets/KayKit-Medieval-Hexagon-Pack-1.0/tree/84fa4e91af6a88989be7c99e0891cede11f2ca38",
+        "https://kaylousberg.itch.io/kaykit-medieval-hexagon"
+      ],
+      "edition": "Free Standard",
+      "license_evidence": {
+        "path": "assets/licenses/kaykit-medieval-CC0.txt",
+        "sha256": "881e50d3629fba90629bedc65e9e6f47cfab3609598c296dcb7f70ea83174360",
+        "bytes": 1027
+      },
+      "modifications": [
+        "Selected seven models and one shared texture from the free Standard edition.",
+        "Flattened resource paths, matte materials, custom floating-island assemblies, windmill motion and deterministic scenery recycling."
+      ],
+      "derived_from": [],
+      "files": [
+        {
+          "path": "assets/environment/kaykit/castle.bin",
+          "sha256": "519004b02fe38eeadecf1f12722e47e40c342fa4bb01ade370734c63936d66a5",
+          "bytes": 317732
+        },
+        {
+          "path": "assets/environment/kaykit/castle.gltf",
+          "sha256": "af9977a887f53d4fa06909638b8027188e60a1244315f1708dfe6f3915a73a4d",
+          "bytes": 1620
+        },
+        {
+          "path": "assets/environment/kaykit/hexagons_medieval.png",
+          "sha256": "5301a06866ba3be68dcc14cc429bd6d0f69004b72884283715d7e233f2e9782e",
+          "bytes": 15783
+        },
+        {
+          "path": "assets/environment/kaykit/home.bin",
+          "sha256": "5d527ca5908c1bbbe80ffbd9443135e9387654bf2187a94796d018d00c6c5726",
+          "bytes": 55348
+        },
+        {
+          "path": "assets/environment/kaykit/home.gltf",
+          "sha256": "5fb5b8bc7c43983b760e1b12607e0f603cc5c922bdde26f56b32d50189bd2ed4",
+          "bytes": 1634
+        },
+        {
+          "path": "assets/environment/kaykit/market.bin",
+          "sha256": "bd83dace5d97f01c74fbb21eac6844537f264359f3a40b1e25b168e6915b1a2a",
+          "bytes": 152160
+        },
+        {
+          "path": "assets/environment/kaykit/market.gltf",
+          "sha256": "48437f5982ac885a26841177dc27084273d842f5dd0cf39da47ec85cbc3cb0c5",
+          "bytes": 1637
+        },
+        {
+          "path": "assets/environment/kaykit/tree_round.bin",
+          "sha256": "437deac68f35338bb309b01e4d346dd4be37557d7a2f033d04765f63e1b88825",
+          "bytes": 3340
+        },
+        {
+          "path": "assets/environment/kaykit/tree_round.gltf",
+          "sha256": "2e61d42b8cb973c55149551a099bb63dff818aa13a52c6d9ff594687e1106284",
+          "bytes": 1612
+        },
+        {
+          "path": "assets/environment/kaykit/tree_tall.bin",
+          "sha256": "c6a7423ce62f61216f7d8c77e1bd1d8665cbbee59718e59e0e42485f9acfca36",
+          "bytes": 7368
+        },
+        {
+          "path": "assets/environment/kaykit/tree_tall.gltf",
+          "sha256": "b477ee0b7d077a01320bfe91490280294dbac321eac7581a2cb5cde512ea325d",
+          "bytes": 1614
+        },
+        {
+          "path": "assets/environment/kaykit/well.bin",
+          "sha256": "5c50811c6666df2a9b43afc1a83ccccf19678c0f8e40c3ca0bf341722dc5133f",
+          "bytes": 42340
+        },
+        {
+          "path": "assets/environment/kaykit/well.gltf",
+          "sha256": "8cc6163f38dcd9cfa347a066473617071f9a0f4d83df8e398b1d1d74427c41be",
+          "bytes": 1631
+        },
+        {
+          "path": "assets/environment/kaykit/windmill.bin",
+          "sha256": "ced3ff9447703352a7d57e2beb5b5e6f0c661c4d6c623a5d4efc22740103f467",
+          "bytes": 141680
+        },
+        {
+          "path": "assets/environment/kaykit/windmill.gltf",
+          "sha256": "5cc4309c6cd1dbd667572fc5e325a130638db1a00308fe5619158dd7298d7fef",
+          "bytes": 3436
+        }
+      ]
+    }
+  ]
+}

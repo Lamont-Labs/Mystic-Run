@@ -9,6 +9,7 @@ import re
 import subprocess
 import zipfile
 from android_policy import inspect_package
+from asset_foundry import verify as verify_assets
 
 
 def run(command, **kwargs):
@@ -29,6 +30,7 @@ def main():
     parser.add_argument('--output',type=Path)
     args=parser.parse_args()
     root=Path(__file__).resolve().parents[1]
+    asset_inventory=verify_assets(root)
     args.godot=args.godot.resolve();args.sdk=args.sdk.resolve()
     if args.keystore:
         args.keystore=args.keystore.resolve()
@@ -117,6 +119,7 @@ def main():
             raise RuntimeError('APK signing certificate does not match the preserved development keystore')
     source_paths=run(['git','ls-files'],cwd=root).splitlines() if(root/'.git').exists() else []
     manifest={
+        'asset_inventory':asset_inventory,
         **android_policy,
         'apk':output.name,'bytes':output.stat().st_size,'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
         'package_id':package.group(1),'version_code':int(package.group(2)),'version_name':package.group(3),

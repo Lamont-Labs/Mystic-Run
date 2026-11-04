@@ -1,5 +1,5 @@
 {
-  "verified_at_utc": "2026-11-03T21:35:56.165147+00:00",
+  "verified_at_utc": "2026-11-04T21:46:12.334426+00:00",
   "engine_version": "4.7.2.stable.official.ed1daf0bf",
   "scope": "Headless gameplay-core assertions and static handoff-route contracts",
   "checks": 427,
@@ -14,6 +14,7 @@
     "core/secret_catalog.gd": "511b430755246ec7b0e397926bee0309d1de85c303e8ba084e9029913b777a82",
     "core/tilt_steering.gd": "0fcf75b14d3dcfd87c88437ef4c151ced5942963bcb83fc9643a2e234a8f6fa2",
     "tests/adventure.gd": "46250f9d9d3a14e377295ca80878d7828410ec5ee0379c2342fa75bcf7673fa8",
+    "tests/asset_districts.gd": "4842c3fefd4e92a94145cf77783b3a1177ec18f791d68606be8840fee78e86a3",
     "tests/gameplay_navigation.gd": "3d2663f9729441773c2df139fa4bb863e21f1fcd119ac07dcdf8cc47c6d6d28d",
     "tests/preview_adventure.gd": "396d973c24da36faf9f6a2b81b3581309a9604a92869622538f26e13dced888d",
     "tests/preview_character_benchmark.gd": "a720d3d3637cfa71a660c51c3709b58bada6c94491475787b0374c1369c1e20f",
@@ -25,8 +26,9 @@
     "tests/tilt_and_elevation.gd": "50ad5b0669e834c0b07885f39888d2a9ec3b8d43db261086559597a775676cc2",
     "content/handoff_routes.json": "6ba0e70ed022c83437138d0f6b8656f248e2e090511f0828dbfee403a830b9f8",
     "tools/android_policy.py": "90ce41a0180b71750139318b8d352409f3cf9c92c882fd7fee180f7eab31a682",
+    "tools/asset_foundry.py": "97af5a8e4bf31148bfe6b48165ca275672e3c260bcfc9b4e9a58198634aae364",
     "tools/bootstrap_godot.py": "38a394048745e2b61b09fd0123b6065ed3955449a5fd01ee7ed90933611eec72",
-    "tools/build_android.py": "3bd7cbaa7b074bc1b90da6fe4b0ebe30efd29da2e3331b3f10fc0b1583790f81",
+    "tools/build_android.py": "b95b68c128852f74ef56c3605a05d6633a7323dbcba9d102ad9e2a0e810b995e",
     "tools/build_knight_asset.py": "d9115341f133973090dabee373836559a371cf4038f1aeecff6fa432897b3869",
     "tools/create_audio.py": "a20ea93b0d7e37a21d54ed9824fdcb9c087b5d5ee96702def51b1ad8067b9dd3",
     "tools/fetch_android_template.py": "7eb175f9af4ca5696d2aecb3271102e56f7f68577ca6cd7217f66d40d13d9892",
@@ -34,6 +36,7 @@
     "tools/render_preview.py": "7b891cfd2dc523dcaeea9b6b4a5afe191af5c6ecf89d579b4a481a19d195879e",
     "tools/sign_android.py": "e2f86070e869591088cf70e8bbfd863e0197b432201530e7002c698155278575",
     "tools/test_android_policy.py": "87f165871caeb48d4e377a890c87b9bc2d5abb41cf6eff17e92423612ada941f",
+    "tools/test_asset_foundry.py": "ee409ee205f5e1caa4cd3856985168d32ec45f1c16309cad5113a575e2abeac1",
     "tools/verify_core.py": "3de4486fef30ec8f7f04b7f7029b906ec22cc2ddeadce8077094ced9fa530d57"
   },
   "android_apk_built_by_this_check": false,

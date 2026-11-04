@@ -1,0 +1,6 @@
+MysticRun original character artwork
+Copyright 2026 Lamont Labs. All rights reserved.
+
+The newly authored Knight geometry, costume, face, helmet, plume, weapon and shield are original Lamont Labs work, as defined by tools/build_knight_asset.py. This record does not relicense third-party work. The retained Quaternius skeleton and authored motion remain under their original CC0 1.0 dedication; see quaternius-CC0.txt.
+
+LicenseRef-LamontLabs-Original identifies owner-authored artwork for this project inventory. It is not an open-source asset license or a grant of rights to third parties.

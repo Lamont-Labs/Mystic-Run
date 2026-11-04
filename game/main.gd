@@ -985,6 +985,7 @@ func _apply_settings() -> void:
 	get_viewport().msaa_3d = Viewport.MSAA_2X if profile["settings"]["quality"] else Viewport.MSAA_DISABLED
 	key_light.shadow_enabled = profile["settings"]["quality"]
 	world.reduced_motion=bool(profile.settings.reduced_motion)
+	world.districts.high_detail=bool(profile.settings.quality)
 	for actor in heroes.values():actor.reduced_motion=bool(profile.settings.reduced_motion)
 	gestures.sensitivity=str(profile.settings.sensitivity)
 	tilt.sensitivity=str(profile.settings.tilt_sensitivity);tilt.inverted=bool(profile.settings.tilt_invert)
