@@ -76,5 +76,8 @@ class ReconstructionTests(unittest.TestCase):
             release.apply_record(self.unsigned,self.original_manifest,record)
 
 
+from test_art_preview_release import ArtPreviewReconstructionTests
+
+
 if __name__ == '__main__':
     unittest.main()
