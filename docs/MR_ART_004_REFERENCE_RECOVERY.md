@@ -46,3 +46,21 @@ These statements are sourced from saved development documentation, not fresh mes
 5. Validate with Blender export, Godot import and gameplay checks before saving the art branch.
 
 No 3D mesh, shader, runtime, signing key, Android package or release was modified by this checkpoint.
+
+
+## Update — exact original handoff ZIP supplied and verified
+
+The owner supplied `MysticRun_Next_Chat_Handoff_2026-11-05.zip`. Its exact `references/01-character-concept.png` was extracted and SHA-256 verified against the recorded authoritative digest:
+
+- `01-character-concept.png`: `17fcdda5ef60f3997ca11293238eae47d528bc3edb675c584f866e4ef27242ec` — **MATCH**.
+- `02-comic-rendering.jpg`: `0690c9d44595fd7052c8a475bf1cfb07d46aa26765db8747ff730e947b972c65` — **MATCH**.
+- `03-illustrated-city.jpg`: `491f74ace5261a3e30c36e4894456518d39a18433f3bb836245d1a10a173f7bd` — **MATCH**.
+
+The exact character reference was visually inspected. It shows:
+- Knight: youthful clean-shaven brown-haired face, open silver/blue helmet with swept coral-red plume, bright blue enamel and gold armor, cyan four-point chest star, blue shield with prominent gold star, curved silver sword with gold guard, short coral-red cape with a large gold star on back, brown belt and pouches.
+- Gargoyle: broad grey-green stone body with carved stone facets, curled horns, large pointed ears, violet membrane wings, gold cuff, purple waist sash with star, digitigrade clawed feet.
+- Witch: expressive silver-haired woman with long rear braid, oversized pointed purple hat, layered purple/gold coat, belt and potion, crescent-and-crystal staff, dark leggings and boots.
+
+The separate comic reference is an energetic ink-heavy stylized action illustration; use its *rendering techniques only*, not its characters or modern setting. The illustrated-city reference is a screenshot of a different urban 3D website; use it only as an optional readability/rendering example, not MysticRun lore.
+
+**Reference recovery gate is now satisfied.** The remaining blocker for a defensible model-change decision is inspection of actual Godot Knight captures (`docs/previews/knight-first-pass/front.png`, `rear.png`, `gameplay.png`) side-by-side with the verified original. No visual comparison against those runtime images has been performed in this update. No 3D model, shader or APK changed.
