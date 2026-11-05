@@ -1,3 +1,17 @@
+# Current development — authored three-character cast
+
+November 4, 2026 · Lamont Labs · `quality/free-asset-foundry` · [Draft PR #5](https://github.com/Lamont-Labs/Mystic-Run/pull/5)
+
+Knight, Gargoyle and Witch now have original visible meshes on the admitted CC0 rigs. The branch also includes seven free KayKit scenery models, a hashed asset registry and reproducible character generators. [Knight refinement](KNIGHT_EXPRESSION_REFINEMENT.md), [Gargoyle checkpoint](AUTHORED_GARGOYLE_CHECKPOINT.md) and [Witch checkpoint](AUTHORED_WITCH_CHECKPOINT.md) contain actual engine frames and evidence.
+
+The Gargoyle milestone is saved as `2e4606d6ae24941d8d825408eb3a815d59621863`; both GitHub gameplay runs and [Android compilation](https://github.com/Lamont-Labs/Mystic-Run/actions/runs/41961021389) passed. Witch is the next separate checkpoint. Local validation after Witch passed 862 Godot assertions, 20 Python tests, 49 asset checks and three 3,600-tick runs without damage, deaths or involuntary handoffs. These results do not establish sustained Android performance.
+
+The installable published version remains build 1016, linked below. This development branch has not been merged or published as a signed release. Remaining work includes surface/material and LOD refinement, owner art review, physical-phone controls/performance checks and a build using the existing owner signing identity.
+
+The following sections preserve the published builds' historical verification records.
+
+---
+
 # Authored Knight preview — Android build 1016
 
 November 3, 2026 · Lamont Labs

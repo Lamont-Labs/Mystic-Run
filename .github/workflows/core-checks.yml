@@ -48,6 +48,9 @@ jobs:
       - name: Verify authored Gargoyle and weighted wing poses
         run: |
           "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/gargoyle_asset.gd
+      - name: Verify authored Witch, casting grip and full slide poses
+        run: |
+          "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/witch_asset.gd
       - name: Exercise all three starting teammates
         run: |
           python3 - <<'PY'

@@ -29,8 +29,11 @@ def smooth_path(points, steps=3):
     return out+[points[-1]]
 
 class CharacterMesh:
-    def __init__(self, identity, gender='Male'):
+    def __init__(self, identity, gender='Male', outward_tubes=False):
         self.identity=identity
+        # Preserve prior saved derivatives when rebuilding them. New character
+        # revisions can opt into outward side faces; tube end caps stay outward.
+        self.outward_tubes=outward_tubes
         bpy.ops.object.select_all(action='SELECT');bpy.ops.object.delete(use_global=False)
         bpy.ops.import_scene.gltf(filepath=str(ROOT/f'assets/models/quaternius/base/Superhero_{gender}_FullBody.gltf'))
         self.rig=next(o for o in bpy.data.objects if o.type=='ARMATURE')
@@ -108,7 +111,7 @@ class CharacterMesh:
                 a=math.tau*i/sides;pts.append(p+radii[j]*(cross*math.cos(a)+up*math.sin(a)));uv.append((i/sides,j/(len(path)-1)))
         for j in range(len(path)-1):
             for i in range(sides):
-                a=j*(sides+1)+i;faces.append((a,a+sides+1,a+sides+2,a+1))
+                a=j*(sides+1)+i;faces.append((a,a+1,a+sides+2,a+sides+1) if self.outward_tubes else (a,a+sides+1,a+sides+2,a+1))
         if caps:
             faces.append(tuple(range(sides-1,-1,-1)))
             faces.append(tuple((len(path)-1)*(sides+1)+i for i in range(sides)))

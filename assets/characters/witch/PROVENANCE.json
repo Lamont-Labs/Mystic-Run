@@ -1,0 +1,44 @@
+{
+  "revision": "authored-witch-1",
+  "source_generator": "tools/build_witch_asset.py",
+  "geometry": "Original Lamont Labs face, tailored costume, gloves, boots, silver braid, crooked hat and crescent crystal staff.",
+  "rig_source": "Previously admitted Quaternius CC0 female humanoid skeleton, plus two braid controls and one staff control.",
+  "motion_source": "Existing admitted CC0 motion; original cosmetic braid and staff control in game/hero.gd.",
+  "blink_closure_y": 1.785,
+  "tube_side_faces_outward": true,
+  "modifications": [
+    "Original visible body, costume, equipment and five facial morph targets.",
+    "Three added control bones retain the original humanoid motion and hand grip."
+  ],
+  "character": "witch",
+  "blender_version": "4.3.2",
+  "mesh_vertices": 16059,
+  "triangles": 27854,
+  "material_surfaces": 1,
+  "painted_material_regions": 13,
+  "bones": 68,
+  "new_bones": [
+    "braid_root",
+    "braid_tip",
+    "staff_control"
+  ],
+  "morph_targets": [
+    "Blink",
+    "Smile",
+    "Focus",
+    "Surprised",
+    "Hurt"
+  ],
+  "morph_affected_vertices": {
+    "Blink": 1404,
+    "Smile": 1777,
+    "Focus": 1744,
+    "Surprised": 1950,
+    "Hurt": 1848
+  },
+  "seam_normals_averaged": true,
+  "asset_sha256": "cc77fece7aea17fe1d23da29ea85107abd10701d4754753312c666e0a7c27632",
+  "asset_bytes": 1785784,
+  "base_body_mesh_reused": false,
+  "physical_phone_tested": false
+}

@@ -269,6 +269,40 @@
           "bytes": 1616856
         }
       ]
+    },
+    {
+      "id": "mysticrun-authored-witch",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "cost_usd": 0,
+      "commercial_use": true,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "edition": "Original derivative",
+      "sources": [
+        "tools/build_witch_asset.py",
+        "assets/characters/witch/PROVENANCE.json"
+      ],
+      "derived_from": [
+        "quaternius-base-characters"
+      ],
+      "license_evidence": {
+        "path": "assets/licenses/witch-original.txt",
+        "sha256": "f622a90ad8adef01b5fc92b9ee1bab1f91e248ef968b330e2b9d9fedde6b7d47",
+        "bytes": 453
+      },
+      "modifications": [
+        "Original visible body, costume, equipment and five facial morph targets.",
+        "Three added control bones retain the original humanoid motion and hand grip."
+      ],
+      "files": [
+        {
+          "path": "assets/characters/witch/witch.glb",
+          "sha256": "cc77fece7aea17fe1d23da29ea85107abd10701d4754753312c666e0a7c27632",
+          "bytes": 1785784
+        }
+      ]
     }
   ]
 }

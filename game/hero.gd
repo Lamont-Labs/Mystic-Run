@@ -2,7 +2,6 @@ extends Node3D
 
 const Geo = preload("res://game/geometry.gd")
 const Motion = preload("res://game/rig_motion.gd")
-const BODY_SHADER = preload("res://assets/shaders/comic_body.gdshader")
 const OUTLINE = preload("res://assets/shaders/ink_outline.gdshader")
 const AUTHORED_SHADER = preload("res://assets/shaders/authored_character.gdshader")
 var identity: String = "knight"
@@ -10,7 +9,6 @@ var body: Node3D
 var skeleton: Skeleton3D
 var motion: RefCounted
 var cape: Node3D
-var aura: Node3D
 var clock: float = 0.0
 var attack_time: float = 0.0
 var power_time: float = 0.0
@@ -38,6 +36,8 @@ var facial_state:String="neutral"
 var hurt_left:float=0.0
 var wing_controls:Array[Dictionary]=[]
 var creature_tuck:float=0.0
+var braid_controls:Array[Dictionary]=[]
+var staff_control:Dictionary={}
 
 func configure(kind: String) -> void:
 	identity=kind
@@ -84,36 +84,20 @@ func _build() -> void:
 	base_scale=1.12 if identity=="gargoyle" else 1.08
 	body.scale=Vector3.ONE*base_scale
 	add_child(body)
-	var gender := "Female" if identity=="witch" else "Male"
-	var model_path:String={"knight":"res://assets/characters/knight/knight.glb","gargoyle":"res://assets/characters/gargoyle/gargoyle.glb"}.get(identity,"res://assets/models/quaternius/base/Superhero_"+gender+"_FullBody.gltf")
+	var model_path:String="res://assets/characters/"+identity+"/"+identity+".glb"
 	var model: Node3D=(load(model_path) as PackedScene).instantiate()
 	body.add_child(model)
 	skeleton=model.find_child("Skeleton3D",true,false)
 	for child in skeleton.get_children():
 		if child is MeshInstance3D:
-			if identity in ["knight","gargoyle"]:
-				authored_mesh=child
-				for shape_index in range(child.mesh.get_blend_shape_count()):
-					face_shapes[str(child.mesh.get_blend_shape_name(shape_index))]=shape_index
-				var authored_material:=ShaderMaterial.new()
-				authored_material.shader=AUTHORED_SHADER
-				authored_material.set_shader_parameter("sentinel_palette",false)
-				authored_material.set_shader_parameter("paint_gain",.76 if identity=="gargoyle" else 1.0)
-				child.material_override=authored_material
-				continue
-			var material := ShaderMaterial.new()
-			material.shader=BODY_SHADER
-			material.set_shader_parameter("character_kind",["knight","gargoyle","witch"].find(identity))
-			material.set_shader_parameter("base_color",Color("3f8fd4") if identity=="knight" else Color("55bda8") if identity=="gargoyle" else Color("ae69dc"))
-			material.set_shader_parameter("highlight_color",accent())
-			var outline := ShaderMaterial.new()
-			outline.shader=OUTLINE
-			material.next_pass=outline
-			child.material_override=material
-			if child.name=="Eyes": child.material_override=_paint("b3ecff",0,1.0) if identity!="witch" else _paint("7448a8")
-			if identity=="knight" and child.name in ["Eyes","Eyebrows"]: child.visible=false
-	var head_index:int=skeleton.find_bone("Head")
-	if head_index>=0 and not is_instance_valid(authored_mesh):skeleton.set_bone_pose_scale(head_index,Vector3.ONE*1.36)
+			authored_mesh=child
+			for shape_index in range(child.mesh.get_blend_shape_count()):
+				face_shapes[str(child.mesh.get_blend_shape_name(shape_index))]=shape_index
+			var authored_material:=ShaderMaterial.new()
+			authored_material.shader=AUTHORED_SHADER
+			authored_material.set_shader_parameter("sentinel_palette",false)
+			authored_material.set_shader_parameter("paint_gain",.76 if identity=="gargoyle" else .88 if identity=="witch" else 1.0)
+			child.material_override=authored_material
 	motion=Motion.new()
 	motion.configure(skeleton,identity)
 	match identity:
@@ -121,9 +105,10 @@ func _build() -> void:
 			mats.gold.next_pass=null
 			_build_cape(.38,1.43,.46,-.18)
 		"gargoyle": _configure_wings()
-		"witch": _witch()
+		"witch": _configure_witch_controls()
 	motion.advance(0.1,false,false,false,identity)
 	if identity=="gargoyle":_animate_wings(1.0)
+	if identity=="witch":_animate_witch_controls(1.0)
 	skeleton.force_update_all_bone_transforms()
 
 func sentinel() -> void:
@@ -141,63 +126,6 @@ func sentinel() -> void:
 		authored_mesh.material_override.set_shader_parameter("sentinel_palette",true)
 	set_meta("sentinel",true)
 
-
-# Lofted shells follow the actual humanoid proportions rather than replacing limbs.
-func _shell(geo: RefCounted, levels: Array, material: Material, sides: int=12, center: Vector3=Vector3.ZERO) -> void:
-	for row in range(levels.size()-1):
-		var a: Vector3=levels[row]
-		var b: Vector3=levels[row+1]
-		for i in range(sides):
-			var t:=TAU*i/sides
-			var n:=TAU*(i+1)/sides
-			var v0:=center+Vector3(sin(t)*a.x,a.y,cos(t)*a.z)
-			var v1:=center+Vector3(sin(n)*a.x,a.y,cos(n)*a.z)
-			var v2:=center+Vector3(sin(t)*b.x,b.y,cos(t)*b.z)
-			var v3:=center+Vector3(sin(n)*b.x,b.y,cos(n)*b.z)
-			geo.triangle(v0,v1,v2,material)
-			geo.triangle(v1,v3,v2,material)
-
-func _witch() -> void:
-	var gold: Material=mats.gold
-	var bodice=Geo.new()
-	_shell(bodice,[Vector3(.12,1.02,.10),Vector3(.15,1.23,.15),Vector3(.18,1.34,.14),Vector3(.13,1.42,.09)],mats.cloth)
-	for side in [-1.0,1.0]:
-		bodice.armor(Vector3(side*.11,1.31,.12),Vector3(.14,.14,.05),mats.dark)
-		Geo.segment(_attachment("spine_03"),Vector3(side*.15,1.35,.14),Vector3(0,1.16,.15),.009,gold)
-	bodice.sphere(Vector3(0,1.27,.16),Vector3(.06,.085,.03),mats.glow)
-	_add(bodice,"spine_03")
-	var crown=Geo.new()
-	crown.ring(Vector3(0,1.79,-.07),.18,.012,gold,Vector3(PI/2,0,0))
-	for side in [-1.0,1.0]: crown.cylinder(Vector3(side*.09,1.82,.02),.018,.16,gold,0,Vector3(0,0,-side*.35),6)
-	# A broad brim and a crooked candy-purple point give the Witch a clear silhouette.
-	crown.cylinder(Vector3(0,1.845,-.015),.37,.055,mats.cloth,1,Vector3.ZERO,24)
-	crown.cylinder(Vector3(0,2.04,-.025),.22,.38,mats.cloth,.25,Vector3(0,0,-.14),16)
-	crown.cylinder(Vector3(.055,2.23,-.025),.065,.16,mats.cloth,0,Vector3(0,0,-.65),12)
-	crown.ring(Vector3(0,1.88,-.015),.205,.026,mats.gold)
-	crown.sphere(Vector3(.10,2.285,-.02),Vector3.ONE*.075,mats.gold,12)
-	_add(crown,"Head")
-	var hair: Node3D=(load("res://assets/models/quaternius/hair/Hair_Long.gltf") as PackedScene).instantiate()
-	_attachment("Head").add_child(hair)
-	for child in hair.get_children():
-		if child is MeshInstance3D: child.material_override=_paint("d0d6e7",0.05)
-	var staff=Geo.new()
-	var hand:=skeleton.get_bone_global_rest(skeleton.find_bone("hand_r")).origin
-	staff.cylinder(hand+Vector3(0,.25,0),.018,1.40,gold)
-	staff.ring(hand+Vector3(0,1.02,0),.17,.018,gold,Vector3(PI/2,0,0))
-	staff.cylinder(hand+Vector3(0,1.03,0),.065,.24,mats.glow,0,Vector3.ZERO,5)
-	_add(staff,"hand_r")
-	_build_cape(.38,1.40,.35,-.12)
-	var sash=Geo.new()
-	for side in [-1.0,1.0]:
-		sash.triangle(Vector3(side*.12,1.03,.1),Vector3(side*.41,.37,-.1),Vector3(side*.18,.29,.16),mats.cloth)
-	_add(sash,"pelvis")
-	aura=Node3D.new()
-	aura.position=Vector3(.55,1.32,.15)
-	body.add_child(aura)
-	var magic=Geo.new()
-	magic.sphere(Vector3.ZERO,Vector3.ONE*.10,mats.glow,16)
-	magic.ring(Vector3.ZERO,.17,.009,gold,Vector3(.5,.7,0))
-	aura.add_child(magic.build())
 
 func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 	cape=Node3D.new()
@@ -230,7 +158,8 @@ func animate(delta: float) -> void:
 	celebration_left=maxf(0,celebration_left-delta);traversal_left=maxf(0,traversal_left-delta)
 	power_time=maxf(0,power_time-delta)
 	motion.advance(delta,moving,airborne,sliding,identity)
-	if identity=="gargoyle":_animate_creature_tuck(delta)
+	if identity in ["gargoyle","witch"]:_animate_creature_tuck(delta)
+	if identity=="witch":_animate_witch_controls(delta)
 	if not wing_controls.is_empty():_animate_wings(delta)
 	if get_meta("sentinel",false):
 		var arm:int=skeleton.find_bone("upperarm_r")
@@ -252,9 +181,6 @@ func animate(delta: float) -> void:
 	body.visible=not (identity=="witch" and traversal_left>.3 and traversal_left<.47)
 	body.rotation.z=lerpf(body.rotation.z,-lean*.17,1-exp(-delta*10))
 	if is_instance_valid(cape): cape.rotation.x=0 if reduced_motion else sin(clock*7)*.045
-	if is_instance_valid(aura):
-		aura.position.y=1.32+sin(clock*2.4)*.04
-		aura.rotation.y+=delta*1.4
 
 func attack(direction:int=1) -> void:
 	swipe_direction=direction;attack_time=.4
@@ -280,8 +206,45 @@ func _configure_wings() -> void:
 			var rest:Quaternion=skeleton.get_bone_rest(index).basis.get_rotation_quaternion()
 			wing_controls.append({"index":index,"parent":parent,"side":1.0 if suffix=="l" else -1.0,"tip":role=="tip","rest":rest,"global_rest":skeleton.get_bone_global_rest(index).basis.get_rotation_quaternion(),"current":rest,"up":(parent_basis.inverse()*Vector3.UP).normalized(),"forward":(parent_basis.inverse()*Vector3.FORWARD).normalized(),"right":(parent_basis.inverse()*Vector3.RIGHT).normalized()})
 
+func _configure_witch_controls() -> void:
+	for name in ["braid_root","braid_tip"]:
+		var index:int=skeleton.find_bone(name)
+		if index<0:continue
+		var parent:int=skeleton.get_bone_parent(index)
+		var rest:Quaternion=skeleton.get_bone_rest(index).basis.get_rotation_quaternion()
+		var parent_basis:Basis=skeleton.get_bone_global_rest(parent).basis
+		braid_controls.append({"index":index,"parent":parent,"rest":rest,"current":rest,"global_rest":skeleton.get_bone_global_rest(index).basis.get_rotation_quaternion(),"right":(parent_basis.inverse()*Vector3.RIGHT).normalized(),"forward":(parent_basis.inverse()*Vector3.FORWARD).normalized()})
+	var index:int=skeleton.find_bone("staff_control")
+	if index>=0:
+		var rest:Quaternion=skeleton.get_bone_global_rest(index).basis.get_rotation_quaternion()
+		staff_control={"index":index,"parent":skeleton.get_bone_parent(index),"global_rest":rest,"global_current":rest}
+
+func _animate_witch_controls(delta:float) -> void:
+	# Local braid motion is cosmetic. The grip stays on the authored hand joint;
+	# only staff orientation changes so the full crescent clears a slide beam.
+	for i in range(braid_controls.size()):
+		var control:Dictionary=braid_controls[i]
+		var sway:float=0.0 if reduced_motion else sin(clock*4.2-i*.65)*(.065 if moving else .025)
+		var pitch:float=0.0 if reduced_motion else sin(clock*3.1-i*.5)*.035
+		var rotation:Quaternion=(Quaternion(control.right,pitch)*Quaternion(control.forward,sway)*Quaternion(control.rest)).normalized()
+		if sliding:
+			skeleton.force_update_all_bone_transforms()
+			var parent_rotation:Quaternion=skeleton.get_bone_global_pose(int(control.parent)).basis.orthonormalized().get_rotation_quaternion()
+			rotation=(parent_rotation.inverse()*Quaternion(Vector3.RIGHT,-1.30)*Quaternion(control.global_rest)).normalized()
+		control.current=Quaternion(control.current).slerp(rotation,1.0-exp(-delta*26.0)).normalized()
+		skeleton.set_bone_pose_rotation(int(control.index),control.current)
+	if staff_control.is_empty():return
+	skeleton.force_update_all_bone_transforms()
+	var parent_rotation:Quaternion=skeleton.get_bone_global_pose(int(staff_control.parent)).basis.orthonormalized().get_rotation_quaternion()
+	var pitch:float=1.62 if sliding else .32 if airborne else .12
+	var sweep:float=sin(clampf(attack_time/.4,0,1)*PI)*.26
+	var target:Quaternion=(Quaternion(Vector3.RIGHT,pitch)*Quaternion(Vector3.FORWARD,.12+sweep)*Quaternion(staff_control.global_rest)).normalized()
+	staff_control.global_current=Quaternion(staff_control.global_current).slerp(target,1.0-exp(-delta*26.0)).normalized()
+	skeleton.set_bone_pose_rotation(int(staff_control.index),(parent_rotation.inverse()*Quaternion(staff_control.global_current)).normalized())
+
 func _animate_creature_tuck(delta:float) -> void:
-	creature_tuck=lerpf(creature_tuck,1.25 if sliding else 0.0,1.0-exp(-delta*26.0))
+	var tuck_angle:float=1.35 if identity=="witch" else 1.25
+	creature_tuck=lerpf(creature_tuck,tuck_angle if sliding else 0.0,1.0-exp(-delta*26.0))
 	if creature_tuck<.00001:return
 	skeleton.force_update_all_bone_transforms()
 	var head:int=skeleton.find_bone("Head")
