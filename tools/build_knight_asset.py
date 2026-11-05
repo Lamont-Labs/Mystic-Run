@@ -401,9 +401,21 @@ for side in (-1,1):
 tube([(0,1.829,.112),(0,1.893,.051),(0,1.927,-.032),
       (0,1.879,-.147),(0,1.755,-.184)],
      [.012,.016,.018,.013,.007],SILVER,'Head',10,4)
-tube([(0,1.908,-.048),(0,1.992,-.115),(0,2.034,-.232),
-      (.009,2.028,-.373),(.020,1.992,-.510),(.032,1.934,-.655)],
-     [.031,.051,.056,.045,.027,.003],RED,'Head',12,5,'plume')
+# MR-ART-032: replace the single rope-shaped plume with a swept, layered
+# crest. All strands retain the existing 'plume' morph tag and Head weighting.
+# The central spine carries the silhouette; side strands supply feather-like
+# separation without creating new bones or a new material surface.
+tube([(0,1.908,-.048),(0,1.997,-.117),(0,2.050,-.234),
+      (.006,2.042,-.379),(.012,2.005,-.521),(.020,1.943,-.665)],
+     [.030,.053,.061,.046,.027,.002],RED,'Head',12,5,'plume')
+for side in (-1,1):
+    tube([(side*.018,1.987,-.134),(side*.048,2.056,-.225),
+          (side*.082,2.055,-.343),(side*.105,2.010,-.474),
+          (side*.112,1.939,-.580)],
+         [.016,.027,.028,.017,.001],RED,'Head',8,4,'plume')
+    tube([(side*.009,2.019,-.202),(side*.026,2.085,-.286),
+          (side*.046,2.072,-.400),(side*.053,2.015,-.512)],
+         [.012,.019,.017,.001],RED,'Head',8,4,'plume')
 
 # Sword: enclosed steel volume with a swept tip and a clean central ridge.
 hand=REST['hand_r'];hx,hy,hz=hand
