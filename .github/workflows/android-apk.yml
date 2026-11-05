@@ -2,6 +2,10 @@ name: Mystic Run Android APK
 
 on:
   workflow_dispatch:
+  push:
+    branches: [art/asset-upgrade-batch-01]
+    paths:
+      - '.github/workflows/android-apk.yml'
 
 permissions:
   contents: read
