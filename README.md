@@ -1,4 +1,4 @@
-> Development: `quality/free-asset-foundry` contains the free scenery, authored Knight/Gargoyle/Witch cast and [material finish refinement](docs/MATERIAL_FINISH_REFINEMENT.md). [Art Preview 0.6.2 / build 1017](docs/ART_PREVIEW_BUILD.md) was compiled and verified as a separately installed development app. The published owner-update release below remains build 1016. [The development queue](docs/NEXT_DEVELOPMENT_STEPS.md) records the remaining phone profiling, art review and owner-signing work.
+> Latest original-game update: **build 1023**, signed with the recovered original key. [Download the update APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.6.1-build1023/Mystic_Run_0.6.1_Three_Character_Update_Build1023.apk). It updates the existing Mystic Run installation. Development source and the refined three-character cast remain in draft PR #5; [the update identity record](docs/ANDROID_UPDATE_IDENTITY.md) and [development queue](docs/NEXT_DEVELOPMENT_STEPS.md) record verified delivery and remaining phone tests.
 
 # Mystic Run — Android runner
 

@@ -15,15 +15,16 @@ Work proceeds one item at a time. Save and verify each checkpoint before beginni
 | Gargoyle curved exterior surfaces and geometric regression check | `GARGOYLE_SURFACE_REFINEMENT.md` and its checkpoint commit |
 | Character material and surface finish | `67bbd5cef7d60952730e143b9a4f3ebe86c333c4` and `MATERIAL_FINISH_REFINEMENT.md` |
 | Separately installed Art Preview 0.6.2 / build 1017 | Verified APK and source identity in `ART_PREVIEW_BUILD.md` |
+| Original signing identity recovered and owner-update build 1023 published | `ANDROID_UPDATE_IDENTITY.md`, matching original certificate, verified GitHub APK |
 
-The code, generators, rights records, model hashes and actual engine review frames are in draft PR #5 on `quality/free-asset-foundry`. The published installable release remains build 1016. Development validation is not final art approval or Google Play readiness.
+The code, generators, rights records, model hashes and actual engine review frames are in draft PR #5 on `quality/free-asset-foundry`. The original-game owner update is now build 1023. Development validation is not final art approval or Google Play readiness.
 
 ## Next code work
 
 1. **Mobile profiling and LOD decision.** Use a representative Android performance capture to identify skinning, shader, fill-rate and scene costs before choosing reductions. Any LOD must retain silhouette, facial behavior, staff/wing clearance and character-specific motion. Lower visual quality already reduces scenery visibility; hero LODs are not implemented or certified. The current source budgets remain Knight 24,328, Gargoyle 22,722 and Witch 27,854 triangles, each with one main imported surface; these are budgets, not measured phone frame rates.
-2. **Owner-signed update build.** Restore access to the existing owner signing identity, compile the reviewed source, assign the next development version code and verify package contents/signature/alignment. An unsigned CI compile and a separately signed Art Preview are not owner-update releases. The normal signed exporter now checks the established owner certificate.
+2. **Original-game update validation on a physical phone.** Install owner-signed build 1023 over the existing game and verify saved settings/records, cold start, pause/resume, touch/tilt controls and character selection. The package/certificate/version and save-format checks passed locally; an actual phone upgrade test remains open.
 
-The separately installed **Mystic Run Art Preview** delivers the new material checkpoint without replacing the existing game or its save data. Its explicit package variant and verification are documented in `MATERIAL_FINISH_REFINEMENT.md` and `ART_PREVIEW_BUILD.md`. This does not close the owner-update signing gate.
+The separately installed **Mystic Run Art Preview** delivers the new material checkpoint without replacing the existing game or its save data. Its explicit package variant and verification are documented in `MATERIAL_FINISH_REFINEMENT.md` and `ART_PREVIEW_BUILD.md`. The original owner-update signing gate is now closed by build 1023. The original private key was recovered from the legacy `Relic_Relay_Development_Signing_Backup.zip`; normal updates must retain that identity.
 
 ## Device work still required
 
