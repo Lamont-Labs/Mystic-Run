@@ -75,7 +75,7 @@ GEM = material('Gem_turquoise', '57d7db', .24, .23)
 LIP = material('Face_warm_detail', 'b57565', 0, .84)
 
 
-def color_for(mat, p, uv):
+def color_for(mat, p, uv, tag=''):
     base = MATS[mat].node_tree.nodes.get('Principled BSDF').inputs['Base Color'].default_value
     # Broad painted gradients survive the chase camera. No random surface noise.
     h = .93+.07*math.sin(uv[1]*math.pi)
@@ -85,6 +85,13 @@ def color_for(mat, p, uv):
         h = .90+.11*math.sin(uv[0]*math.pi)+.04*uv[1]
     elif mat == SKIN:
         h = .94+.06*uv[1]
+    if tag == 'chest_armor' and mat == BLUE:
+        # MR-ART-038: broad hand-painted chest light/shadow regions, not noise.
+        # A soft central highlight and darker lower/side falloff emphasize
+        # sculpted curvature without increasing the mobile triangle count.
+        center_light=max(0.0,1.0-abs(p[0])/.27)
+        upper_light=max(0.0,min(1.0,(p[1]-1.08)/.34))
+        h *= .83+.18*center_light+.10*upper_light
     return tuple(min(1, max(0, c*h)) for c in base[:3])+(1,)
 
 
@@ -92,7 +99,7 @@ def mesh(points, faces, mat, bone, uvs=None, tag=''):
     offset = len(V)
     for i, p in enumerate(points):
         uv = uvs[i] if uvs else (0.5, 0.5)
-        V.append(xyz(p)); UV.append(uv); COL.append(color_for(mat, p, uv))
+        V.append(xyz(p)); UV.append(uv); COL.append(color_for(mat, p, uv, tag))
         params=MATS[mat].node_tree.nodes.get('Principled BSDF').inputs
         PBR.append((params['Metallic'].default_value,params['Roughness'].default_value))
         WEIGHTS.append(bone(p) if callable(bone) else {bone: 1.0})
@@ -233,7 +240,7 @@ loft([(0,.85,.02,.16,.12),(0,.99,.01,.18,.135),(0,1.12,.00,.16,.125),(0,1.30,0,.
 loft([(0,1.045,0,.165,.132),(0,1.09,.005,.184,.147),
       (0,1.22,.012,.229,.181),(0,1.31,.000,.256,.198),
       (0,1.385,-.004,.255,.173),(0,1.435,-.008,.219,.122)],
-     BLUE,'spine_03',sides=20,steps=2)
+     BLUE,'spine_03',sides=20,steps=2,tag='chest_armor')
 loft([(0,1.045,0,.175,.142),(0,1.065,0,.184,.15),(0,1.08,0,.19,.15)],GOLD,'spine_03',steps=2)
 for side in (-1,1):
     tube([(side*.215,1.418,.082),(side*.19,1.40,.139),(side*.12,1.355,.177),(0,1.305,.199)],[.012]*4,GOLD,'spine_03')
