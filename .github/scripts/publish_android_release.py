@@ -208,15 +208,21 @@ def prepare(record, input_directory, output_directory, sdk):
 
 
 def publish(records_directory, output_directory, sdk):
+    import publish_art_preview as preview
     if os.environ.get('GITHUB_REPOSITORY') != REPOSITORY:
         raise ValueError('Release job must run in the canonical repository')
     records = [json.loads(p.read_text()) for p in records_directory.glob('*.json')]
     if not records:
         raise ValueError('No signed release records found')
     for record in records:
-        validate_record(record)
+        if record.get('schema')==preview.SCHEMA:
+            preview.validate_record(record)
+        else:
+            validate_record(record)
     record = max(records, key=lambda r:r['signed_manifest']['version_code'])
     manifest = record['signed_manifest']
+    if record.get('schema')==preview.SCHEMA:
+        return preview.publish(record,output_directory,sdk)
     tag = f"v{manifest['version_name']}-build{manifest['version_code']}"
     existing = subprocess.run(['gh', 'release', 'view', tag, '--repo', REPOSITORY], capture_output=True, text=True, timeout=60)
     if existing.returncode == 0:
