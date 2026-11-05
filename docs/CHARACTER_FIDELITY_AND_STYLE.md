@@ -63,3 +63,30 @@ The handoff bundle contains the exact attached image bytes at these paths. The n
 | `references/03-illustrated-city.jpg` | `1000048208.jpg` | `libfile_a99398680e948191aa92248009d3272d` | `491f74ace5261a3e30c36e4894456518d39a18433f3bb836245d1a10a173f7bd` |
 
 Read and inspect the actual images before proposing or building new character art. This document's feature list supplements the images; it does not replace them.
+
+
+## Owner decision — MR-ART-001 (November 5, 2026)
+
+**Rendering treatment selected: B — textured hand-drawn comic fantasy.**
+
+This decision resolves the previously undecided rendering finish only. The original MysticRun character concept sheet remains the authoritative design specification for the Knight, Gargoyle and Witch. The generated comparison posters from MR-ART-001 and the initial MR-ART-002 exploration visibly drifted from that sheet and are **not** accepted character-design references or runtime assets. In particular, do not replace the Knight with a bearded, bareheaded lion-crest warrior.
+
+### Locked production rules
+
+- Knight: youthful expressive face, dark hair, open-faced helmet with swept red plume, curved blue-and-gold armor, layered gauntlets and boots, brown belt/pouches, embroidered red cape, tall blue-and-gold star shield, and broad ornamented silver sword.
+- Finish: deliberate ink accents, painted color variation, tactile comic textures, shaped shadow regions and saturated but readable lighting; avoid anime proportions, generic armor, primitive blocky meshes and flat untextured surfaces.
+- Chase-camera priority: distinctive helmet plume, shoulders, cape embroidery, sword and shield must remain recognizable at gameplay distance.
+- The exact source image must be inspected before a claim of visual fidelity or final model approval. Text alone is not sufficient to reconstruct it exactly.
+- Preserve the existing Godot 4.7.2 gameplay, character APIs, rigs, progression, saves, package identity and original Android signing certificate.
+- No production-model replacement or APK release is approved merely by the Style B selection.
+
+### MR-ART-002 — implementation gate
+
+1. Obtain and inspect the exact approved character sheet and its front/rear details from the saved handoff references.
+2. Compare the existing authored Knight's actual Godot front/rear/face/chase-camera captures to the approved reference, logging specific geometry/material discrepancies.
+3. Prepare a deterministic Blender 4.3.2 change plan for the existing Knight generator and rig, with an explicit material/outline strategy for Godot GL Compatibility.
+4. Implement only one scoped, verifiable Knight refinement after the comparison, preserving the current asset as rollback.
+5. Run the existing rig/asset/gameplay checks, capture actual Godot output, and review against the reference. Do not equate a concept image with an imported animated 3D asset.
+6. Save the source checkpoint on the art branch; no automatic merge or APK publication.
+
+**Decision recorded:** Style B approved. **Not yet approved:** a new Knight geometry, final concept fidelity, phone performance or the full cast.
