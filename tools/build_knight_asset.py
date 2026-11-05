@@ -319,44 +319,45 @@ for side in (-1,1):
     tube([(side*.122,1.802,.08),(side*.145,1.746,.096),(side*.147,1.689,.052)],[.026,.024,.010],HAIR,'Head',12,4)
 tube([(-.105,1.789,.151),(-.025,1.789,.160),(.058,1.780,.159),(.09,1.773,.150)],[.016,.020,.015,.003],HAIR,'Head',12,4)
 
-# Helmet shell is a curved open visor, with deliberately smooth outer normals.
+# MR-ART-011: lower, faceted open-face crown and a continuous rear-swept crest.
+# Preserve the same Head skin binding and authored morph contracts.
 pts,uv,faces=[],[],[]
 nr,ns=12,40
 def helmet_bottom(a):
-    return 1.615+.215*max(0,math.cos(a))**.70
+    return 1.622+.191*max(0,math.cos(a))**.56
 
 for j in range(nr):
     t=j/nr
     for i in range(ns+1):
         a=math.tau*i/ns
         bottom=helmet_bottom(a)
-        y=bottom+(1.94-bottom)*t
-        radius=math.sqrt(max(.001,1-((y-1.74)/.20)**2))
-        pts.append((math.sin(a)*(.184*radius+.008),y,-.021+math.cos(a)*(.161*radius+.012)))
+        y=bottom+(1.912-bottom)*t
+        radius=math.sqrt(max(.001,1-((y-1.735)/.177)**2))
+        pts.append((math.sin(a)*(.181*radius+.009),y,-.027+math.cos(a)*(.151*radius+.011)))
         uv.append((i/ns,t))
 for j in range(nr-1):
     for i in range(ns):
         a=j*(ns+1)+i;faces.append((a,a+1,a+ns+2,a+ns+1))
 # Close the crown with a true apex; the previous shell left an open top ring.
-apex=len(pts);pts.append((0,1.94,-.021));uv.append((.5,1))
+apex=len(pts);pts.append((0,1.912,-.027));uv.append((.5,1))
 for i in range(ns):
     faces.append(((nr-1)*(ns+1)+i,(nr-1)*(ns+1)+i+1,apex))
 mesh(pts,faces,BLUE,'Head',uv)
 brim=[]
 for i in range(41):
     a=math.tau*i/40;y=helmet_bottom(a)
-    radius=math.sqrt(max(.001,1-((y-1.74)/.20)**2))
-    brim.append((math.sin(a)*(.184*radius+.009),y,-.021+math.cos(a)*(.161*radius+.014)))
+    radius=math.sqrt(max(.001,1-((y-1.735)/.177)**2))
+    brim.append((math.sin(a)*(.181*radius+.010),y,-.027+math.cos(a)*(.151*radius+.013)))
 tube(brim,[.011]*len(brim),GOLD,'Head',8,1)
 for side in (-1,1):
     ellipsoid((side*.176,1.686,-.018),(.025,.061,.061),GOLD,'Head',10,24)
     ellipsoid((side*.195,1.686,-.018),(.014,.039,.039),GEM,'Head',10,24)
     tube([(side*.151,1.77,.036),(side*.164,1.69,.04),(side*.139,1.585,.071)],[.009,.012,.01],SILVER,'Head')
 # Raised crown ridge and a swept horsehair plume; rear silhouette matches the cape.
-tube([(0,1.806,.143),(0,1.884,.091),(0,1.927,-.015),(0,1.875,-.146),(0,1.74,-.194)],[.012,.015,.017,.013,.008],SILVER,'Head',10,4)
+tube([(0,1.804,.130),(0,1.866,.084),(0,1.902,-.027),(0,1.864,-.148),(0,1.754,-.190)],[.012,.015,.017,.013,.008],SILVER,'Head',10,4)
 # A long, tapered, rear-swept crest replaces the compact upright curl.
 # Keep the same Head weighting and 'plume' tag for PlumeSway.
-tube([(0,1.91,-.043),(0,2.045,-.105),(0,2.095,-.245),(.012,2.073,-.39),(.025,2.01,-.52),(.035,1.945,-.61)],[.025,.049,.060,.046,.026,.003],RED,'Head',12,5,'plume')
+tube([(0,1.908,-.048),(0,1.992,-.115),(0,2.034,-.232),(.009,2.028,-.373),(.020,1.992,-.510),(.032,1.934,-.655)],[.031,.051,.056,.045,.027,.003],RED,'Head',12,5,'plume')
 
 # Sword: enclosed steel volume with a swept tip and a clean central ridge.
 hand=REST['hand_r'];hx,hy,hz=hand
