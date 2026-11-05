@@ -227,11 +227,26 @@ def torso_weights(p):
 
 
 loft([(0,.85,.02,.16,.12),(0,.99,.01,.18,.135),(0,1.12,.00,.16,.125),(0,1.30,0,.24,.16),(0,1.43,0,.245,.14),(0,1.48,.01,.11,.09)],NAVY,torso_weights)
-loft([(0,1.045,0,.17,.137),(0,1.09,.01,.19,.15),(0,1.22,.015,.235,.176),(0,1.36,.00,.265,.182),(0,1.435,0,.23,.135)],BLUE,'spine_03')
+# MR-ART-036: sculpt the existing chest shell instead of adding another
+# rounded volume. A narrower waist, expanded upper breastplate and stronger
+# forward ridge create a layered heroic silhouette at unchanged ring density.
+loft([(0,1.045,0,.165,.132),(0,1.09,.005,.184,.147),
+      (0,1.22,.012,.229,.181),(0,1.31,.000,.256,.198),
+      (0,1.385,-.004,.255,.173),(0,1.435,-.008,.219,.122)],
+     BLUE,'spine_03',sides=20,steps=2)
 loft([(0,1.045,0,.175,.142),(0,1.065,0,.184,.15),(0,1.08,0,.19,.15)],GOLD,'spine_03',steps=2)
 for side in (-1,1):
     tube([(side*.215,1.418,.082),(side*.19,1.40,.139),(side*.12,1.355,.177),(0,1.305,.199)],[.012]*4,GOLD,'spine_03')
     tube([(side*.205,1.17,.115),(side*.15,1.13,.157),(0,1.10,.17)],[.009]*3,GOLD,'spine_03')
+# Raised lateral breastplate insets frame the central chest emblem.
+# The panels use the existing plate primitive and spine_03 weight.
+for side in (-1,1):
+    plate([(side*.094,1.385),(side*.210,1.365),
+           (side*.220,1.277),(side*.139,1.232),
+           (side*.090,1.287)],.174,.017,BLUE,'spine_03',.005)
+    tube([(side*.100,1.385,.195),(side*.199,1.359,.198),
+          (side*.207,1.285,.199),(side*.146,1.243,.197)],
+         [.006,.008,.007,.004],GOLD,'spine_03',6,2)
 star(0,1.31,.196,.081,GOLD,'spine_03')
 plate([(-.025,1.31),(0,1.35),(.025,1.31),(0,1.268)],.218,.012,GEM,'spine_03')
 
