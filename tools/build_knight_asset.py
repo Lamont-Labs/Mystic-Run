@@ -345,7 +345,8 @@ pts,uv,faces=[],[],[]
 nr,ns=8,28
 def helmet_bottom(a):
     # Open front aperture: brow clears the eyes; side and rear protect the head.
-    return 1.620+.202*max(0,math.cos(a))**.60
+    # Keep the center aperture clear while extending the side guards lower.
+    return 1.605+.228*max(0,math.cos(a))**.70
 
 def helmet_shell(a,y):
     # Deliberate polygonal steel silhouette rather than a spherical dome.
@@ -379,17 +380,17 @@ brim=[helmet_shell(math.tau*i/ns,helmet_bottom(math.tau*i/ns)) for i in range(ns
 tube(brim,[.010]*len(brim),GOLD,'Head',8,1)
 # A raised angular brow visor gives the face opening a purposeful top edge.
 # Keep the brow above the eyes; side guards frame, not cover, the expression.
-plate([(-.149,1.813),(-.098,1.839),(0,1.852),(.098,1.839),(.149,1.813),
-       (.117,1.799),(0,1.806),(-.117,1.799)],.137,.016,SILVER,'Head',.004)
-tube([(-.151,1.811,.149),(-.085,1.834,.164),(0,1.842,.169),
-      (.085,1.834,.164),(.151,1.811,.149)],
+plate([(-.155,1.819),(-.105,1.846),(0,1.862),(.105,1.846),(.155,1.819),
+       (.119,1.805),(0,1.814),(-.119,1.805)],.137,.019,SILVER,'Head',.004)
+tube([(-.155,1.818,.149),(-.090,1.843,.164),(0,1.853,.169),
+      (.090,1.843,.164),(.155,1.818,.149)],
      [.009,.010,.012,.010,.009],GOLD,'Head',10,3)
 for side in (-1,1):
     # Angular cheek guard below the temple, leaving the center face exposed.
-    plate([(side*.155,1.784),(side*.182,1.739),(side*.174,1.664),
-           (side*.136,1.622),(side*.137,1.696)],.057,.017,BLUE,'Head',.004)
-    tube([(side*.153,1.785,.063),(side*.177,1.730,.075),
-          (side*.166,1.666,.091),(side*.138,1.626,.099)],
+    plate([(side*.156,1.792),(side*.189,1.746),(side*.180,1.662),
+           (side*.130,1.602),(side*.132,1.694)],.057,.021,BLUE,'Head',.004)
+    tube([(side*.156,1.793,.063),(side*.185,1.734,.075),
+          (side*.172,1.658,.091),(side*.133,1.607,.099)],
          [.010,.012,.010,.004],GOLD,'Head',10,3)
     ellipsoid((side*.182,1.699,-.028),(.019,.046,.050),GOLD,'Head',10,20)
     ellipsoid((side*.195,1.699,-.028),(.010,.027,.027),GEM,'Head',10,20)
