@@ -143,11 +143,11 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 				var spread:float=lerpf(.62,1.12,uv.y)
 				var edge_wave:float=1.0+0.065*sin(uv.y*PI*2.0+0.35)
 				var drape_x:float=(uv.x-.5)*2.0
-				var fold:float=sin(uv.x*PI*6.0+uv.y*1.8)*uv.y*0.042
-				var hem_drop:float=pow(uv.y,8.0)*(0.027*cos(uv.x*PI*6.0)+0.018*cos(uv.x*PI*2.0))
+				var fold:float=sin(uv.x*PI*2.0+uv.y*0.65)*uv.y*0.016
+				var hem_drop:float=pow(uv.y,8.0)*(0.009*cos(uv.x*PI*2.0))
 				vertices.append(Vector3(drape_x*width*spread*edge_wave,
 					lerpf(top,bottom,uv.y)-hem_drop,
-					z-uv.y*uv.y*.48+fold-0.024*sin(uv.y*PI)*cos(uv.x*PI*2.0)))
+					z-uv.y*uv.y*.48+fold-0.012*sin(uv.y*PI)*cos(uv.x*PI*2.0)))
 			geo.triangle(vertices[0],vertices[2],vertices[1],mats.cloth)
 			geo.triangle(vertices[1],vertices[2],vertices[3],mats.cloth)
 	var cloth: StandardMaterial3D=mats.cloth
@@ -164,8 +164,8 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 			var v:=i/12.0
 			var spread:float=lerpf(.62,1.12,v)*(1.0+0.065*sin(v*PI*2.0+0.35))
 			var point:=Vector3(side*width*spread,
-				lerpf(top,bottom,v)-pow(v,8.0)*(-0.009),
-				z-v*v*.48+sin((1.0 if side>0 else 0.0)*PI*6.0+v*1.8)*v*.042-0.024*sin(v*PI)*cos(PI))
+				lerpf(top,bottom,v)+pow(v,8.0)*0.009,
+				z-v*v*.48+sin((1.0 if side>0 else 0.0)*PI*2.0+v*0.65)*v*.016+0.012*sin(v*PI))
 			Geo.segment(cape,previous,point,.007,mats.gold)
 			previous=point
 
