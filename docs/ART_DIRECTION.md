@@ -1,3 +1,13 @@
+> **Current owner direction — November 5, 2026:** The supplied MysticRun concept
+> sheet is the exact character-design target for faces, proportions, silhouettes,
+> costume construction and equipment. Generic Ranger or Peasant outfits are
+> construction resources, not accepted cast replacements. The owner is considering
+> textured comic and cleaner illustrated rendering references; no final new style
+> is selected. Read `CHARACTER_FIDELITY_AND_STYLE.md` and inspect the three images
+> in the next-chat handoff before further character work. First proposed work is
+> a controlled same-Knight style comparison, then a faithful 3D benchmark after
+> style selection. The implementation history below is not visual acceptance.
+
 > 0.4.0 update: gameplay now uses lit character surfaces, embroidered cloth,
 > patterned stone, layered 3D architecture and a grade-aware closer camera. The
 > production-quality target remains unapproved. Opening artwork alone is not

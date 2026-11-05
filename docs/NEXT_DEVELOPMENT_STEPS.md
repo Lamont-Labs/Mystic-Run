@@ -8,7 +8,9 @@ Work proceeds one item at a time. Save and verify each checkpoint before beginni
 
 The owner rejected the remaining visual quality on November 5 and requested actual 3D asset generation and acquisition. `ASSET_BATCH_01.md` records five original props, 28 downloaded environment meshes, four rigged outfit assemblies and 20 modular clothing parts, with a standalone Godot review project. These are staged candidates, delivered as an asset ZIP and rebuildable from pinned sources. They have not replaced the current playable cast.
 
-The next task is one visibly stronger Knight benchmark using intentional costume construction, head geometry, armor and materials, followed by motion and chase-camera review. The profiling and phone tasks below remain open and follow that benchmark.
+The owner's latest correction requires matching the supplied concept sheet's exact character designs. They are considering textured comic and cleaner illustrated rendering styles; no final new finish is selected. Generic downloaded costumes have not been accepted as replacement designs.
+
+Read `CHARACTER_FIDELITY_AND_STYLE.md` and `HANDOFF_NEXT_CHAT.md` before continuing. The first proposed action is a same-Knight comparison of the original concept finish, a textured comic finish and a cleaner illustrated finish, holding design, pose and camera fixed. After the owner chooses the rendering direction, build one faithful Knight benchmark and verify its actual motion and chase-camera appearance. The profiling and phone tasks below remain open and follow that benchmark. Development is paused for the requested move to another chat.
 
 ## Completed checkpoints
 

@@ -70,4 +70,6 @@ Use the pinned editor binary in place of `godot` if the default command is anoth
 
 ## Next task
 
-Build one new Knight benchmark from an intentional costume/body assembly, a properly shaped expressive head, layered armor and the new weapon candidate. Compare front, rear, running, sliding, jumping and chase-camera views against the preserved cast. The benchmark must visibly improve the actual playable model before applying the approach to the Witch and Gargoyle. Material consolidation, full motion checks and phone profiling follow that visual benchmark.
+The owner's subsequent correction makes the supplied concept sheet the exact character-design target. The Ranger and Peasant outfits are construction resources, not accepted cast replacements. The owner is considering comic and cleaner illustrated rendering references; the final style remains undecided. Read `CHARACTER_FIDELITY_AND_STYLE.md` and `HANDOFF_NEXT_CHAT.md` before continuing.
+
+First proposed work is a controlled same-Knight comparison in the original concept finish, a textured comic finish and a cleaner illustrated finish. After the owner selects the rendering direction, build one faithful Knight mesh with an expressive head, the concept's layered armor and its equipment. Compare actual engine front, rear, running, sliding, jumping and chase-camera views before applying the approach to the Witch and Gargoyle. Material consolidation, full motion checks and phone profiling follow that visual benchmark.
