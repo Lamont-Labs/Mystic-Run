@@ -186,7 +186,10 @@ def main():
         'build_variant':'isolated-art-preview' if args.art_preview else 'owner-development',
         'exported_configuration_sha256':exported_configuration,
         'source_configuration_restored':True,
-        'owner_game_update_compatible':not args.art_preview and not args.unsigned,
+        'owner_game_update_compatible':False,
+        'permanent_signing_identity':not args.art_preview and not args.unsigned,
+        'updates_legacy_owner_installation':False,
+        'updates_permanent_identity_installation':not args.art_preview and not args.unsigned,
         'certificate_sha256':certificate_sha,'signature_verified':not args.unsigned,'alignment_16k_verified':True,
         'preserved_keystore_matched':not args.unsigned,'requires_owner_signing':args.unsigned,'zip_integrity_verified':True,
         'engine':run([args.godot,'--version']).strip(),'physical_phone_tested':False,
@@ -210,3 +213,4 @@ def main():
 
 if __name__=='__main__':
     main()
+

@@ -15,6 +15,7 @@ import zipfile
 REPOSITORY = 'Lamont-Labs/Mystic-Run'
 PACKAGE = 'com.lamontlabs.knightgargoylewitch.dev'
 CERTIFICATE = 'f5ee5d42ec692e402b52c0457be35c24fe1f92229005002155f675040dddb9c9'
+PERMANENT_CERTIFICATE = '6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf'
 SCHEMA = 'mystic-run-signed-apk-reconstruction/v1'
 
 
@@ -47,8 +48,11 @@ def validate_record(record):
     builder = manifest['builder']
     if record.get('schema') != SCHEMA or builder.get('repository') != REPOSITORY or builder.get('service') != 'github-actions':
         raise ValueError('Wrong release record or compilation origin')
-    if manifest.get('package_id') != PACKAGE or manifest.get('certificate_sha256') != CERTIFICATE:
+    if manifest.get('package_id') != PACKAGE or manifest.get('certificate_sha256') not in (CERTIFICATE,PERMANENT_CERTIFICATE):
         raise ValueError('Wrong Android application or signing identity')
+    if manifest.get('certificate_sha256') == PERMANENT_CERTIFICATE:
+        if manifest.get('permanent_signing_identity') is not True or manifest.get('owner_game_update_compatible') is not False or manifest.get('updates_legacy_owner_installation') is not False:
+            raise ValueError('Permanent-key releases must explicitly block legacy upgrade compatibility claims')
     if not manifest.get('signature_verified') or manifest.get('requires_owner_signing'):
         raise ValueError('The release must be an owner-signed APK')
     if not re.fullmatch(r'[0-9a-f]{40}', manifest['git_commit']) or builder.get('commit') != manifest['git_commit']:
@@ -152,7 +156,8 @@ def verify_apk(apk, sdk, manifest):
     tools = sdk/'build-tools/35.0.1'
     signature = command([tools/'apksigner', 'verify', '--verbose', '--print-certs', apk])
     fingerprint = re.search(r'certificate SHA-256 digest: ([0-9a-fA-F]+)', signature)
-    if not fingerprint or fingerprint.group(1).lower() != CERTIFICATE:
+    expected_certificate = manifest.get('certificate_sha256')
+    if expected_certificate not in (CERTIFICATE,PERMANENT_CERTIFICATE) or not fingerprint or fingerprint.group(1).lower() != expected_certificate:
         raise ValueError('APK signing certificate mismatch')
     command([tools/'zipalign', '-c', '-P', '16', '4', apk])
     metadata = command([tools/'aapt', 'dump', 'badging', apk])
@@ -178,6 +183,20 @@ def verify_apk(apk, sdk, manifest):
             if not loads or not all(s[7] >= 16384 and s[2] % 16384 == s[3] % 16384 for s in loads):
                 raise ValueError('Native library is not aligned for 16 KB pages')
     return signature
+
+
+def signing_note(manifest):
+    if manifest.get('certificate_sha256') == PERMANENT_CERTIFICATE:
+        return ('Signed with the preserved permanent MysticRun key (certificate SHA-256: '+PERMANENT_CERTIFICATE+'). '
+                'The application ID is unchanged. This APK cannot update an installation signed with the earlier legacy certificate. '
+                'Do not uninstall the existing phone app or discard its saves. '
+                'A phone already using this permanent certificate can accept a higher-version update. '
+                'Signature, package/version, offline permissions, ZIP integrity, APK alignment and native 16 KB alignment were verified. '
+                'Physical phone testing remains pending.')
+    if manifest.get('certificate_sha256') == CERTIFICATE:
+        return ('The APK preserves the original signing identity. Signature, package/version, ZIP integrity, APK alignment '
+                'and native 16 KB alignment were verified. Physical phone testing remains pending.')
+    raise ValueError('Unknown signing identity')
 
 
 def write_verification(apk, sdk, manifest):
@@ -244,7 +263,7 @@ def publish(records_directory, output_directory, sdk):
         notes = directory/'release-notes.md'
         notes.write_text(str(record.get('release_notes',''))+'\n\n'+'Installable arm64 Android development alpha. Download the .apk under Assets and open it on your phone.\n\n'
             f"GitHub compilation: {run['html_url']}\n\nSource commit: `{manifest['git_commit']}`.\n\n"
-            'The APK preserves the existing signing identity. Signature, package/version, ZIP integrity, APK alignment and native 16 KB alignment were verified. Physical phone testing remains pending.\n')
+            +signing_note(manifest)+'\n')
         assets = [apk, output_directory/apk.with_suffix('.manifest.json').name, output_directory/'APK-SIGNATURE.txt', output_directory/'SHA256SUMS']
         command(['gh', 'release', 'create', tag, '--repo', REPOSITORY, '--target', manifest['git_commit'], '--title', f"Mystic Run {manifest['version_name']} - Android build {manifest['version_code']}", '--notes-file', notes, '--prerelease', *assets])
         command(['gh', 'release', 'download', tag, '--repo', REPOSITORY, '--pattern', apk.name, '--dir', directory/'published'])
@@ -282,3 +301,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+

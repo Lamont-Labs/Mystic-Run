@@ -6,10 +6,17 @@ on:
 permissions:
   contents: read
 
+concurrency:
+  group: mystic-run-permanent-android-release
+  cancel-in-progress: false
+
 jobs:
   android:
+    if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 25
+    permissions:
+      contents: write
     steps:
       - name: Checkout game
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
@@ -44,9 +51,13 @@ jobs:
           log-accepted-android-sdk-licenses: false
           packages: ''
       - name: Install Android SDK packages
-        run: sdkmanager 'platform-tools' 'build-tools;35.0.1' 'platforms;android-35'
+        run: sdkmanager 'platform-tools' 'build-tools;35.0.1' 'platforms;android-36'
       - name: Run gameplay core checks
         run: python3 tools/verify_core.py --godot "$(cat "${RUNNER_TEMP}/godot-path")"
+      - name: Check Android release contracts
+        run: |
+          python3 -m unittest discover -s tools -p 'test_android*.py'
+          python3 -m unittest discover -s .github/scripts -p test_release_reconstruction.py
       - name: Build and verify APK
         env:
           RELAY_KEY_PASSWORD: ${{ secrets.RELAY_DEVELOPMENT_KEY_PASSWORD }}
@@ -64,3 +75,40 @@ jobs:
             docs/verification_actual.json
           retention-days: 30
           if-no-files-found: error
+      - name: Verify and publish permanent-key APK
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          PYTHONPATH=.github/scripts python3 - <<'PY'
+          import json,os,subprocess,tempfile
+          from pathlib import Path
+          import publish_android_release as release
+          manifest=json.loads(Path('build/apk-manifest.json').read_text())
+          if manifest.get('git_commit')!=os.environ['GITHUB_SHA'] or manifest.get('builder',{}).get('commit')!=os.environ['GITHUB_SHA']:
+              raise SystemExit('Release source does not match the current main build')
+          if manifest.get('certificate_sha256')!=release.PERMANENT_CERTIFICATE or manifest.get('permanent_signing_identity') is not True or manifest.get('updates_legacy_owner_installation') is not False:
+              raise SystemExit('Permanent signing identity or compatibility declaration mismatch')
+          apk=Path('build')/manifest['apk']
+          sdk=Path(os.environ['ANDROID_SDK_ROOT'])
+          release.write_verification(apk,sdk,manifest)
+          tag=f"v{manifest['version_name']}-build{manifest['version_code']}"
+          notes=Path(os.environ['RUNNER_TEMP'])/'permanent-release-notes.md'
+          notes.write_text('MysticRun Android development build from main.\n\n'+release.signing_note(manifest)+'\n\nSource commit: '+manifest['git_commit']+'\n')
+          existing=subprocess.run(['gh','release','view',tag,'--repo',release.REPOSITORY],capture_output=True,text=True,timeout=60)
+          if existing.returncode:
+              if 'release not found' not in existing.stderr.lower():
+                  raise SystemExit('Unable to inspect the release status')
+              release.command(['gh','release','create',tag,'--repo',release.REPOSITORY,'--target',manifest['git_commit'],'--title',f"Mystic Run {manifest['version_name']} - permanent Android build {manifest['version_code']}",'--notes-file',notes,'--prerelease',apk,apk.with_suffix('.manifest.json'),apk.parent/'APK-SIGNATURE.txt',apk.parent/'SHA256SUMS'])
+          with tempfile.TemporaryDirectory(prefix='verify-published-') as temporary:
+              destination=Path(temporary)
+              release.command(['gh','release','download',tag,'--repo',release.REPOSITORY,'--pattern',apk.name,'--dir',destination])
+              published=destination/apk.name
+              release.write_verification(published,sdk,manifest)
+          print(release.command(['gh','release','view',tag,'--repo',release.REPOSITORY,'--json','url,assets']))
+          PY
+      - name: Remove runner signing material
+        if: always()
+        run: |
+          rm -f "${RUNNER_TEMP}/owner-development.keystore" "${RUNNER_TEMP}/signing-cert.der"
+          rm -f "${HOME}/.config/godot/editor_settings-4.7.tres"
+

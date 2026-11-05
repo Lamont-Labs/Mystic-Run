@@ -16,6 +16,7 @@ from android_policy import inspect_package
 
 PACKAGE='com.lamontlabs.knightgargoylewitch.dev'
 OWNER_CERTIFICATE='f5ee5d42ec692e402b52c0457be35c24fe1f92229005002155f675040dddb9c9'
+PERMANENT_CERTIFICATE='6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf'
 
 
 def validate_input(apk, manifest, expected_commit, expected_run_id=None):
@@ -64,7 +65,9 @@ def main():
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--expected-commit',required=True)
     parser.add_argument('--expected-run-id')
+    parser.add_argument('--permanent-identity',action='store_true',help='Use the existing permanent backup; this cannot update legacy-owner installations')
     args=parser.parse_args()
+    expected_certificate=PERMANENT_CERTIFICATE if args.permanent_identity else OWNER_CERTIFICATE
     source=args.apk.resolve();output=args.output.resolve()
     if source==output or not args.keystore.is_file():
         raise SystemExit('A separate output path and the preserved keystore are required')
@@ -75,7 +78,7 @@ def main():
     env['MYSTIC_SIGN_PASSWORD']=os.environ.get('RELAY_KEY_PASSWORD') or 'android'
     java=Path(os.environ.get('JAVA_HOME_17_X64') or os.environ.get('JAVA_HOME') or '/usr/lib/jvm/java-17-openjdk-amd64')
     certificate=subprocess.run([str(java/'bin/keytool'),'-exportcert','-alias','androiddebugkey','-keystore',str(args.keystore.resolve()),'-storepass:env','MYSTIC_SIGN_PASSWORD'],capture_output=True,env=env,timeout=30)
-    if certificate.returncode or hashlib.sha256(certificate.stdout).hexdigest()!=OWNER_CERTIFICATE:
+    if certificate.returncode or hashlib.sha256(certificate.stdout).hexdigest()!=expected_certificate:
         raise SystemExit('Keystore does not match the preserved Mystic Run signing identity')
     output.parent.mkdir(parents=True,exist_ok=True)
     with tempfile.TemporaryDirectory(prefix='mystic-sign-') as temporary:
@@ -84,7 +87,7 @@ def main():
         run([sdk/'apksigner','sign','--ks',args.keystore.resolve(),'--ks-key-alias','androiddebugkey','--ks-pass','env:MYSTIC_SIGN_PASSWORD','--key-pass','env:MYSTIC_SIGN_PASSWORD','--v1-signing-enabled','false','--v2-signing-enabled','true','--v3-signing-enabled','true','--v4-signing-enabled','false','--out',output,aligned],env=env,timeout=60)
     signature=run([sdk/'apksigner','verify','--verbose','--print-certs',output],timeout=30)
     fingerprint=re.search(r'certificate SHA-256 digest: ([0-9a-fA-F]+)',signature)
-    if not fingerprint or fingerprint.group(1).lower()!=OWNER_CERTIFICATE:
+    if not fingerprint or fingerprint.group(1).lower()!=expected_certificate:
         raise RuntimeError('Signed APK certificate did not match the preserved identity')
     run([sdk/'zipalign','-c','-P','16','4',output],timeout=30)
     metadata=run([sdk/'aapt','dump','badging',output],timeout=30)
@@ -109,9 +112,12 @@ def main():
     signed.update({
         **android_policy,
         'apk':output.name,'bytes':output.stat().st_size,'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
-        'unsigned_apk_sha256':manifest['sha256'],'certificate_sha256':OWNER_CERTIFICATE,
+        'unsigned_apk_sha256':manifest['sha256'],'certificate_sha256':expected_certificate,
         'signature_verified':True,'requires_owner_signing':False,'preserved_keystore_matched':True,
-        'owner_game_update_compatible':True,
+        'owner_game_update_compatible':not args.permanent_identity,
+        'permanent_signing_identity':args.permanent_identity,
+        'updates_legacy_owner_installation':not args.permanent_identity,
+        'updates_permanent_identity_installation':args.permanent_identity,
         'alignment_16k_verified':True,'native_16k_alignment_verified':True,'zip_integrity_verified':True,
         'packaged_game_files_unchanged_by_signing':True,'signing_service':'local-preserved-owner-key',
         'native_libraries':libraries,
@@ -124,3 +130,4 @@ def main():
 
 if __name__=='__main__':
     main()
+

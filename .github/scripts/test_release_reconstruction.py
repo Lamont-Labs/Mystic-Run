@@ -75,9 +75,47 @@ class ReconstructionTests(unittest.TestCase):
         with self.assertRaises(ValueError):
             release.apply_record(self.unsigned,self.original_manifest,record)
 
+    def permanent_record(self):
+        record = copy.deepcopy(self.record)
+        record['signed_manifest'].update({
+            'certificate_sha256':'6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf',
+            'permanent_signing_identity':True,
+            'owner_game_update_compatible':False,
+            'updates_legacy_owner_installation':False,
+        })
+        return record
+
+    def test_permanent_identity_round_trip_preserves_game_bytes(self):
+        self.assertEqual(release.apply_record(self.unsigned,self.original_manifest,self.permanent_record()),self.signed)
+
+    def test_permanent_identity_cannot_claim_legacy_upgrade(self):
+        for field in ('owner_game_update_compatible','updates_legacy_owner_installation'):
+            with self.subTest(field=field):
+                record = self.permanent_record()
+                record['signed_manifest'][field] = True
+                with self.assertRaises(ValueError):
+                    release.validate_record(record)
+
+    def test_permanent_identity_requires_explicit_marker(self):
+        record = self.permanent_record()
+        del record['signed_manifest']['permanent_signing_identity']
+        with self.assertRaises(ValueError):
+            release.validate_record(record)
+
+    def test_permanent_release_notes_explain_certificate_boundary(self):
+        notes = release.signing_note(self.permanent_record()['signed_manifest'])
+        self.assertIn('cannot update',notes)
+        self.assertIn('6cae555c',notes)
+        self.assertIn('Do not uninstall',notes)
+
+    def test_legacy_release_notes_preserve_original_identity(self):
+        notes = release.signing_note(self.record['signed_manifest'])
+        self.assertIn('preserves the original signing identity',notes)
+
 
 from test_art_preview_release import ArtPreviewReconstructionTests
 
 
 if __name__ == '__main__':
     unittest.main()
+
