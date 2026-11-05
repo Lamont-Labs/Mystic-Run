@@ -140,11 +140,11 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 			for uv in [Vector2(column/12.0,row/10.0),Vector2((column+1)/12.0,row/10.0),Vector2(column/12.0,(row+1)/10.0),Vector2((column+1)/12.0,(row+1)/10.0)]:
 				# MR-ART-018: curved shoulder drape, asymmetric cloth folds and
 				# a gently scalloped hem. Keep the gold star shader and spine rig.
-				var spread:=lerpf(.62,1.12,uv.y)
-				var edge_wave:=1.0+0.065*sin(uv.y*PI*2.0+0.35)
-				var drape_x:=(uv.x-.5)*2.0
-				var fold:=sin(uv.x*PI*6.0+uv.y*1.8)*uv.y*0.042
-				var hem_drop:=pow(uv.y,8.0)*(0.027*cos(uv.x*PI*6.0)+0.018*cos(uv.x*PI*2.0))
+				var spread:float=lerpf(.62,1.12,uv.y)
+				var edge_wave:float=1.0+0.065*sin(uv.y*PI*2.0+0.35)
+				var drape_x:float=(uv.x-.5)*2.0
+				var fold:float=sin(uv.x*PI*6.0+uv.y*1.8)*uv.y*0.042
+				var hem_drop:float=pow(uv.y,8.0)*(0.027*cos(uv.x*PI*6.0)+0.018*cos(uv.x*PI*2.0))
 				vertices.append(Vector3(drape_x*width*spread*edge_wave,
 					lerpf(top,bottom,uv.y)-hem_drop,
 					z-uv.y*uv.y*.48+fold-0.024*sin(uv.y*PI)*cos(uv.x*PI*2.0)))
@@ -162,7 +162,7 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 		var previous:=Vector3(side*width*.62,top,z)
 		for i in range(1,13):
 			var v:=i/12.0
-			var spread:=lerpf(.62,1.12,v)*(1.0+0.065*sin(v*PI*2.0+0.35))
+			var spread:float=lerpf(.62,1.12,v)*(1.0+0.065*sin(v*PI*2.0+0.35))
 			var point:=Vector3(side*width*spread,
 				lerpf(top,bottom,v)-pow(v,8.0)*(-0.009),
 				z-v*v*.48+sin((1.0 if side>0 else 0.0)*PI*6.0+v*1.8)*v*.042-0.024*sin(v*PI)*cos(PI))
