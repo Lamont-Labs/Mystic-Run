@@ -1,0 +1,68 @@
+name: Knight asset rebuild evidence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['art/asset-upgrade-batch-01']
+    paths:
+      - 'tools/build_knight_asset.py'
+      - 'tools/verify_knight_glb.py'
+      - '.github/workflows/knight-asset-rebuild.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Install Blender 4.3.2 for isolated asset rebuild
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --output /tmp/blender.tar.xz https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz
+          sha256sum /tmp/blender.tar.xz | tee blender-archive-sha256.txt
+          mkdir -p /tmp/mystic-blender
+          tar -xJf /tmp/blender.tar.xz -C /tmp/mystic-blender --strip-components=1
+          /tmp/mystic-blender/blender --background --factory-startup --python-expr "import bpy; assert bpy.app.version[:3] == (4,3,2), bpy.app.version_string"
+      - name: Rebuild Knight GLB and provenance
+        run: /tmp/mystic-blender/blender --background --factory-startup --python-exit-code 1 --python tools/build_knight_asset.py
+      - name: Validate newly generated GLB
+        run: python3 tools/verify_knight_glb.py | tee knight-structural-report.json
+      - name: Verify source-to-output modifications are isolated
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --short | tee knight-generated-files.txt
+          git diff --name-only | while read -r file; do
+            case "$file" in
+              assets/characters/knight/knight.glb|assets/characters/knight/PROVENANCE.json|assets/asset_registry.json) ;;
+              *) echo "Unexpected tracked change: $file"; exit 1 ;;
+            esac
+          done
+      - name: Import regenerated Knight in pinned Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/bootstrap_godot.py --cache "${RUNNER_TEMP}/godot" > godot-binary-path.txt
+          "$(cat godot-binary-path.txt)" --headless --path . --editor --import --quit
+          "$(cat godot-binary-path.txt)" --headless --path . --script res://tests/rig_motion.gd
+          "$(cat godot-binary-path.txt)" --headless --path . --script res://tests/knight_expressions.gd
+      - name: Upload generated asset and evidence (review only)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: knight-rebuild-review
+          path: |
+            assets/characters/knight/knight.glb
+            assets/characters/knight/PROVENANCE.json
+            assets/asset_registry.json
+            knight-structural-report.json
+            knight-generated-files.txt
+            blender-archive-sha256.txt
+            godot-binary-path.txt
+          retention-days: 14
+          if-no-files-found: warn
