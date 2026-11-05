@@ -48,6 +48,14 @@ func run() -> void:
 	var arrays:Array=node.mesh.surface_get_arrays(0)
 	var vertices:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
 	var indices:PackedInt32Array=arrays[Mesh.ARRAY_INDEX]
+	var normals:PackedVector3Array=arrays[Mesh.ARRAY_NORMAL]
+	var horn_samples:int=0;var outward_horns:bool=true
+	for i in range(vertices.size()):
+		var p:Vector3=vertices[i]
+		if p.y>2.02 and p.y<2.08 and absf(p.x)<.24:
+			if p.z<-.12:horn_samples+=1;outward_horns=outward_horns and normals[i].z<-.15
+			elif p.z>-.064:horn_samples+=1;outward_horns=outward_horns and normals[i].z>.15
+	check(horn_samples>=8 and outward_horns,"Actual exterior horn normals face away from the swept centreline")
 	var weights:PackedFloat32Array=arrays[Mesh.ARRAY_WEIGHTS]
 	var joints:PackedInt32Array=arrays[Mesh.ARRAY_BONES]
 	check(indices.size()/3<=30000,"Complete creature stays below the 30,000-triangle hero budget")
@@ -96,7 +104,7 @@ func run() -> void:
 	check(actor.facial_state=="pleased" and node.get_blend_shape_value(actor.face_shapes.Smile)>0,"Celebration drives the creature smile")
 	actor.react_to_hit();actor.animate(1.0/60)
 	check(actor.facial_state=="hurt" and node.get_blend_shape_value(actor.face_shapes.Hurt)>0,"Accepted hit reaction drives the hurt expression")
-	var result:Dictionary={"checks":checks,"failed":failures.size(),"failures":failures,"triangles":indices.size()/3,"bones":actor.skeleton.get_bone_count(),"wing_width_run":folded.size.x,"wing_width_glide":gliding.size.x,"wing_width_slide":sliding.size.x,"wing_slide_top":sliding.end.y,"full_slide_top":full_slide.end.y,"active_slide_top":active_slide_top,"scope":"Actual imported mesh, skin, wing deformation, facial state and desktop pose checks; not physical-device performance or final art approval"}
+	var result:Dictionary={"checks":checks,"failed":failures.size(),"failures":failures,"triangles":indices.size()/3,"bones":actor.skeleton.get_bone_count(),"outward_horn_samples":horn_samples,"wing_width_run":folded.size.x,"wing_width_glide":gliding.size.x,"wing_width_slide":sliding.size.x,"wing_slide_top":sliding.end.y,"full_slide_top":full_slide.end.y,"active_slide_top":active_slide_top,"scope":"Actual imported mesh, exterior curve normals, skin, wing deformation, facial state and desktop pose checks; not physical-device performance or final art approval"}
 	actor.queue_free();await process_frame;load("res://game/rig_motion.gd").release_shared()
 	FileAccess.open("res://tests/evidence/gargoyle-asset.json",FileAccess.WRITE).store_string(JSON.stringify(result,"  "))
 	print("GARGOYLE_ASSET_QA ",JSON.stringify(result));quit(0 if failures.is_empty() else 1)

@@ -260,13 +260,14 @@
       },
       "modifications": [
         "Original nonhuman visible geometry and five facial morph targets.",
-        "Four added wing bones and weighted curved membranes, retained humanoid motion rig."
+        "Four added wing bones and weighted curved membranes, retained humanoid motion rig.",
+        "Outward-facing curved detail surfaces for solid brows, horns, claws, piping and wing spars."
       ],
       "files": [
         {
           "path": "assets/characters/gargoyle/gargoyle.glb",
-          "sha256": "0c4c077a7ee55a763f53698f9b0d88433537cde4818fc467044c44db801040ed",
-          "bytes": 1616856
+          "sha256": "303d5e9a96638098a37a39a780c0f6b5ae7752fefa3127ffb6de2e8f703c957a",
+          "bytes": 1506972
         }
       ]
     },

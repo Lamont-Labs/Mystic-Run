@@ -7,7 +7,7 @@ import math
 from mathutils import Vector
 from character_mesh import CharacterMesh
 
-m=CharacterMesh('gargoyle')
+m=CharacterMesh('gargoyle',outward_tubes=True)
 STONE=m.material('Stone_jade','58a99e',0,.92)
 LIGHT=m.material('Stone_edges','76b5a6',0,.88)
 DEEP=m.material('Stone_recesses','315e65',0,.96)
@@ -174,10 +174,11 @@ def deform(name,p,tag):
     return p
 
 m.export({name:lambda p,tag,n=name:deform(n,p,tag) for name in ['Blink','Smile','Focus','Surprised','Hurt']},{
-    'revision':'authored-gargoyle-1','source_generator':'tools/build_gargoyle_asset.py',
+    'revision':'authored-gargoyle-2','source_generator':'tools/build_gargoyle_asset.py',
     'geometry':'Original Lamont Labs stone body, muzzle, horns, hands, feet, sash, wing membranes and spars.',
     'rig_source':'Previously admitted Quaternius CC0 humanoid skeleton, plus four original wing control bones.',
     'motion_source':'Existing admitted CC0 authored motion; original cosmetic wing control in game/hero.gd.',
     'blink_closure_y':1.793,
-    'modifications':['Original nonhuman visible geometry and five facial morph targets.','Four added wing bones and weighted curved membranes, retained humanoid motion rig.'],
+    'tube_side_faces_outward':True,
+    'modifications':['Original nonhuman visible geometry and five facial morph targets.','Four added wing bones and weighted curved membranes, retained humanoid motion rig.','Outward-facing curved detail surfaces for solid brows, horns, claws, piping and wing spars.'],
 })
