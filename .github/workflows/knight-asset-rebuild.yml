@@ -24,6 +24,7 @@ jobs:
         run: |
           set -euo pipefail
           curl -fL --retry 3 --output /tmp/blender.tar.xz https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz
+          echo '4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  /tmp/blender.tar.xz' | sha256sum --check
           sha256sum /tmp/blender.tar.xz | tee blender-archive-sha256.txt
           mkdir -p /tmp/mystic-blender
           tar -xJf /tmp/blender.tar.xz -C /tmp/mystic-blender --strip-components=1
