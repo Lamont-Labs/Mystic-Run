@@ -1,0 +1,6 @@
+MysticRun original Gargoyle artwork
+Copyright 2026 Lamont Labs. All rights reserved.
+
+The visible geometry, costume, face, equipment and new control bones are authored by Lamont Labs. The retained Quaternius skeleton remains under its included CC0 1.0 dedication; see quaternius-CC0.txt. This record does not relicense third-party work.
+
+LicenseRef-LamontLabs-Original identifies owner-authored project artwork and is not a license grant to third parties.

@@ -1,4 +1,4 @@
-> Development: `quality/free-asset-foundry` includes the [free-asset integration](docs/FREE_ASSET_FIRST_PLAYABLE.md) and [Knight geometry/expression refinement](docs/KNIGHT_EXPRESSION_REFINEMENT.md), with verification and actual engine frames. The published Android release below remains build 1016.
+> Development: `quality/free-asset-foundry` includes the [free-asset integration](docs/FREE_ASSET_FIRST_PLAYABLE.md), [Knight refinement](docs/KNIGHT_EXPRESSION_REFINEMENT.md), and [authored Gargoyle checkpoint](docs/AUTHORED_GARGOYLE_CHECKPOINT.md), with verification and actual engine frames. The published Android release below remains build 1016.
 
 # Mystic Run — Android runner
 

@@ -235,6 +235,40 @@
           "bytes": 3436
         }
       ]
+    },
+    {
+      "id": "mysticrun-authored-gargoyle",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "cost_usd": 0,
+      "commercial_use": true,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "edition": "Original derivative",
+      "sources": [
+        "tools/build_gargoyle_asset.py",
+        "assets/characters/gargoyle/PROVENANCE.json"
+      ],
+      "derived_from": [
+        "quaternius-base-characters"
+      ],
+      "license_evidence": {
+        "path": "assets/licenses/gargoyle-original.txt",
+        "sha256": "18713e622529b98b2afa3754c0bdf75c05530e850b639b9582fd6fad27dca31c",
+        "bytes": 456
+      },
+      "modifications": [
+        "Original nonhuman visible geometry and five facial morph targets.",
+        "Four added wing bones and weighted curved membranes, retained humanoid motion rig."
+      ],
+      "files": [
+        {
+          "path": "assets/characters/gargoyle/gargoyle.glb",
+          "sha256": "0c4c077a7ee55a763f53698f9b0d88433537cde4818fc467044c44db801040ed",
+          "bytes": 1616856
+        }
+      ]
     }
   ]
 }

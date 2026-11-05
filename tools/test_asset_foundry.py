@@ -91,7 +91,7 @@ class AssetAdmissionTests(unittest.TestCase):
         document = json.loads(path.read_text())
         document["buffers"][0]["uri"] = "https://unreviewed.invalid/body.bin"
         path.write_text(json.dumps(document))
-        entry = self.registry["assets"][-1]
+        entry = next(e for e in self.registry["assets"] if e["id"] == "kaykit-medieval-districts")
         entry["files"] = [file_record(path, self.root) if f["path"] == name else f for f in entry["files"]]
         self.save()
         with self.assertRaisesRegex(ValueError, "Invalid local asset path"):
