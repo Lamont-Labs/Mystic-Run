@@ -23,12 +23,15 @@ var fans: Array[Node3D] = []
 var atlas_material: ShaderMaterial
 var high_detail: bool = true
 var motion_clock: float = 0.0
+var replacement_scenes: Dictionary = {}
+var replacement_instances: int = 0
 var island_mesh: ArrayMesh
 
 func configure() -> void:
 	atlas_material = ShaderMaterial.new()
 	atlas_material.shader = SHADER
 	atlas_material.set_shader_parameter("atlas", ATLAS)
+	_load_replacement_scenery()
 	island_mesh = _foundation()
 	for index in range(POOL_SIZE):
 		var island := Node3D.new()
@@ -55,7 +58,43 @@ func configure() -> void:
 				_place(island, "well", Vector3(2.4, 0, 1.8), 2.6, 0)
 		_place(island, "tree_round", Vector3(-3.3, .25, -.7), 3.0, index * .8)
 		_place(island, "tree_tall", Vector3(3.2, .25, -2.6), 3.2, index * -.6)
+		# Optional high-detail art: decorative only, never in the obstacle corridor.
+		if index % 4 == 0:
+			_place_replacement(island, "skybridge_gateway", Vector3(0, 0, -4.0), 0.85, 0.0)
+		elif index % 4 == 2:
+			_place_replacement(island, "relic_waystone", Vector3(1.5, .15, 2.4), 1.15, 0.0)
 	update_scenery(0.0, 0.0, true, false, false)
+
+func _load_replacement_scenery() -> void:
+	# The GLBs are installed by tools/import_handoff_assets.py.
+	# A checkout without the handoff remains playable using existing scenery.
+	for name in ["skybridge_gateway", "relic_waystone"]:
+		var path: String = "res://assets/replacement_batch01/original/" + name + ".glb"
+		if ResourceLoader.exists(path):
+			var scene: Resource = load(path)
+			if scene is PackedScene:
+				replacement_scenes[name] = scene
+
+func _place_replacement(parent: Node3D, name: String, at: Vector3, size: float, yaw: float) -> void:
+	if not replacement_scenes.has(name):
+		return
+	var scene: PackedScene = replacement_scenes[name]
+	var instance: Node3D = scene.instantiate() as Node3D
+	if instance == null:
+		return
+	instance.position = at
+	instance.scale = Vector3.ONE * size
+	instance.rotation.y = yaw
+	parent.add_child(instance)
+	_disable_replacement_collision(instance)
+	replacement_instances += 1
+
+func _disable_replacement_collision(node: Node) -> void:
+	if node is CollisionObject3D:
+		node.collision_layer = 0
+		node.collision_mask = 0
+	for child in node.get_children():
+		_disable_replacement_collision(child)
 
 func _foundation() -> ArrayMesh:
 	var rock := StandardMaterial3D.new()
@@ -106,4 +145,4 @@ func update_scenery(distance: float, delta: float, flat_course: bool, reduced_mo
 		fan.rotation.z = 0.0 if reduced_motion else fposmod(motion_clock * .55, TAU)
 
 func diagnostics() -> Dictionary:
-	return {"source": "KayKit Medieval Hexagon Pack, free Standard, CC0 1.0", "island_pool": islands.size(), "windmills": fans.size(), "shared_atlas": true, "collision_bodies": 0, "runtime_downloads": false}
+	return {"source": "KayKit Medieval Hexagon Pack, free Standard, CC0 1.0", "island_pool": islands.size(), "windmills": fans.size(), "shared_atlas": true, "collision_bodies": 0, "runtime_downloads": false, "replacement_models_loaded": replacement_scenes.size(), "replacement_instances": replacement_instances}
