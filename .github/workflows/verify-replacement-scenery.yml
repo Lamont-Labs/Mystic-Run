@@ -1,0 +1,62 @@
+name: MysticRun replacement scenery integration check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - art/runtime-asset-integration
+    paths:
+      - game/asset_districts.gd
+      - tools/build_asset_batch01.py
+      - tools/import_handoff_assets.py
+      - .github/workflows/verify-replacement-scenery.yml
+
+permissions:
+  contents: read
+
+jobs:
+  replacement-scenery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Install Blender asset generator
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y blender
+          blender --version
+      - name: Generate original 3D scenery from source
+        run: blender --background --python tools/build_asset_batch01.py
+      - name: Install authored geometry in game runtime
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil,struct
+          src=Path('art/asset_batch_01/review/assets/original')
+          dst=Path('assets/replacement_batch01/original')
+          dst.mkdir(parents=True,exist_ok=True)
+          for name in ('skybridge_gateway','relic_waystone'):
+              file=src/(name+'.glb')
+              data=file.read_bytes()
+              assert len(data)>20 and data[:4]==b'glTF' and struct.unpack_from('<I',data,8)[0]==len(data),name
+              shutil.copyfile(file,dst/file.name)
+              print(name,len(data))
+          assert len(list(dst.glob('*.glb')))==2
+          PY
+      - name: Install pinned Godot editor
+        run: |
+          python3 tools/bootstrap_godot.py --cache "${RUNNER_TEMP}/godot" > "${RUNNER_TEMP}/godot-path"
+      - name: Import project and verify runtime resource loading
+        run: |
+          GODOT="$(cat "${RUNNER_TEMP}/godot-path")"
+          "$GODOT" --headless --path . --editor --import --quit
+          "$GODOT" --headless --path . --script tools/check_replacement_scenery.gd
+      - name: Preserve verified geometry and logs for build handoff
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mysticrun-replacement-scenery
+          path: |
+            assets/replacement_batch01/original/*.glb
+            art/asset_batch_01/original-assets.json
+          if-no-files-found: error
+          retention-days: 30
