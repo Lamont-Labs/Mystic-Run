@@ -31,6 +31,9 @@ def extract(archive_path: Path, project: Path) -> int:
             # use review/assets/outfits/...
             hashes.update({"review/" + item["path"]: item["sha256"]
                            for item in outfits["assets"]})
+            kaykit = json.loads(source.read(PREFIX + "kaykit-dungeon.lock.json"))
+            hashes.update({"review/assets/kaykit/" + Path(item["path"]).name: item["sha256"]
+                           for item in kaykit["files"] if item["path"].endswith(".glb")})
             members = sorted(n for n in source.namelist()
                              if n.startswith(PREFIX + "review/assets/") and n.endswith(".glb"))
             if len(members) != 57:
@@ -41,7 +44,9 @@ def extract(archive_path: Path, project: Path) -> int:
                 payload = source.read(name)
                 if payload[:4] != b"glTF":
                     raise ValueError("Invalid GLB magic: " + rel)
-                if rel in hashes and hashlib.sha256(payload).hexdigest() != hashes[rel]:
+                if rel not in hashes:
+                    raise ValueError("Unpinned asset: " + rel)
+                if hashlib.sha256(payload).hexdigest() != hashes[rel]:
                     raise ValueError("Asset hash mismatch: " + rel)
                 target_rel = Path(rel).relative_to("review/assets")
                 pending.append((OUTPUT / target_rel, payload))
