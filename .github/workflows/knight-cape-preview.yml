@@ -1,0 +1,53 @@
+name: Knight cape visual evidence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['art/asset-upgrade-batch-01']
+    paths:
+      - 'game/hero.gd'
+      - 'assets/shaders/embroidered_cloth.gdshader'
+      - 'tests/preview_authored_character.gd'
+      - '.github/workflows/knight-cape-preview.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  cape-preview:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - name: Install pinned Godot
+        run: python3 tools/bootstrap_godot.py --cache "${RUNNER_TEMP}/godot" > godot-binary-path.txt
+      - name: Import assets
+        run: '"$(cat godot-binary-path.txt)" --headless --path . --editor --import --quit'
+      - name: Capture actual Knight cape views and animation poses
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb libgl1-mesa-dri libgl1 libx11-6 libxrandr2 libxi6 libxcursor1 libxinerama1
+          mkdir -p cape-review
+          python3 tools/render_preview.py --godot "$(cat godot-binary-path.txt)" --output cape-review --character knight --script res://tests/preview_authored_character.gd --frames 120
+          for view in front rear side run attack jump slide celebrate; do
+            test -s "cape-review/knight-${view}.png"
+          done
+          python3 - <<'PY'
+          import hashlib,json
+          from pathlib import Path
+          files=sorted(Path('cape-review').glob('knight-*.png'))
+          records=[{'path':p.as_posix(),'bytes':p.stat().st_size,'sha256':hashlib.sha256(p.read_bytes()).hexdigest()} for p in files]
+          assert len(records)>=8
+          Path('cape-review/manifest.json').write_text(json.dumps({'source':'Godot actual actor preview; desktop software render','frames':records,'approval':'visual inspection pending'},indent=2))
+          PY
+      - name: Upload cape review
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4
+        with:
+          name: knight-cape-visual-review
+          path: cape-review/
+          retention-days: 14
+          if-no-files-found: warn

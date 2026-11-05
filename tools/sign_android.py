@@ -111,6 +111,7 @@ def main():
         'apk':output.name,'bytes':output.stat().st_size,'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
         'unsigned_apk_sha256':manifest['sha256'],'certificate_sha256':OWNER_CERTIFICATE,
         'signature_verified':True,'requires_owner_signing':False,'preserved_keystore_matched':True,
+        'owner_game_update_compatible':True,
         'alignment_16k_verified':True,'native_16k_alignment_verified':True,'zip_integrity_verified':True,
         'packaged_game_files_unchanged_by_signing':True,'signing_service':'local-preserved-owner-key',
         'native_libraries':libraries,

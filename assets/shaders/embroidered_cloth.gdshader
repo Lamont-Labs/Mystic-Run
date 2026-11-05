@@ -9,13 +9,14 @@ varying vec3 cloth_position;
 void vertex(){
  cloth_position=VERTEX;
  float v=clamp((top-VERTEX.y)/(top-bottom),0.0,1.0);
- VERTEX.z+=motion_amount*v*v*(sin(TIME*8.0+VERTEX.x*10.0)*0.045+sin(TIME*5.3+VERTEX.x*16.0)*0.022);
+ VERTEX.z+=motion_amount*v*v*(sin(TIME*4.0+v*2.2)*0.024+sin(TIME*2.7+VERTEX.x*3.2+v*1.5)*0.011);
 }
 void fragment(){
  float v=clamp((top-cloth_position.y)/(top-bottom),0.0,1.0);
- float spread=mix(0.60,1.18,v);
+ // MR-ART-018: match the curved cape's lateral profile so embroidery and trim track its edges.
+ float spread=mix(0.62,1.12,v)*(1.0+0.065*sin(v*6.28318530+0.35));
  float u=cloth_position.x/(half_width*spread);
- float folds=0.96+0.04*cos(cloth_position.x*32.0+v*1.8);
+ float folds=0.965+0.035*cos(cloth_position.x*8.0+v*1.1);
  float edge=smoothstep(0.86,0.89,abs(u))-smoothstep(0.94,0.97,abs(u));
  float hem=1.0-smoothstep(0.012,0.022,abs(v-0.94));
  vec2 p=vec2(u,(v-0.44)*2.3);

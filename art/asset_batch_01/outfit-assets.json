@@ -1,0 +1,1689 @@
+{
+  "schema": 1,
+  "archive_sha256": "c3468b18871cc8c8f05ab14df7712baf22cb9f389cbd870babf130e595187f70",
+  "blender": "4.3.2",
+  "assemblies": 4,
+  "modular_parts": 20,
+  "assets": [
+    {
+      "id": "outfit_female_peasant",
+      "label": "Female Peasant Outfit",
+      "path": "assets/outfits/Female_Peasant.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Outfits/Female_Peasant.gltf",
+      "source_sha256": "43ba98058b933cae9acbde0f3ef8c3dda4ba9f69f338606f9d87666d9efffb31",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "outfit_assembly",
+      "triangles": 13568,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 4,
+      "sha256": "abc8c6fec76cb6887ea1732968477915110b64ec45f41db00347532a01ca5cd7",
+      "bytes": 3469672,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 1024px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_ranger",
+      "label": "Female Ranger Outfit",
+      "path": "assets/outfits/Female_Ranger.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Outfits/Female_Ranger.gltf",
+      "source_sha256": "9b98b2ae6af3b4a1ec22bf8928b939e0751f08b25b636de82bfa7364fb34d3e1",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "outfit_assembly",
+      "triangles": 26966,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 9,
+      "sha256": "c86e1f8275795dc7945fd3df301a52112f9b97d8445a0b1c4bda5f10471c8b80",
+      "bytes": 8168928,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Female_Dark_BaseColor",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Regular_Female_Normal",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Female_Roughness",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 1024px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_peasant",
+      "label": "Male Peasant Outfit",
+      "path": "assets/outfits/Male_Peasant.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Outfits/Male_Peasant.gltf",
+      "source_sha256": "8f5a6cf6c1cf96e0a0f8e1a861b4245d42b7f88d44e5076da3d48f3fc52f4e76",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "outfit_assembly",
+      "triangles": 12894,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 4,
+      "sha256": "3e2a5487ef6574e45af1a7ac583b61d7bd2aa97b0fb6bc36da5fbd49d9dd12b6",
+      "bytes": 6295288,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Male_Dark_BaseColor",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Regular_Male_Normal",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Male_Roughness",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 1024px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_ranger",
+      "label": "Male Ranger Outfit",
+      "path": "assets/outfits/Male_Ranger.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Outfits/Male_Ranger.gltf",
+      "source_sha256": "e1033a212332d84d98c19bc4927c621635478d0aa15d13c79da68d3ba9e0196f",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "outfit_assembly",
+      "triangles": 26982,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 9,
+      "sha256": "11091b09cebae2cc8b73a6ab68c5068405b7cab0bfdf58af1d7e8c5354fe188d",
+      "bytes": 7901932,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Male_Dark_BaseColor",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Regular_Male_Normal",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Male_Roughness",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            1024,
+            1024
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 1024px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_peasant_arms",
+      "label": "Female Peasant Arms Part",
+      "path": "assets/outfits/Female_Peasant_Arms.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Peasant_Arms.gltf",
+      "source_sha256": "7f2446a7bab93b882e4095a9583219de3f381962551e8a7d451c287d74a8987e",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 6848,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "40559dec9ad15861653d6c76677bcdf2f27a3f930985dc1b46100ee5ee46b00d",
+      "bytes": 1210996,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_peasant_body",
+      "label": "Female Peasant Body Part",
+      "path": "assets/outfits/Female_Peasant_Body.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Peasant_Body.gltf",
+      "source_sha256": "9c4edd8d18a028ee721fbaa5431a42e6ae1b579ac3bd756604bf888b387d4529",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2188,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "434a21c9e6b4847ff4d4a3a0b30ba69ee5c053a97bbb3b940c043100edbf1e49",
+      "bytes": 1016844,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_peasant_feet",
+      "label": "Female Peasant Feet Part",
+      "path": "assets/outfits/Female_Peasant_Feet.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Peasant_Feet.gltf",
+      "source_sha256": "1c8cfde62c44e578d10194f769a568dd40a7f0523d0d286661660141704715de",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2588,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "8a69aa3b1ed98a2e30da7b72405a5a8ec84cd1c7de5651671e61b03ffb935b4f",
+      "bytes": 1029260,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_peasant_legs",
+      "label": "Female Peasant Legs Part",
+      "path": "assets/outfits/Female_Peasant_Legs.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Peasant_Legs.gltf",
+      "source_sha256": "1369d75a8197e9e9fdbaf9491b276e7a31c08944377145ff5e497a7c1ac81ea3",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1944,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "11e99c5f524d9d4bbec5ad1a0a0e6c1f9342d287f7c7871fe9f80c95e591d4e4",
+      "bytes": 947404,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_ranger_acc_pauldrons",
+      "label": "Female Ranger Acc Pauldrons Part",
+      "path": "assets/outfits/Female_Ranger_Acc_Pauldrons.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Acc_Pauldrons.gltf",
+      "source_sha256": "9ebbd79c8cf2316f0edf1ab76c6613ff8f7c5842d9faf98825b9afc205f6ce1e",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1376,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "f7a841f9508c785a081501eababa62b13a25ee2783104c8839f642f295959579",
+      "bytes": 1082516,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_ranger_arms",
+      "label": "Female Ranger Arms Part",
+      "path": "assets/outfits/Female_Ranger_Arms.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Arms.gltf",
+      "source_sha256": "98a1b7a5d5d98b6de2f914f810cf75b359d7e11c62f33197948cf4c17c2c95eb",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 8508,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 2,
+      "sha256": "26d8a0276e41cde9b43847eb42fa2eea326e3cf8ab6259d62c9998030415107b",
+      "bytes": 2429816,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Female_Dark_BaseColor",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Regular_Female_Normal",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Female_Roughness",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_ranger_body",
+      "label": "Female Ranger Body Part",
+      "path": "assets/outfits/Female_Ranger_Body.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Body.gltf",
+      "source_sha256": "7215f19c1c31fa8f19286357f93e6e043b0dd162d4418fdc73f530a88717db35",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 4570,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 3,
+      "sha256": "bf7a0aaa871e4d69eb91a52a4497bda92f3fc826b9b018067d6bd487b62b61ed",
+      "bytes": 1408000,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_ranger_feet",
+      "label": "Female Ranger Feet Part",
+      "path": "assets/outfits/Female_Ranger_Feet.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Feet.gltf",
+      "source_sha256": "11fef23ffa6099722f44f7411622f24db8728e9b7b5c028d5c40f980f5f97501",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 9172,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "ffb01d01ebdac779bfc7bf3dffc14d8de96e5f78d2ebcc266f1c8713564b954f",
+      "bytes": 1904192,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_ranger_head_hood",
+      "label": "Female Ranger Head Hood Part",
+      "path": "assets/outfits/Female_Ranger_Head_Hood.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Head_Hood.gltf",
+      "source_sha256": "3ac6867e32cba7793d9393d4844cc21f38c53e833d468d7d5adebfb42bba7d0e",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2136,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "68301588908c37aa4a2163ef9cb84b44a5ca4aa82f8bfa8ce341608049d94193",
+      "bytes": 1098436,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_female_ranger_legs",
+      "label": "Female Ranger Legs Part",
+      "path": "assets/outfits/Female_Ranger_Legs.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Legs.gltf",
+      "source_sha256": "804932b0e0b49601a565aef57422bc7ca17e526656518e399ef5d72f7134db6c",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1204,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "b3e045fe0a74ef952ad6ea8369bd0e306aa8e736080156f119562c7ab0d022b7",
+      "bytes": 1048420,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_peasant_arms",
+      "label": "Male Peasant Arms Part",
+      "path": "assets/outfits/Male_Peasant_Arms.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Peasant_Arms.gltf",
+      "source_sha256": "4eb0fff5637cb65909103fee86c799f13883c9fa18a0118cc5233a77b67db1d2",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 5338,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "026e3d3c7bbcb7c50b3cd68b492b291b75530968d179dfc281a917766fbf2990",
+      "bytes": 1980132,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Male_Dark_BaseColor",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Regular_Male_Normal",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Male_Roughness",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_peasant_body",
+      "label": "Male Peasant Body Part",
+      "path": "assets/outfits/Male_Peasant_Body.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Peasant_Body.gltf",
+      "source_sha256": "daaa452abe8762c3bee7b1b30066c76d62077873c72cbf826de1a0f575ac3cb0",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 3856,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "cff761a4714d2a3ceb58c268ee0371dbfde13e0aed5015f8ff6b11055272f4c5",
+      "bytes": 1117700,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_peasant_feet",
+      "label": "Male Peasant Feet Part",
+      "path": "assets/outfits/Male_Peasant_Feet.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Peasant_Feet.gltf",
+      "source_sha256": "191a2d70d6c2e550669bb7b1fc1c07be650d7168512e18eb2acb0e55d0535c52",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2588,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "b67f3892591d27c8023f7f45cd012cd7bd74114417189e161820983f25cd47b1",
+      "bytes": 1027872,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_peasant_legs",
+      "label": "Male Peasant Legs Part",
+      "path": "assets/outfits/Male_Peasant_Legs.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Peasant_Legs.gltf",
+      "source_sha256": "207933393b7a2ef436c0ffea65b70e35feaee084992e798c3eb31e0c771fabb0",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1112,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "d6e6f58f7b37096c186ed4be08cee7111253bcebe628561707bc4b59f5c5635f",
+      "bytes": 931004,
+      "textures": [
+        {
+          "name": "T_Peasant_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Peasant_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Peasant_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_ranger_acc_pauldron",
+      "label": "Male Ranger Acc Pauldron Part",
+      "path": "assets/outfits/Male_Ranger_Acc_Pauldron.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Acc_Pauldron.gltf",
+      "source_sha256": "967bd4e8d85821fbc7116269440b9a90904f6c7eeb0fc17b86349ee1fa3a7aa9",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1376,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "37057f453f1e34722a909184287d7057f62d2563966821404b3690d697d0dc81",
+      "bytes": 1051032,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_ranger_arms",
+      "label": "Male Ranger Arms Part",
+      "path": "assets/outfits/Male_Ranger_Arms.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Arms.gltf",
+      "source_sha256": "437d71553d79dbf4583351718b5cb5c6d342f5e0682b287a7cd806630ed2b349",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 4928,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "859c1dfaac5e48c944fa96eb7fb0463419ffa35a8e062b1b1dd927afe6300fb1",
+      "bytes": 2064600,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Male_Dark_BaseColor",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Regular_Male_Normal",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Regular_Male_Roughness",
+          "source_dimensions": [
+            2048,
+            2048
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_ranger_body",
+      "label": "Male Ranger Body Part",
+      "path": "assets/outfits/Male_Ranger_Body.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Body.gltf",
+      "source_sha256": "c5bb520006116222bad30533bd39e0f215abbf8d44e3fa1769ebad12043eac57",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 4606,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 3,
+      "sha256": "226d676baac115e091280de24d698a09f92bdc4ee57f784541e64e9ff4c53bcc",
+      "bytes": 1320432,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_ranger_feet_boots",
+      "label": "Male Ranger Feet Boots Part",
+      "path": "assets/outfits/Male_Ranger_Feet_Boots.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Feet_Boots.gltf",
+      "source_sha256": "e71cd92792aeabca0dd1621556c54945dd97d154147790a5cb1afd75415a4e02",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 9172,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "b01f169bf80389af13f067a131cceec90396ab4a38795f02e59cab22e0d4af23",
+      "bytes": 1797512,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_ranger_head_hood",
+      "label": "Male Ranger Head Hood Part",
+      "path": "assets/outfits/Male_Ranger_Head_Hood.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Head_Hood.gltf",
+      "source_sha256": "57affa34c145d2c1a02a3d9b17066e22b84eb4ce2bb79c6c7b90588af00846b6",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2136,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "12a3d96c6fe5d5cc212f0b8b76f2c0212e23e683249ffe42b013cd00ab961408",
+      "bytes": 1087976,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    },
+    {
+      "id": "outfit_male_ranger_legs",
+      "label": "Male Ranger Legs Part",
+      "path": "assets/outfits/Male_Ranger_Legs.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Legs.gltf",
+      "source_sha256": "c415a01384d34b77a98ff4b0d01d42453dfe98bee259e58a328a803d36ac9df2",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1128,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "f5744ea2db531d40c7c10e35ac0a25adac1e74c2696ff92313a422ef61480544",
+      "bytes": 1038996,
+      "textures": [
+        {
+          "name": "T_Ranger_BaseColor",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "sRGB"
+        },
+        {
+          "name": "T_Ranger_Normal",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        },
+        {
+          "name": "T_Ranger_ORM",
+          "source_dimensions": [
+            4096,
+            4096
+          ],
+          "output_dimensions": [
+            512,
+            512
+          ],
+          "color_space": "Non-Color"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ]
+    }
+  ]
+}

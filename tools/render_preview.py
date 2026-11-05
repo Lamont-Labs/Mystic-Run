@@ -25,6 +25,7 @@ def main():
     parser.add_argument('--screen', default='home')
     parser.add_argument('--navigation',action='store_true')
     parser.add_argument('--script', help='Run a game-owned preview script instead of the menu capture')
+    parser.add_argument('--finish-strength', type=float, default=1.0, help='Character stage comparison only: 0 original finish, 1 refined finish')
     parser.add_argument('--movie', type=Path, help='Optional Godot movie output (.avi)')
     parser.add_argument('--level', choices=['citadel','spires','rift'], default='citadel')
     args = parser.parse_args()
@@ -74,6 +75,8 @@ def main():
             if not args.qa_ticks and not args.navigation and not args.script:
                 command += ['--quit-after',str(args.frames)]
             command += ['--',f'--capture-dir={args.output}',f'--character={args.character}',f'--level={args.level}',f'--preview-frames={args.frames}',f'--screen={args.screen}']
+            if args.script == 'res://tests/preview_authored_character.gd':
+                command += [f'--finish-strength={args.finish_strength}']
             command += ['--qa',f'--qa-ticks={args.qa_ticks}'] if args.qa_ticks else [] if args.navigation or args.script else ['--qa-menu',f'--screen={args.screen}']
             with (args.output/'game.log').open('w') as log:
                 run = subprocess.run(command,env=env,stdout=log,stderr=subprocess.STDOUT,timeout=360 if args.qa_ticks or args.navigation or args.script else 60)

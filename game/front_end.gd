@@ -292,8 +292,8 @@ func _howto() -> void:
 
 func _credits() -> void:
 	_heading("LAMONT LABS","CREDITS")
-	_text(content,"Mystic Run\nOriginal game design, code, interface, custom equipment and synthesized audio: Lamont Labs.\n\nCharacter illustrations and distant city matte generated for Mystic Run. Humanoid meshes and authored motion: Quaternius, CC0 1.0.\n\nGodot Engine: MIT. Bangers, Cinzel and Manrope: SIL OFL 1.1.",25,MUTED)
-	for path in ["godot-LICENSE.txt","godot-COPYRIGHT.txt","quaternius-CC0.txt"]:
+	_text(content,"Mystic Run\nOriginal game design, code, interface, custom equipment and synthesized audio: Lamont Labs.\n\nCharacter illustrations and distant city matte generated for Mystic Run. Humanoid meshes and authored motion: Quaternius, CC0 1.0.\n\nFloating district buildings and trees: Kay Lousberg / KayKit, Medieval Hexagon Pack, CC0 1.0. Adapted and assembled for Mystic Run by Lamont Labs.\n\nGodot Engine: MIT. Bangers, Cinzel and Manrope: SIL OFL 1.1.",25,MUTED)
+	for path in ["godot-LICENSE.txt","godot-COPYRIGHT.txt","quaternius-CC0.txt","kaykit-medieval-CC0.txt"]:
 		_text(content,FileAccess.get_file_as_string("res://assets/licenses/"+path),18,MUTED)
 
 func _pause() -> void:

@@ -1,0 +1,190 @@
+{
+  "repository": "KayKit-Game-Assets/KayKit-Dungeon-Remastered-1.0",
+  "commit": "b0ca9bd96a8072ab36a3a5464f00ed1e06a16d07",
+  "publisher": "Kay Lousberg / KayKit",
+  "edition": "Free public repository",
+  "source_page": "https://kaylousberg.itch.io/kaykit-dungeon-pack",
+  "license": "CC0-1.0",
+  "files": [
+    {
+      "source_path": "LICENSE.txt",
+      "path": "LICENSE.txt",
+      "sha256": "c5f17abf619731f57f6bbff450f6484214605c13aa96bb75bbcfc70930941ff7",
+      "bytes": 829
+    },
+    {
+      "source_path": "README.md",
+      "path": "README.md",
+      "sha256": "4f4e8120b6b757e56b43f56a61ab64671ccefc4bb45b50405d5486f6f6a9832e",
+      "bytes": 2398
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/wall_arched.gltf.glb",
+      "path": "wall_arched.glb",
+      "sha256": "916a7d81b8d6ebddb069440a0f9ecb14c9c2a1e5cd7769acf2218d630bd56cb8",
+      "bytes": 69124
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/wall_archedwindow_gated.gltf.glb",
+      "path": "wall_archedwindow_gated.glb",
+      "sha256": "4edf28602a00b2666a9044322eeae170fe1dd606dfae7846ecda357f1b9eb266",
+      "bytes": 64752
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/wall_cracked.gltf.glb",
+      "path": "wall_cracked.glb",
+      "sha256": "344fb9a709a51b7f04131fded75a5ad38e829d74fcf1784d848f3df0703f804c",
+      "bytes": 138396
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/wall_pillar.gltf.glb",
+      "path": "wall_pillar.glb",
+      "sha256": "f85030386f9f183bbc03a0817a1967a40758f24828295ed2a1c88d4c004eb5eb",
+      "bytes": 55156
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/wall_doorway.glb",
+      "path": "wall_doorway.glb",
+      "sha256": "2be5369a2d1d1d8795150b2156d8343b3e37620d78de256cb03276c54ea70c97",
+      "bytes": 100596
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/pillar_decorated.gltf.glb",
+      "path": "pillar_decorated.glb",
+      "sha256": "eecf7d454a1b6767a113e2490cb1536134abea0b57329a50cf2250d3ed8e2f65",
+      "bytes": 62460
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/floor_tile_small_decorated.gltf.glb",
+      "path": "floor_tile_small_decorated.glb",
+      "sha256": "4dd8a74dc00c2272957938f1612c730e06bfddca7a9d9cdc6f316594d4a0f3cf",
+      "bytes": 40812
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/floor_tile_large.gltf.glb",
+      "path": "floor_tile_large.glb",
+      "sha256": "5b6bbbc683f6729d094732056f157a928435de97ec3cf94c341c7465907fe17b",
+      "bytes": 28100
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/floor_tile_small_broken_A.gltf.glb",
+      "path": "floor_tile_small_broken_A.glb",
+      "sha256": "d1acc3407f941623b3b01ec9a1751c36a5ca82bb14721fc8f28e5559317edad4",
+      "bytes": 22132
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/floor_tile_small_weeds_A.gltf.glb",
+      "path": "floor_tile_small_weeds_A.glb",
+      "sha256": "95fcb7701819428da04318aafbd9410b994217424d1453844ba3e6f1f91a28f3",
+      "bytes": 44020
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/stairs_walled.gltf.glb",
+      "path": "stairs_walled.glb",
+      "sha256": "1ebdaebab2d79cfb717ebfc4ccf889c0a5a391d7f847281d849f5171b8bce658",
+      "bytes": 72072
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/stairs_wood_decorated.gltf.glb",
+      "path": "stairs_wood_decorated.glb",
+      "sha256": "41c86378edb2951add637d9beb52cb97b6d5adf6c02e59ed3aa5a89cef1228d9",
+      "bytes": 171080
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/chest_gold.glb",
+      "path": "chest_gold.glb",
+      "sha256": "04708d5f88ed59d361c8a6cec1efe8b7028dbc641dfae0a1467f272e14a94b6e",
+      "bytes": 140140
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/barrel_large_decorated.gltf.glb",
+      "path": "barrel_large_decorated.glb",
+      "sha256": "d3ad760d5005500a8755e5a816e574dd7e4227c5bb038685a3cb0ab2ad8bb6cb",
+      "bytes": 73628
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/crates_stacked.gltf.glb",
+      "path": "crates_stacked.glb",
+      "sha256": "43182b077ead9b033804300ef453b7402bdc979f00cfce2d7f0c91dcf6bb5d3c",
+      "bytes": 103704
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/banner_shield_blue.gltf.glb",
+      "path": "banner_shield_blue.glb",
+      "sha256": "27fc58e296e15ce180f212be6998677ab191b5055d194d2b062c95ce8c7acef7",
+      "bytes": 55104
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/banner_shield_red.gltf.glb",
+      "path": "banner_shield_red.glb",
+      "sha256": "d332133c940fa9dc6bea1668f2f8f2c07b5dce5db23b865ade5d035c8dc8e949",
+      "bytes": 55104
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/banner_triple_blue.gltf.glb",
+      "path": "banner_triple_blue.glb",
+      "sha256": "58e9a9625c99b199e7ae3f387e1594915a4d6091b0e93da0d0b2ac18aeb691bc",
+      "bytes": 36232
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/banner_patternA_red.gltf.glb",
+      "path": "banner_patternA_red.glb",
+      "sha256": "64243b0a8110bbc6e5a02f5c0acbe447dc7ea65319123319c402dd26486dad25",
+      "bytes": 25164
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/sword_shield_gold.gltf.glb",
+      "path": "sword_shield_gold.glb",
+      "sha256": "7b7dd709bd6a24e9e2913da2ebc1fd64ca318e22fbef66f0e8cf14b79adae9aa",
+      "bytes": 47768
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/torch_mounted.gltf.glb",
+      "path": "torch_mounted.glb",
+      "sha256": "a617c159e02932db48ca81ec46f1f100acc8904fb6ece43e919d2f93c13950e9",
+      "bytes": 33220
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/torch_lit.gltf.glb",
+      "path": "torch_lit.glb",
+      "sha256": "45fcfeb3b129722019d42aef0acae8f6c5f8f6dbdf5d3346ceea1f084b69b396",
+      "bytes": 31244
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/candle_triple.gltf.glb",
+      "path": "candle_triple.glb",
+      "sha256": "3536f0a55df50c728ec9c369c4a6a81c913b33a507ac4a192d418d28fd6677c2",
+      "bytes": 28240
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/rubble_large.gltf.glb",
+      "path": "rubble_large.glb",
+      "sha256": "0292da1b5788a5a52b616d5d27d3270c676a5fbf9e921b6dd3dc30364d355b54",
+      "bytes": 60196
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/keg_decorated.gltf.glb",
+      "path": "keg_decorated.glb",
+      "sha256": "02a31f44f66de39375510cd1ef35c5d19cee4cf910d78f38bc5f89093a6a2670",
+      "bytes": 142052
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/keyring_hanging.gltf.glb",
+      "path": "keyring_hanging.glb",
+      "sha256": "6edaf6494c7d0cae9178356fb4e2c11b2af2390933cc083203c5d9c287023364",
+      "bytes": 49108
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/coin_stack_large.gltf.glb",
+      "path": "coin_stack_large.glb",
+      "sha256": "1a64011dc0d6754bc95d932744ad7717132c538206976a0262293bd4ba31627e",
+      "bytes": 101076
+    },
+    {
+      "source_path": "addons/kaykit_dungeon_remastered/Assets/gltf/table_long_decorated_C.gltf.glb",
+      "path": "table_long_decorated_C.glb",
+      "sha256": "bc67bce5b700ef2be4008349856f11d5d494807d20b68e079650db646af0b26b",
+      "bytes": 231608
+    }
+  ]
+}

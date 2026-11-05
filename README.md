@@ -1,3 +1,5 @@
+> Latest original-game update: **build 1023**, signed with the recovered original key. [Download the update APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.6.1-build1023/Mystic_Run_0.6.1_Three_Character_Update_Build1023.apk). It updates the existing Mystic Run installation. Development source and the refined three-character cast remain in draft PR #5; [the update identity record](docs/ANDROID_UPDATE_IDENTITY.md) and [development queue](docs/NEXT_DEVELOPMENT_STEPS.md) record verified delivery and remaining phone tests.
+
 # Mystic Run — Android runner
 
 **Current revision: 0.6.1 / Knight preview build 1016.** Choose the Knight, Gargoyle or Witch and race through a colorful magical city. Dodge, strike, collect stars and return with treasures for your journal.
@@ -27,4 +29,4 @@ Build 1016 introduces the first exported, weighted Knight replacement, with a vi
 
 The 0.6.1 visual revision adds a floating storybook castle city, rounded towers, colorful balloons, larger character heads, a pointed Witch hat, friendly Gargoyle features, star capes, springy landings and a consistent purple-and-gold interface. Controls, progression, encounter timing and saved-game rules are unchanged.
 
-The actual playable 3D runner appears in the menu. The Knight uses a newly authored mesh on a Quaternius CC0 skeleton; Gargoyle/Witch base meshes and the source motion library are Quaternius CC0. Custom equipment, architecture, interface, game systems and synthesized audio are in this repository. Distant city art and character illustrations were generated for Mystic Run. See `assets/ART_PROVENANCE.json`, `assets/models/quaternius/PROVENANCE.json`, `assets/characters/knight/PROVENANCE.json` and bundled notices.
+The actual playable 3D runner appears in the menu. On the development branch, all three heroes use newly authored visible meshes on Quaternius CC0 skeletons; the retained source motion library is also CC0. The published build 1016 predates the Gargoyle/Witch replacements. Custom equipment, architecture, interface, game systems and synthesized audio are in this repository. Distant city art and character illustrations were generated for Mystic Run. See `assets/ART_PROVENANCE.json`, `assets/models/quaternius/PROVENANCE.json`, each character's `PROVENANCE.json` and bundled notices.

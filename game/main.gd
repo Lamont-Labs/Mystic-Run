@@ -702,6 +702,7 @@ func _hurt(context: Dictionary = {}) -> void:
 	if power_left > 0.0 and selected in ["knight","witch"]:
 		return
 	if core.receive_damage():
+		heroes[selected].react_to_hit()
 		qa_damage += 1;run_damage+=1;combo=0;combo_left=0
 		qa_incidents.append({"tick":core.tick,"character":selected,"kind":context.get("kind","unknown"),"at":context.get("at",0),"runner_y":motor.position.y,"slide":sliding_left,"attack_age":attack_age,"phase":core.phase})
 		ui.flash = 1.0
@@ -985,6 +986,7 @@ func _apply_settings() -> void:
 	get_viewport().msaa_3d = Viewport.MSAA_2X if profile["settings"]["quality"] else Viewport.MSAA_DISABLED
 	key_light.shadow_enabled = profile["settings"]["quality"]
 	world.reduced_motion=bool(profile.settings.reduced_motion)
+	world.districts.high_detail=bool(profile.settings.quality)
 	for actor in heroes.values():actor.reduced_motion=bool(profile.settings.reduced_motion)
 	gestures.sensitivity=str(profile.settings.sensitivity)
 	tilt.sensitivity=str(profile.settings.tilt_sensitivity);tilt.inverted=bool(profile.settings.tilt_invert)

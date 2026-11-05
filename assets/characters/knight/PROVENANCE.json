@@ -1,19 +1,32 @@
 {
   "character": "knight",
-  "revision": "authored-knight-1",
+  "revision": "authored-knight-2-expressions",
   "source_generator": "tools/build_knight_asset.py",
   "blender_version": "4.3.2",
-  "mesh_vertices": 14538,
-  "triangles": 24348,
+  "mesh_vertices": 14498,
+  "triangles": 24328,
   "material_surfaces": 1,
   "painted_material_regions": 13,
   "bones": 65,
   "morph_targets": [
     "Blink",
-    "PlumeSway"
+    "PlumeSway",
+    "Smile",
+    "Focus",
+    "Surprised",
+    "Hurt"
   ],
-  "asset_sha256": "553c19d508409460576f7bca7802debaabdca57b490b513dd206e23e17210131",
-  "asset_bytes": 1333720,
+  "morph_affected_vertices": {
+    "Blink": 1174,
+    "PlumeSway": 252,
+    "Smile": 1734,
+    "Focus": 1550,
+    "Surprised": 1734,
+    "Hurt": 1732
+  },
+  "blink_closure_y": 1.7092100381851196,
+  "asset_sha256": "1be8296c2effc4c2a8b8b42ee529e8ca764dcf9af6923fc49ba6279c56c4bf23",
+  "asset_bytes": 1662012,
   "rig_source": "Quaternius Universal Base Characters, CC0 1.0; original skeleton retained",
   "geometry": "New Lamont Labs mesh, costume, face, helmet, plume, weapon and shield, authored by the source generator",
   "base_body_mesh_reused": false,

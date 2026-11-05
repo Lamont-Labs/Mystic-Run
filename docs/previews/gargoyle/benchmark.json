@@ -1,0 +1,12 @@
+{
+  "course": "endless",
+  "damage": 0,
+  "distance_m": 148.193,
+  "frames": 240,
+  "handoffs": 0,
+  "recording_fps": 30,
+  "runner": "gargoyle",
+  "scope": "Actual desktop render with disclosed automated controls; not human playability, on-device performance or art approval",
+  "seed": 73129,
+  "selected_character_preserved": true
+}

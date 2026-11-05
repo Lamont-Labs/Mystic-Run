@@ -1,3 +1,19 @@
+# Current development — three-character cast and material finish
+
+November 5, 2026 · Lamont Labs · `quality/free-asset-foundry` · [Draft PR #5](https://github.com/Lamont-Labs/Mystic-Run/pull/5)
+
+Knight, Gargoyle and Witch now have original visible meshes on the admitted CC0 rigs. The branch also includes seven free KayKit scenery models, a hashed asset registry and reproducible character generators. The new [material finish checkpoint](MATERIAL_FINISH_REFINEMENT.md) adds differentiated surface treatment and actual front/rear/face/chase review while preserving all three model files. [Knight refinement](KNIGHT_EXPRESSION_REFINEMENT.md), [Gargoyle checkpoint](AUTHORED_GARGOYLE_CHECKPOINT.md) and [Witch checkpoint](AUTHORED_WITCH_CHECKPOINT.md) retain the preceding geometry evidence.
+
+The Gargoyle milestone is saved as `2e4606d6ae24941d8d825408eb3a815d59621863`; both GitHub gameplay runs and [Android compilation](https://github.com/Lamont-Labs/Mystic-Run/actions/runs/41961021389) passed. Witch is saved as `dbbbb65100742c238e9b2055d88b6f6cb978c9d1`, with both gameplay runs and Android compilation green. A separate [Gargoyle surface correction](GARGOYLE_SURFACE_REFINEMENT.md) follows it. Current local validation passed 863 Godot assertions, 23 Python tests, 51 asset checks and three 3,600-tick runs without damage, deaths or involuntary handoffs. These results do not establish sustained Android performance.
+
+The original signing key has been recovered and certificate-checked. **Owner-signed update build 1023** is published: [download the APK](https://github.com/Lamont-Labs/Mystic-Run/releases/download/v0.6.1-build1023/Mystic_Run_0.6.1_Three_Character_Update_Build1023.apk). It uses the original game package and certificate, with a higher version code; the save/load functions, profile defaults and progression source are unchanged from build 1016. [The update identity record](ANDROID_UPDATE_IDENTITY.md) documents the recovered backup and future delivery contract. The publication workflow downloaded its uploaded APK and verified its exact SHA-256. This art branch remains unmerged; the release records identify the actual compilation source `67bbd5cef7d60952730e143b9a4f3ebe86c333c4`.
+
+Art Preview 0.6.2 / build 1017 remains a separate installation with its own saves. Normal update deliveries target the original game. Mobile profiling and the LOD decision, owner art review and physical-phone installation/controls/performance checks remain open.
+
+The following sections preserve the published builds' historical verification records.
+
+---
+
 # Authored Knight preview — Android build 1016
 
 November 3, 2026 · Lamont Labs

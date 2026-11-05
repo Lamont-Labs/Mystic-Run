@@ -1,0 +1,1951 @@
+{
+  "schema": 1,
+  "status": "PASS",
+  "scope": "Exact file hashes, GLB 2 structure, embedded dependencies, finite attributes, index bounds, skin joint and inverse-bind bounds, PNG dimensions and source correspondence",
+  "models": 57,
+  "original_models": 5,
+  "downloaded_models": 52,
+  "outfit_assemblies": 4,
+  "modular_clothing_parts": 20,
+  "bytes": 54941692,
+  "runtime_integration": false,
+  "assets": [
+    {
+      "id": "skyguard_sword",
+      "label": "Skyguard Sword",
+      "path": "assets/original/skyguard_sword.glb",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "purpose": "Knight weapon candidate with forged blade, inlaid fuller and wrapped grip",
+      "status": "REVIEW_ONLY",
+      "triangles": 1668,
+      "exported_vertices": 1036,
+      "mesh_instances": 1,
+      "surfaces": 3,
+      "materials": 3,
+      "textures": [],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 50300,
+      "sha256": "4c98b4005fdc7f24d15b608e130faa8415f3746cd1344741eb57ddd7bf9cf0ad"
+    },
+    {
+      "id": "moonspire_staff",
+      "label": "Moonspire Staff",
+      "path": "assets/original/moonspire_staff.glb",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "purpose": "Witch staff candidate with a layered crescent and suspended crystal",
+      "status": "REVIEW_ONLY",
+      "triangles": 5004,
+      "exported_vertices": 2816,
+      "mesh_instances": 1,
+      "surfaces": 3,
+      "materials": 3,
+      "textures": [],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 134364,
+      "sha256": "4a2deec010677bc87726e6acb050357bf262df8b2e13a690b2db3785b842ad73"
+    },
+    {
+      "id": "citadel_lantern",
+      "label": "Citadel Lantern",
+      "path": "assets/original/citadel_lantern.glb",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "purpose": "Repeatable castle lantern with framed luminous windows and pointed enamel roof",
+      "status": "REVIEW_ONLY",
+      "triangles": 1476,
+      "exported_vertices": 816,
+      "mesh_instances": 1,
+      "surfaces": 3,
+      "materials": 3,
+      "textures": [],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 41184,
+      "sha256": "f9c381679bece87a992cd2b7049bafae1804244a72ea74110b6df85818ab23aa"
+    },
+    {
+      "id": "relic_waystone",
+      "label": "Relic Waystone",
+      "path": "assets/original/relic_waystone.glb",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "purpose": "Landmark or checkpoint art candidate with inset runes and caged crystal",
+      "status": "REVIEW_ONLY",
+      "triangles": 668,
+      "exported_vertices": 528,
+      "mesh_instances": 1,
+      "surfaces": 3,
+      "materials": 3,
+      "textures": [],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 25980,
+      "sha256": "88f1511476b49d9c903ca43e860f350eaac0c0d83a9c3dd2a802f4647fce0c9b"
+    },
+    {
+      "id": "skybridge_gateway",
+      "label": "Skybridge Gateway",
+      "path": "assets/original/skybridge_gateway.glb",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "purpose": "Off-route signature architecture with cut masonry, inset panels and heraldic metalwork",
+      "status": "REVIEW_ONLY",
+      "triangles": 3316,
+      "exported_vertices": 4352,
+      "mesh_instances": 1,
+      "surfaces": 2,
+      "materials": 2,
+      "textures": [],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 178616,
+      "sha256": "4ecdaa9231838276e88a5778cc6bc342ec94e11738f8564d8a13ee2857ef269a"
+    },
+    {
+      "id": "kaykit_wall_arched",
+      "label": "Wall Arched",
+      "path": "assets/kaykit/wall_arched.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 724,
+      "exported_vertices": 1492,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 69124,
+      "sha256": "916a7d81b8d6ebddb069440a0f9ecb14c9c2a1e5cd7769acf2218d630bd56cb8"
+    },
+    {
+      "id": "kaykit_wall_archedwindow_gated",
+      "label": "Wall Archedwindow Gated",
+      "path": "assets/kaykit/wall_archedwindow_gated.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 732,
+      "exported_vertices": 1354,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 64752,
+      "sha256": "4edf28602a00b2666a9044322eeae170fe1dd606dfae7846ecda357f1b9eb266"
+    },
+    {
+      "id": "kaykit_wall_cracked",
+      "label": "Wall Cracked",
+      "path": "assets/kaykit/wall_cracked.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 2010,
+      "exported_vertices": 3416,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 138396,
+      "sha256": "344fb9a709a51b7f04131fded75a5ad38e829d74fcf1784d848f3df0703f804c"
+    },
+    {
+      "id": "kaykit_wall_pillar",
+      "label": "Wall Pillar",
+      "path": "assets/kaykit/wall_pillar.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 540,
+      "exported_vertices": 1091,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 55156,
+      "sha256": "f85030386f9f183bbc03a0817a1967a40758f24828295ed2a1c88d4c004eb5eb"
+    },
+    {
+      "id": "kaykit_wall_doorway",
+      "label": "Wall Doorway",
+      "path": "assets/kaykit/wall_doorway.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 1068,
+      "exported_vertices": 1563,
+      "mesh_instances": 2,
+      "surfaces": 2,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 100596,
+      "sha256": "2be5369a2d1d1d8795150b2156d8343b3e37620d78de256cb03276c54ea70c97"
+    },
+    {
+      "id": "kaykit_pillar_decorated",
+      "label": "Pillar Decorated",
+      "path": "assets/kaykit/pillar_decorated.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 761,
+      "exported_vertices": 1276,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 62460,
+      "sha256": "eecf7d454a1b6767a113e2490cb1536134abea0b57329a50cf2250d3ed8e2f65"
+    },
+    {
+      "id": "kaykit_floor_tile_small_decorated",
+      "label": "Floor Tile Small Decorated",
+      "path": "assets/kaykit/floor_tile_small_decorated.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 390,
+      "exported_vertices": 670,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 40812,
+      "sha256": "4dd8a74dc00c2272957938f1612c730e06bfddca7a9d9cdc6f316594d4a0f3cf"
+    },
+    {
+      "id": "kaykit_floor_tile_large",
+      "label": "Floor Tile Large",
+      "path": "assets/kaykit/floor_tile_large.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 188,
+      "exported_vertices": 311,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 28100,
+      "sha256": "5b6bbbc683f6729d094732056f157a928435de97ec3cf94c341c7465907fe17b"
+    },
+    {
+      "id": "kaykit_floor_tile_small_broken_A",
+      "label": "Floor Tile Small Broken A",
+      "path": "assets/kaykit/floor_tile_small_broken_A.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 94,
+      "exported_vertices": 142,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 22132,
+      "sha256": "d1acc3407f941623b3b01ec9a1751c36a5ca82bb14721fc8f28e5559317edad4"
+    },
+    {
+      "id": "kaykit_floor_tile_small_weeds_A",
+      "label": "Floor Tile Small Weeds A",
+      "path": "assets/kaykit/floor_tile_small_weeds_A.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 589,
+      "exported_vertices": 733,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 44020,
+      "sha256": "95fcb7701819428da04318aafbd9410b994217424d1453844ba3e6f1f91a28f3"
+    },
+    {
+      "id": "kaykit_stairs_walled",
+      "label": "Stairs Walled",
+      "path": "assets/kaykit/stairs_walled.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 790,
+      "exported_vertices": 1572,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 72072,
+      "sha256": "1ebdaebab2d79cfb717ebfc4ccf889c0a5a391d7f847281d849f5171b8bce658"
+    },
+    {
+      "id": "kaykit_stairs_wood_decorated",
+      "label": "Stairs Wood Decorated",
+      "path": "assets/kaykit/stairs_wood_decorated.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 2537,
+      "exported_vertices": 4337,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 171080,
+      "sha256": "41c86378edb2951add637d9beb52cb97b6d5adf6c02e59ed3aa5a89cef1228d9"
+    },
+    {
+      "id": "kaykit_chest_gold",
+      "label": "Chest Gold",
+      "path": "assets/kaykit/chest_gold.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 1568,
+      "exported_vertices": 2322,
+      "mesh_instances": 2,
+      "surfaces": 2,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 140140,
+      "sha256": "04708d5f88ed59d361c8a6cec1efe8b7028dbc641dfae0a1467f272e14a94b6e"
+    },
+    {
+      "id": "kaykit_barrel_large_decorated",
+      "label": "Barrel Large Decorated",
+      "path": "assets/kaykit/barrel_large_decorated.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 1047,
+      "exported_vertices": 1570,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 73628,
+      "sha256": "d3ad760d5005500a8755e5a816e574dd7e4227c5bb038685a3cb0ab2ad8bb6cb"
+    },
+    {
+      "id": "kaykit_crates_stacked",
+      "label": "Crates Stacked",
+      "path": "assets/kaykit/crates_stacked.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 1331,
+      "exported_vertices": 2457,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 103704,
+      "sha256": "43182b077ead9b033804300ef453b7402bdc979f00cfce2d7f0c91dcf6bb5d3c"
+    },
+    {
+      "id": "kaykit_banner_shield_blue",
+      "label": "Banner Shield Blue",
+      "path": "assets/kaykit/banner_shield_blue.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 639,
+      "exported_vertices": 1068,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 55104,
+      "sha256": "27fc58e296e15ce180f212be6998677ab191b5055d194d2b062c95ce8c7acef7"
+    },
+    {
+      "id": "kaykit_banner_shield_red",
+      "label": "Banner Shield Red",
+      "path": "assets/kaykit/banner_shield_red.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 639,
+      "exported_vertices": 1068,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 55104,
+      "sha256": "d332133c940fa9dc6bea1668f2f8f2c07b5dce5db23b865ade5d035c8dc8e949"
+    },
+    {
+      "id": "kaykit_banner_triple_blue",
+      "label": "Banner Triple Blue",
+      "path": "assets/kaykit/banner_triple_blue.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 263,
+      "exported_vertices": 549,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 36232,
+      "sha256": "58e9a9625c99b199e7ae3f387e1594915a4d6091b0e93da0d0b2ac18aeb691bc"
+    },
+    {
+      "id": "kaykit_banner_patternA_red",
+      "label": "Banner Patterna Red",
+      "path": "assets/kaykit/banner_patternA_red.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 110,
+      "exported_vertices": 232,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 25164,
+      "sha256": "64243b0a8110bbc6e5a02f5c0acbe447dc7ea65319123319c402dd26486dad25"
+    },
+    {
+      "id": "kaykit_sword_shield_gold",
+      "label": "Sword Shield Gold",
+      "path": "assets/kaykit/sword_shield_gold.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 542,
+      "exported_vertices": 857,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 47768,
+      "sha256": "7b7dd709bd6a24e9e2913da2ebc1fd64ca318e22fbef66f0e8cf14b79adae9aa"
+    },
+    {
+      "id": "kaykit_torch_mounted",
+      "label": "Torch Mounted",
+      "path": "assets/kaykit/torch_mounted.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 278,
+      "exported_vertices": 452,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 33220,
+      "sha256": "a617c159e02932db48ca81ec46f1f100acc8904fb6ece43e919d2f93c13950e9"
+    },
+    {
+      "id": "kaykit_torch_lit",
+      "label": "Torch Lit",
+      "path": "assets/kaykit/torch_lit.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 270,
+      "exported_vertices": 392,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 31244,
+      "sha256": "45fcfeb3b129722019d42aef0acae8f6c5f8f6dbdf5d3346ceea1f084b69b396"
+    },
+    {
+      "id": "kaykit_candle_triple",
+      "label": "Candle Triple",
+      "path": "assets/kaykit/candle_triple.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 198,
+      "exported_vertices": 312,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 28240,
+      "sha256": "3536f0a55df50c728ec9c369c4a6a81c913b33a507ac4a192d418d28fd6677c2"
+    },
+    {
+      "id": "kaykit_rubble_large",
+      "label": "Rubble Large",
+      "path": "assets/kaykit/rubble_large.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 788,
+      "exported_vertices": 1200,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 60196,
+      "sha256": "0292da1b5788a5a52b616d5d27d3270c676a5fbf9e921b6dd3dc30364d355b54"
+    },
+    {
+      "id": "kaykit_keg_decorated",
+      "label": "Keg Decorated",
+      "path": "assets/kaykit/keg_decorated.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 2058,
+      "exported_vertices": 3519,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 142052,
+      "sha256": "02a31f44f66de39375510cd1ef35c5d19cee4cf910d78f38bc5f89093a6a2670"
+    },
+    {
+      "id": "kaykit_keyring_hanging",
+      "label": "Keyring Hanging",
+      "path": "assets/kaykit/keyring_hanging.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 728,
+      "exported_vertices": 864,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 49108,
+      "sha256": "6edaf6494c7d0cae9178356fb4e2c11b2af2390933cc083203c5d9c287023364"
+    },
+    {
+      "id": "kaykit_coin_stack_large",
+      "label": "Coin Stack Large",
+      "path": "assets/kaykit/coin_stack_large.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 1776,
+      "exported_vertices": 2292,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 101076,
+      "sha256": "1a64011dc0d6754bc95d932744ad7717132c538206976a0262293bd4ba31627e"
+    },
+    {
+      "id": "kaykit_table_long_decorated_C",
+      "label": "Table Long Decorated C",
+      "path": "assets/kaykit/table_long_decorated_C.glb",
+      "publisher": "Kay Lousberg / KayKit",
+      "license": "CC0-1.0",
+      "status": "REVIEW_ONLY",
+      "triangles": 3499,
+      "exported_vertices": 6047,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "f9ae182518f908bd09461a56a430b9ca7369812ac10890224cc6f32e7da3e1ee"
+        }
+      ],
+      "rigged": false,
+      "animations": 0,
+      "bytes": 231608,
+      "sha256": "bc67bce5b700ef2be4008349856f11d5d494807d20b68e079650db646af0b26b"
+    },
+    {
+      "id": "outfit_female_peasant",
+      "label": "Female Peasant Outfit",
+      "path": "assets/outfits/Female_Peasant.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Outfits/Female_Peasant.gltf",
+      "source_sha256": "43ba98058b933cae9acbde0f3ef8c3dda4ba9f69f338606f9d87666d9efffb31",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "outfit_assembly",
+      "triangles": 13568,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 4,
+      "sha256": "abc8c6fec76cb6887ea1732968477915110b64ec45f41db00347532a01ca5cd7",
+      "bytes": 3469672,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "013bc2f0e29c569bed7148552b93b4ef93b3def8da67215811c082a462358fbc"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "2c732250c852641de3ec7c16d3d631d4c13a42dd15e8d2b9fae9d8003e424715"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "13281f54da992db88f44e2b386ce7ea46b58312d25fcfcd453e4a484800a082b"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 1024px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 10400,
+      "mesh_instances": 4,
+      "surfaces": 4,
+      "materials": 2,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_ranger",
+      "label": "Female Ranger Outfit",
+      "path": "assets/outfits/Female_Ranger.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Outfits/Female_Ranger.gltf",
+      "source_sha256": "9b98b2ae6af3b4a1ec22bf8928b939e0751f08b25b636de82bfa7364fb34d3e1",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "outfit_assembly",
+      "triangles": 26966,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 9,
+      "sha256": "c86e1f8275795dc7945fd3df301a52112f9b97d8445a0b1c4bda5f10471c8b80",
+      "bytes": 8168928,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "935de21bf85773804f6b263fc2d3106ad603ae9c3ec99af10f3fab8c4b571a2f"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "23ed938463cc4615953d43dccd6c59a406248b9d8f42e096be47c9a405f9df18"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "90f13a05710dd8fa3e75c5fef8545335234ade3e49abef3522517592e35028b6"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "e8eb48a5176345854acd6b844f50e6aa0a3f67aa081a1cf944dd6b08502f781c"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "6be6091575a157654c7a10adce8396e6599513b463d1e8da49ea767e8c25b5ba"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "825034b2911715696252934eb4951dcc33884e9df32a8d187f7768cbd9302798"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 1024px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 26113,
+      "mesh_instances": 9,
+      "surfaces": 10,
+      "materials": 2,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_peasant",
+      "label": "Male Peasant Outfit",
+      "path": "assets/outfits/Male_Peasant.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Outfits/Male_Peasant.gltf",
+      "source_sha256": "8f5a6cf6c1cf96e0a0f8e1a861b4245d42b7f88d44e5076da3d48f3fc52f4e76",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "outfit_assembly",
+      "triangles": 12894,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 4,
+      "sha256": "3e2a5487ef6574e45af1a7ac583b61d7bd2aa97b0fb6bc36da5fbd49d9dd12b6",
+      "bytes": 6295288,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "013bc2f0e29c569bed7148552b93b4ef93b3def8da67215811c082a462358fbc"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "2c732250c852641de3ec7c16d3d631d4c13a42dd15e8d2b9fae9d8003e424715"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "13281f54da992db88f44e2b386ce7ea46b58312d25fcfcd453e4a484800a082b"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "8ab3f54bde28bd652045381952c1211c59b5c0a694516ee2a1b80cf0af61927d"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "a8839796d4ccabb6f1353230773eaa975c09f530297a9b9d083a8bd94e9e1d3f"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "72a86f9c444d6040d224e2f5eba03bb0eae32d19697d45021d4a73ab6ddc1622"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 1024px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 8869,
+      "mesh_instances": 4,
+      "surfaces": 5,
+      "materials": 2,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_ranger",
+      "label": "Male Ranger Outfit",
+      "path": "assets/outfits/Male_Ranger.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Outfits/Male_Ranger.gltf",
+      "source_sha256": "e1033a212332d84d98c19bc4927c621635478d0aa15d13c79da68d3ba9e0196f",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "outfit_assembly",
+      "triangles": 26982,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 9,
+      "sha256": "11091b09cebae2cc8b73a6ab68c5068405b7cab0bfdf58af1d7e8c5354fe188d",
+      "bytes": 7901932,
+      "textures": [
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "935de21bf85773804f6b263fc2d3106ad603ae9c3ec99af10f3fab8c4b571a2f"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "23ed938463cc4615953d43dccd6c59a406248b9d8f42e096be47c9a405f9df18"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "90f13a05710dd8fa3e75c5fef8545335234ade3e49abef3522517592e35028b6"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "8ab3f54bde28bd652045381952c1211c59b5c0a694516ee2a1b80cf0af61927d"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "a8839796d4ccabb6f1353230773eaa975c09f530297a9b9d083a8bd94e9e1d3f"
+        },
+        {
+          "width": 1024,
+          "height": 1024,
+          "sha256": "72a86f9c444d6040d224e2f5eba03bb0eae32d19697d45021d4a73ab6ddc1622"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 1024px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 25626,
+      "mesh_instances": 9,
+      "surfaces": 10,
+      "materials": 3,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_peasant_arms",
+      "label": "Female Peasant Arms Part",
+      "path": "assets/outfits/Female_Peasant_Arms.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Peasant_Arms.gltf",
+      "source_sha256": "7f2446a7bab93b882e4095a9583219de3f381962551e8a7d451c287d74a8987e",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 6848,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "40559dec9ad15861653d6c76677bcdf2f27a3f930985dc1b46100ee5ee46b00d",
+      "bytes": 1210996,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "efec8ffa1a598847ae4e289575fc454818880207acd4c1d54a0c52e6655f2e4a"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "087091c337a8781601bc110a586dbb433b93f46ac19693a3001c53370b8ac400"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2cdf16e4b68be80fd8c8878ee2270c5da0dbc9818a0e5ec520ca42dd097e4d60"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 5629,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_peasant_body",
+      "label": "Female Peasant Body Part",
+      "path": "assets/outfits/Female_Peasant_Body.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Peasant_Body.gltf",
+      "source_sha256": "9c4edd8d18a028ee721fbaa5431a42e6ae1b579ac3bd756604bf888b387d4529",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2188,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "434a21c9e6b4847ff4d4a3a0b30ba69ee5c053a97bbb3b940c043100edbf1e49",
+      "bytes": 1016844,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "efec8ffa1a598847ae4e289575fc454818880207acd4c1d54a0c52e6655f2e4a"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "087091c337a8781601bc110a586dbb433b93f46ac19693a3001c53370b8ac400"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2cdf16e4b68be80fd8c8878ee2270c5da0dbc9818a0e5ec520ca42dd097e4d60"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 1753,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_peasant_feet",
+      "label": "Female Peasant Feet Part",
+      "path": "assets/outfits/Female_Peasant_Feet.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Peasant_Feet.gltf",
+      "source_sha256": "1c8cfde62c44e578d10194f769a568dd40a7f0523d0d286661660141704715de",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2588,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "8a69aa3b1ed98a2e30da7b72405a5a8ec84cd1c7de5651671e61b03ffb935b4f",
+      "bytes": 1029260,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "efec8ffa1a598847ae4e289575fc454818880207acd4c1d54a0c52e6655f2e4a"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "087091c337a8781601bc110a586dbb433b93f46ac19693a3001c53370b8ac400"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2cdf16e4b68be80fd8c8878ee2270c5da0dbc9818a0e5ec520ca42dd097e4d60"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 1892,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_peasant_legs",
+      "label": "Female Peasant Legs Part",
+      "path": "assets/outfits/Female_Peasant_Legs.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Peasant_Legs.gltf",
+      "source_sha256": "1369d75a8197e9e9fdbaf9491b276e7a31c08944377145ff5e497a7c1ac81ea3",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1944,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "11e99c5f524d9d4bbec5ad1a0a0e6c1f9342d287f7c7871fe9f80c95e591d4e4",
+      "bytes": 947404,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "efec8ffa1a598847ae4e289575fc454818880207acd4c1d54a0c52e6655f2e4a"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "087091c337a8781601bc110a586dbb433b93f46ac19693a3001c53370b8ac400"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2cdf16e4b68be80fd8c8878ee2270c5da0dbc9818a0e5ec520ca42dd097e4d60"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 1126,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_ranger_acc_pauldrons",
+      "label": "Female Ranger Acc Pauldrons Part",
+      "path": "assets/outfits/Female_Ranger_Acc_Pauldrons.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Acc_Pauldrons.gltf",
+      "source_sha256": "9ebbd79c8cf2316f0edf1ab76c6613ff8f7c5842d9faf98825b9afc205f6ce1e",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1376,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "f7a841f9508c785a081501eababa62b13a25ee2783104c8839f642f295959579",
+      "bytes": 1082516,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 1098,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_ranger_arms",
+      "label": "Female Ranger Arms Part",
+      "path": "assets/outfits/Female_Ranger_Arms.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Arms.gltf",
+      "source_sha256": "98a1b7a5d5d98b6de2f914f810cf75b359d7e11c62f33197948cf4c17c2c95eb",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 8508,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 2,
+      "sha256": "26d8a0276e41cde9b43847eb42fa2eea326e3cf8ab6259d62c9998030415107b",
+      "bytes": 2429816,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2e51b79ed683ec4d6cd1bdbb971ba8cc610ce473c0dbfcc54300098426ac5096"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "5779c6561cd5bc923828bd2bd7afc991cf03e20d3bd7d38844c40a3aa74cb9d3"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "cf22b0ce0cbd8e25ebb591e8b1beb6e0f17e728db8b582ad5ccde221d046ed11"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 7414,
+      "mesh_instances": 2,
+      "surfaces": 3,
+      "materials": 2,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_ranger_body",
+      "label": "Female Ranger Body Part",
+      "path": "assets/outfits/Female_Ranger_Body.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Body.gltf",
+      "source_sha256": "7215f19c1c31fa8f19286357f93e6e043b0dd162d4418fdc73f530a88717db35",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 4570,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 3,
+      "sha256": "bf7a0aaa871e4d69eb91a52a4497bda92f3fc826b9b018067d6bd487b62b61ed",
+      "bytes": 1408000,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 4886,
+      "mesh_instances": 3,
+      "surfaces": 3,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_ranger_feet",
+      "label": "Female Ranger Feet Part",
+      "path": "assets/outfits/Female_Ranger_Feet.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Feet.gltf",
+      "source_sha256": "11fef23ffa6099722f44f7411622f24db8728e9b7b5c028d5c40f980f5f97501",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 9172,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "ffb01d01ebdac779bfc7bf3dffc14d8de96e5f78d2ebcc266f1c8713564b954f",
+      "bytes": 1904192,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 10784,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_ranger_head_hood",
+      "label": "Female Ranger Head Hood Part",
+      "path": "assets/outfits/Female_Ranger_Head_Hood.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Head_Hood.gltf",
+      "source_sha256": "3ac6867e32cba7793d9393d4844cc21f38c53e833d468d7d5adebfb42bba7d0e",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2136,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "68301588908c37aa4a2163ef9cb84b44a5ca4aa82f8bfa8ce341608049d94193",
+      "bytes": 1098436,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 1240,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_female_ranger_legs",
+      "label": "Female Ranger Legs Part",
+      "path": "assets/outfits/Female_Ranger_Legs.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Female_Ranger_Legs.gltf",
+      "source_sha256": "804932b0e0b49601a565aef57422bc7ca17e526656518e399ef5d72f7134db6c",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1204,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "b3e045fe0a74ef952ad6ea8369bd0e306aa8e736080156f119562c7ab0d022b7",
+      "bytes": 1048420,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 685,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_peasant_arms",
+      "label": "Male Peasant Arms Part",
+      "path": "assets/outfits/Male_Peasant_Arms.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Peasant_Arms.gltf",
+      "source_sha256": "4eb0fff5637cb65909103fee86c799f13883c9fa18a0118cc5233a77b67db1d2",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 5338,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "026e3d3c7bbcb7c50b3cd68b492b291b75530968d179dfc281a917766fbf2990",
+      "bytes": 1980132,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "efec8ffa1a598847ae4e289575fc454818880207acd4c1d54a0c52e6655f2e4a"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "087091c337a8781601bc110a586dbb433b93f46ac19693a3001c53370b8ac400"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2cdf16e4b68be80fd8c8878ee2270c5da0dbc9818a0e5ec520ca42dd097e4d60"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "deec3a7195f9b96f21cce6430af77c30a7b3ee45b7066066f017b9b85ceaf4b9"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "364e735e626eef4e93b777199b13a67e8292c90405da9b6e8b127b3ec6d3066d"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "f18e87d3348dfed878b2583a1fc2c9549b3570602c82f819abb44d63372675af"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 3315,
+      "mesh_instances": 1,
+      "surfaces": 2,
+      "materials": 2,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_peasant_body",
+      "label": "Male Peasant Body Part",
+      "path": "assets/outfits/Male_Peasant_Body.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Peasant_Body.gltf",
+      "source_sha256": "daaa452abe8762c3bee7b1b30066c76d62077873c72cbf826de1a0f575ac3cb0",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 3856,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "cff761a4714d2a3ceb58c268ee0371dbfde13e0aed5015f8ff6b11055272f4c5",
+      "bytes": 1117700,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "efec8ffa1a598847ae4e289575fc454818880207acd4c1d54a0c52e6655f2e4a"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "087091c337a8781601bc110a586dbb433b93f46ac19693a3001c53370b8ac400"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2cdf16e4b68be80fd8c8878ee2270c5da0dbc9818a0e5ec520ca42dd097e4d60"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 3020,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_peasant_feet",
+      "label": "Male Peasant Feet Part",
+      "path": "assets/outfits/Male_Peasant_Feet.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Peasant_Feet.gltf",
+      "source_sha256": "191a2d70d6c2e550669bb7b1fc1c07be650d7168512e18eb2acb0e55d0535c52",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2588,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "b67f3892591d27c8023f7f45cd012cd7bd74114417189e161820983f25cd47b1",
+      "bytes": 1027872,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "efec8ffa1a598847ae4e289575fc454818880207acd4c1d54a0c52e6655f2e4a"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "087091c337a8781601bc110a586dbb433b93f46ac19693a3001c53370b8ac400"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2cdf16e4b68be80fd8c8878ee2270c5da0dbc9818a0e5ec520ca42dd097e4d60"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 1878,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_peasant_legs",
+      "label": "Male Peasant Legs Part",
+      "path": "assets/outfits/Male_Peasant_Legs.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Peasant_Legs.gltf",
+      "source_sha256": "207933393b7a2ef436c0ffea65b70e35feaee084992e798c3eb31e0c771fabb0",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1112,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "d6e6f58f7b37096c186ed4be08cee7111253bcebe628561707bc4b59f5c5635f",
+      "bytes": 931004,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "efec8ffa1a598847ae4e289575fc454818880207acd4c1d54a0c52e6655f2e4a"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "087091c337a8781601bc110a586dbb433b93f46ac19693a3001c53370b8ac400"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "2cdf16e4b68be80fd8c8878ee2270c5da0dbc9818a0e5ec520ca42dd097e4d60"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 656,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_ranger_acc_pauldron",
+      "label": "Male Ranger Acc Pauldron Part",
+      "path": "assets/outfits/Male_Ranger_Acc_Pauldron.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Acc_Pauldron.gltf",
+      "source_sha256": "967bd4e8d85821fbc7116269440b9a90904f6c7eeb0fc17b86349ee1fa3a7aa9",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1376,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "37057f453f1e34722a909184287d7057f62d2563966821404b3690d697d0dc81",
+      "bytes": 1051032,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 1100,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_ranger_arms",
+      "label": "Male Ranger Arms Part",
+      "path": "assets/outfits/Male_Ranger_Arms.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Arms.gltf",
+      "source_sha256": "437d71553d79dbf4583351718b5cb5c6d342f5e0682b287a7cd806630ed2b349",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 4928,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "859c1dfaac5e48c944fa96eb7fb0463419ffa35a8e062b1b1dd927afe6300fb1",
+      "bytes": 2064600,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "deec3a7195f9b96f21cce6430af77c30a7b3ee45b7066066f017b9b85ceaf4b9"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "364e735e626eef4e93b777199b13a67e8292c90405da9b6e8b127b3ec6d3066d"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "f18e87d3348dfed878b2583a1fc2c9549b3570602c82f819abb44d63372675af"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 3042,
+      "mesh_instances": 1,
+      "surfaces": 2,
+      "materials": 2,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_ranger_body",
+      "label": "Male Ranger Body Part",
+      "path": "assets/outfits/Male_Ranger_Body.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Body.gltf",
+      "source_sha256": "c5bb520006116222bad30533bd39e0f215abbf8d44e3fa1769ebad12043eac57",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 4606,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 3,
+      "sha256": "226d676baac115e091280de24d698a09f92bdc4ee57f784541e64e9ff4c53bcc",
+      "bytes": 1320432,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 4754,
+      "mesh_instances": 3,
+      "surfaces": 3,
+      "materials": 2,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_ranger_feet_boots",
+      "label": "Male Ranger Feet Boots Part",
+      "path": "assets/outfits/Male_Ranger_Feet_Boots.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Feet_Boots.gltf",
+      "source_sha256": "e71cd92792aeabca0dd1621556c54945dd97d154147790a5cb1afd75415a4e02",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 9172,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "b01f169bf80389af13f067a131cceec90396ab4a38795f02e59cab22e0d4af23",
+      "bytes": 1797512,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 10508,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_ranger_head_hood",
+      "label": "Male Ranger Head Hood Part",
+      "path": "assets/outfits/Male_Ranger_Head_Hood.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Head_Hood.gltf",
+      "source_sha256": "57affa34c145d2c1a02a3d9b17066e22b84eb4ce2bb79c6c7b90588af00846b6",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 2136,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "12a3d96c6fe5d5cc212f0b8b76f2c0212e23e683249ffe42b013cd00ab961408",
+      "bytes": 1087976,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 1240,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    },
+    {
+      "id": "outfit_male_ranger_legs",
+      "label": "Male Ranger Legs Part",
+      "path": "assets/outfits/Male_Ranger_Legs.glb",
+      "source_path": "Modular Character Outfits - Fantasy[Standard]/Exports/glTF (Godot-Unreal)/Modular Parts/Male_Ranger_Legs.gltf",
+      "source_sha256": "c415a01384d34b77a98ff4b0d01d42453dfe98bee259e58a328a803d36ac9df2",
+      "publisher": "Quaternius",
+      "license": "CC0-1.0",
+      "kind": "modular_clothing_part",
+      "triangles": 1128,
+      "rigged": true,
+      "bones": 65,
+      "meshes": 1,
+      "sha256": "f5744ea2db531d40c7c10e35ac0a25adac1e74c2696ff92313a422ef61480544",
+      "bytes": 1038996,
+      "textures": [
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "8ba90c1a33d59415402aef8371e9a8d8651fcd20f213cfd13687dd7cb83118f6"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "7a237e608b04be3f31931346f2ae30bbb9fe3ad5b09c1d64ac901dc951bb1e55"
+        },
+        {
+          "width": 512,
+          "height": 512,
+          "sha256": "16737ccdcfa96477996817e87cedcc8f53907b73ddb96489a787ae9dda0c7647"
+        }
+      ],
+      "status": "REVIEW_ONLY",
+      "modifications": [
+        "PBR maps downsampled to at most 512px",
+        "Self-contained GLB packaging",
+        "Original rig and skin weights retained",
+        "No gameplay animation retargeting or hero identity replacement"
+      ],
+      "exported_vertices": 644,
+      "mesh_instances": 1,
+      "surfaces": 1,
+      "materials": 1,
+      "animations": 0
+    }
+  ]
+}
