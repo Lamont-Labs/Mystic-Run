@@ -13,7 +13,8 @@ void vertex(){
 }
 void fragment(){
  float v=clamp((top-cloth_position.y)/(top-bottom),0.0,1.0);
- float spread=mix(0.60,1.18,v);
+ // MR-ART-018: match the curved cape's lateral profile so embroidery and trim track its edges.
+ float spread=mix(0.62,1.12,v)*(1.0+0.065*sin(v*6.28318530+0.35));
  float u=cloth_position.x/(half_width*spread);
  float folds=0.96+0.04*cos(cloth_position.x*32.0+v*1.8);
  float edge=smoothstep(0.86,0.89,abs(u))-smoothstep(0.94,0.97,abs(u));
