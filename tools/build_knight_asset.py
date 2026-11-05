@@ -323,7 +323,9 @@ tube([(-.105,1.789,.151),(-.025,1.789,.160),(.058,1.780,.159),(.09,1.773,.150)],
 # open-face shell with a distinct brow, crown rails and shaped cheek guards.
 # Every new surface retains Head weighting; the existing plume morph is unchanged.
 pts,uv,faces=[],[],[]
-nr,ns=13,48
+# MR-ART-014: preserve the sculptural helmet while staying below the 25k-triangle mobile budget.
+# The prior 13x48 shell exceeded the hard rig QA limit; silhouette rails supply detail.
+nr,ns=8,28
 def helmet_bottom(a):
     # Open front aperture: brow clears the eyes; side and rear protect the head.
     return 1.620+.202*max(0,math.cos(a))**.60
