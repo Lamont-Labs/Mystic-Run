@@ -304,6 +304,34 @@
           "bytes": 1785784
         }
       ]
+    },
+    {
+      "id": "mysticrun-character-finish-detail",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "cost_usd": 0,
+      "commercial_use": true,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "sources": [
+        "tools/build_character_finish.py"
+      ],
+      "modifications": [
+        "Original periodic scalar detail texture; channels encode stone, cloth, leather and hair; sampled as linear data."
+      ],
+      "license_evidence": {
+        "path": "assets/licenses/lamont-labs-original.txt",
+        "sha256": "58459d395ec52d786935be1f9af3dfa7aa9b09d8533b5cbbd5e743560e1b3d17",
+        "bytes": 591
+      },
+      "files": [
+        {
+          "path": "assets/characters/finish-detail.png",
+          "sha256": "47b20b6ac6fd2d340979fc98b54694fba70951ac853274ae464f6e97b357e457",
+          "bytes": 232453
+        }
+      ]
     }
   ]
 }

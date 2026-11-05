@@ -4,6 +4,7 @@ const Geo = preload("res://game/geometry.gd")
 const Motion = preload("res://game/rig_motion.gd")
 const OUTLINE = preload("res://assets/shaders/ink_outline.gdshader")
 const AUTHORED_SHADER = preload("res://assets/shaders/authored_character.gdshader")
+const FINISH_DETAIL = preload("res://assets/characters/finish-detail.png")
 var identity: String = "knight"
 var body: Node3D
 var skeleton: Skeleton3D
@@ -97,6 +98,8 @@ func _build() -> void:
 			authored_material.shader=AUTHORED_SHADER
 			authored_material.set_shader_parameter("sentinel_palette",false)
 			authored_material.set_shader_parameter("paint_gain",.76 if identity=="gargoyle" else .88 if identity=="witch" else 1.0)
+			authored_material.set_shader_parameter("character_kind",["knight","gargoyle","witch"].find(identity))
+			authored_material.set_shader_parameter("finish_detail",FINISH_DETAIL)
 			child.material_override=authored_material
 	motion=Motion.new()
 	motion.configure(skeleton,identity)

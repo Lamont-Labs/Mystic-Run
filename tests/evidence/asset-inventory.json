@@ -1,9 +1,9 @@
 {
   "status": "PASS",
   "schema": 1,
-  "assets": 6,
-  "runtime_files": 26,
-  "checks": 49,
-  "source_bytes": 7805712,
+  "assets": 7,
+  "runtime_files": 27,
+  "checks": 51,
+  "source_bytes": 8038165,
   "scope": "Reviewed rights metadata, local license evidence, exact hashes, complete 3D inventory and glTF dependencies; no store or device certification"
 }
