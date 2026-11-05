@@ -13,7 +13,7 @@ import zipfile
 from android_policy import inspect_package
 from asset_foundry import verify as verify_assets
 
-OWNER_CERTIFICATE='f5ee5d42ec692e402b52c0457be35c24fe1f92229005002155f675040dddb9c9'
+OWNER_CERTIFICATE='6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf'
 ART_PREVIEW_CERTIFICATE='cced8d8dca20fd35d169f546802953375c76fad3559cdbcbe896271c61f26f5e'
 
 
