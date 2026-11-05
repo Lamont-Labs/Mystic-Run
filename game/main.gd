@@ -702,6 +702,7 @@ func _hurt(context: Dictionary = {}) -> void:
 	if power_left > 0.0 and selected in ["knight","witch"]:
 		return
 	if core.receive_damage():
+		heroes[selected].react_to_hit()
 		qa_damage += 1;run_damage+=1;combo=0;combo_left=0
 		qa_incidents.append({"tick":core.tick,"character":selected,"kind":context.get("kind","unknown"),"at":context.get("at",0),"runner_y":motor.position.y,"slide":sliding_left,"attack_age":attack_age,"phase":core.phase})
 		ui.flash = 1.0

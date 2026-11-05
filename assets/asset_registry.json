@@ -120,8 +120,8 @@
         "bytes": 591
       },
       "modifications": [
-        "Original weighted character geometry, vertex-painted material regions and two facial/plume morph targets.",
-        "Retained CC0 humanoid skeleton; original body mesh not reused."
+        "Original weighted face, costume and equipment; refined open helmet and six facial/secondary morph targets.",
+        "Retained previously admitted CC0 humanoid skeleton; original body mesh not reused."
       ],
       "derived_from": [
         "quaternius-base-characters"
@@ -129,8 +129,8 @@
       "files": [
         {
           "path": "assets/characters/knight/knight.glb",
-          "sha256": "553c19d508409460576f7bca7802debaabdca57b490b513dd206e23e17210131",
-          "bytes": 1333720
+          "sha256": "1be8296c2effc4c2a8b8b42ee529e8ca764dcf9af6923fc49ba6279c56c4bf23",
+          "bytes": 1662012
         }
       ]
     },

@@ -60,7 +60,7 @@ def material(name, color, metal=0.0, rough=.65):
     return len(MATS)-1
 
 
-SKIN = material('Skin_warm_peach', 'eab68d', 0, .82)
+SKIN = material('Skin_warm_peach', 'dfa984', 0, .82)
 BLUE = material('Enamel_sapphire', '4c8cad', .28, .48)
 GOLD = material('Metal_warm_gold', 'd7b271', .55, .44)
 SILVER = material('Blade_satin_steel', 'b8d6e6', .50, .28)
@@ -162,11 +162,15 @@ def tube(points, radii, mat, bone, sides=8, steps=2, tag=''):
         rs.extend(radii[i]+(radii[i+1]-radii[i])*j/steps for j in range(steps))
     rs.append(radii[-1])
     pts,uv,faces=[],[],[]
+    previous_cross=None
     for j,p in enumerate(path):
         direction=(path[min(j+1,len(path)-1)]-path[max(0,j-1)]).normalized()
-        cross=direction.cross(Vector((0,0,1)))
+        # Transport the previous cross-section instead of flipping a fixed-axis
+        # frame at the apex of a bent plume, hair clump or armor trim.
+        cross=previous_cross-direction*previous_cross.dot(direction) if previous_cross is not None else direction.cross(Vector((0,0,1)))
         if cross.length<.01:cross=direction.cross(Vector((0,1,0)))
         cross.normalize();up=direction.cross(cross).normalized()
+        previous_cross=cross.copy()
         for i in range(sides+1):
             a=math.tau*i/sides
             pts.append(p+rs[j]*(cross*math.cos(a)+up*math.sin(a)))
@@ -175,6 +179,9 @@ def tube(points, radii, mat, bone, sides=8, steps=2, tag=''):
         for i in range(sides):
             a=j*(sides+1)+i
             faces.append((a,a+sides+1,a+sides+2,a+1))
+    if tag=='plume':
+        faces.append(tuple(range(sides-1,-1,-1)))
+        faces.append(tuple((len(path)-1)*(sides+1)+i for i in range(sides)))
     mesh(pts,faces,mat,bone,uv,tag)
 
 
@@ -286,52 +293,59 @@ for suffix in ('l','r'):
 
 # A designed head: chin, jaw, cheek, temple and forehead rings with an open face.
 loft([(0,1.46,.018,.073,.071),(0,1.57,.017,.078,.075)],SKIN,'neck_01',sides=24)
-loft([(0,1.525,.025,.065,.072),(0,1.55,.025,.11,.10),(0,1.59,.015,.145,.112),(0,1.665,.002,.174,.132),(0,1.755,-.01,.17,.143),(0,1.825,-.02,.136,.128),(0,1.865,-.024,.06,.069),(0,1.874,-.024,.004,.004)],SKIN,'Head',sides=36)
+loft([(0,1.525,.025,.075,.072),(0,1.55,.025,.116,.10),(0,1.59,.015,.147,.112),(0,1.665,.002,.171,.132),(0,1.755,-.01,.168,.143),(0,1.825,-.02,.136,.128),(0,1.865,-.024,.06,.069),(0,1.874,-.024,.004,.004)],SKIN,'Head',sides=36,tag='face')
 for side in (-1,1):
     ellipsoid((side*.169,1.675,-.006),(.039,.061,.031),SKIN,'Head',10,18)
     ellipsoid((side*.184,1.678,.015),(.016,.034,.011),LIP,'Head',8,14)
     # Eye sockets and curved lids, with opaque whites and separate irises.
-    ellipsoid((side*.070,1.706,.132),(.044,.030,.025),WHITE,'Head',10,24,'blink')
-    ellipsoid((side*.065,1.706,.155),(.018,.022,.006),IRIS,'Head',10,20,'blink')
-    ellipsoid((side*.064,1.706,.160),(.008,.015,.003),DARK,'Head',8,16,'blink')
-    ellipsoid((side*.059,1.714,.163),(.005,.005,.002),WHITE,'Head',6,10,'blink')
-    tube([(side*.027,1.705,.143),(side*.045,1.730,.149),(side*.079,1.735,.143),(side*.11,1.711,.130)],[.004,.006,.006,.003],HAIR,'Head',8,3,'blink')
-    tube([(side*.029,1.697,.144),(side*.071,1.678,.151),(side*.108,1.695,.133)],[.003,.004,.003],LIP,'Head',8,3,'blink')
-    tube([(side*.024,1.762,.139),(side*.061,1.775,.142),(side*.108,1.758,.123)],[.01,.014,.007],HAIR,'Head',10,4)
+    ellipsoid((side*.070,1.706,.134),(.041,.027,.019),WHITE,'Head',10,24,'eye')
+    ellipsoid((side*.065,1.706,.152),(.022,.023,.005),IRIS,'Head',10,20,'eye')
+    ellipsoid((side*.064,1.706,.157),(.009,.016,.003),DARK,'Head',8,16,'eye')
+    ellipsoid((side*.059,1.714,.160),(.004,.004,.0015),WHITE,'Head',6,10,'eye')
+    tube([(side*.029,1.705,.146),(side*.046,1.727,.153),(side*.079,1.731,.147),(side*.108,1.711,.134)],[.003,.004,.004,.0025],HAIR,'Head',8,3,'upper_lid')
+    tube([(side*.031,1.697,.146),(side*.071,1.682,.151),(side*.106,1.695,.137)],[.0025,.003,.0025],LIP,'Head',8,3,'lower_lid')
+    tube([(side*.025,1.754,.141),(side*.061,1.763,.145),(side*.106,1.754,.129)],[.006,.008,.004],HAIR,'Head',10,4,'brow')
 ellipsoid((0,1.683,.124),(.022,.038,.023),SKIN,'Head',10,20)
 ellipsoid((0,1.657,.15),(.027,.018,.019),SKIN,'Head',10,20)
 for side in (-1,1):ellipsoid((side*.016,1.650,.159),(.005,.003,.003),LIP,'Head',6,10)
-tube([(-.057,1.602,.119),(-.024,1.593,.136),(.015,1.594,.14),(.057,1.610,.126)],[.0035,.0045,.0045,.0035],HAIR,'Head',8,4)
-tube([(-.036,1.587,.131),(0,1.581,.14),(.039,1.592,.136)],[.004,.006,.003],LIP,'Head',8,3)
+tube([(-.054,1.603,.122),(-.024,1.595,.139),(.015,1.595,.142),(.054,1.607,.129)],[.003,.0035,.0035,.003],HAIR,'Head',8,4,'mouth')
+tube([(-.036,1.589,.135),(0,1.585,.144),(.039,1.593,.139)],[.003,.004,.0025],LIP,'Head',8,3,'lower_lip')
+# The inner mouth and teeth start almost closed; facial morphs open real volume.
+ellipsoid((0,1.597,.143),(.029,.0015,.004),DARK,'Head',8,16,'mouth_inner')
+ellipsoid((0,1.601,.148),(.023,.001,.0025),WHITE,'Head',8,16,'teeth')
 
 # Hair is swept in coherent clumps under the helmet, with broad sculpted grooves.
 for side in (-1,1):
-    tube([(side*.122,1.802,.08),(side*.15,1.746,.10),(side*.153,1.683,.052)],[.041,.038,.015],HAIR,'Head',12,4)
-for i in range(3):
-    x=-.09+i*.075
-    tube([(x-.025,1.795,.128),(x+.012,1.785,.145),(x+.025,1.752-(i%2)*.01,.143)],[.035,.033,.006],HAIR,'Head',12,4)
+    tube([(side*.122,1.802,.08),(side*.145,1.746,.096),(side*.147,1.689,.052)],[.026,.024,.010],HAIR,'Head',12,4)
+tube([(-.105,1.789,.151),(-.025,1.789,.160),(.058,1.780,.159),(.09,1.773,.150)],[.016,.020,.015,.003],HAIR,'Head',12,4)
 
 # Helmet shell is a curved open visor, with deliberately smooth outer normals.
 pts,uv,faces=[],[],[]
 nr,ns=12,40
-for j in range(nr+1):
+def helmet_bottom(a):
+    return 1.62+.19*max(0,math.cos(a))**.65
+
+for j in range(nr):
     t=j/nr
     for i in range(ns+1):
         a=math.tau*i/ns
-        front=max(0,math.cos(a))
-        bottom=1.58+.225*front**3
-        y=bottom+(1.92-bottom)*t
-        radius=math.sqrt(max(.002,1-((y-1.74)/.19)**2))
+        bottom=helmet_bottom(a)
+        y=bottom+(1.94-bottom)*t
+        radius=math.sqrt(max(.001,1-((y-1.74)/.20)**2))
         pts.append((math.sin(a)*(.184*radius+.008),y,-.021+math.cos(a)*(.161*radius+.012)))
         uv.append((i/ns,t))
-for j in range(nr):
+for j in range(nr-1):
     for i in range(ns):
         a=j*(ns+1)+i;faces.append((a,a+1,a+ns+2,a+ns+1))
+# Close the crown with a true apex; the previous shell left an open top ring.
+apex=len(pts);pts.append((0,1.94,-.021));uv.append((.5,1))
+for i in range(ns):
+    faces.append(((nr-1)*(ns+1)+i,(nr-1)*(ns+1)+i+1,apex))
 mesh(pts,faces,BLUE,'Head',uv)
 brim=[]
 for i in range(41):
-    a=math.tau*i/40;front=max(0,math.cos(a));y=1.58+.225*front**3
-    radius=math.sqrt(max(.002,1-((y-1.74)/.19)**2))
+    a=math.tau*i/40;y=helmet_bottom(a)
+    radius=math.sqrt(max(.001,1-((y-1.74)/.20)**2))
     brim.append((math.sin(a)*(.184*radius+.009),y,-.021+math.cos(a)*(.161*radius+.014)))
 tube(brim,[.011]*len(brim),GOLD,'Head',8,1)
 for side in (-1,1):
@@ -363,11 +377,16 @@ inner=[(x+(u-x)*.84,y+(v-y)*.84) for u,v in outline]
 plate(inner,z+.113,.008,BLUE,'lowerarm_l')
 star(x,y-.018,z+.135,.096,GOLD,'lowerarm_l')
 
+# Keep source-space coordinates so expressions use the identical head transform.
+SOURCE_POSITIONS=[game(Vector(v)) for v in V]
+def head_point(p):
+    pivot=REST['Head'];d=Vector(p)-pivot
+    return pivot+Vector((d.x*1.12,d.y*1.05,d.z*1.06))
+
 # Create a single skinned mesh, named surfaces, UVs and facial/secondary morphs.
 for i,weights in enumerate(WEIGHTS):
     if weights.get('Head',0)>.99:
-        p=game(Vector(V[i]));pivot=REST['Head'];d=p-pivot
-        p=pivot+Vector((d.x*1.12,d.y*1.05,d.z*1.06));V[i]=xyz(p)
+        V[i]=xyz(head_point(SOURCE_POSITIONS[i]))
 data=bpy.data.meshes.new('Knight_AuthoredTopology')
 data.from_pydata(V,[],F);data.update()
 obj=bpy.data.objects.new('Knight',data);bpy.context.collection.objects.link(obj)
@@ -390,16 +409,48 @@ for i,weights in enumerate(WEIGHTS):
 modifier=obj.modifiers.new('KnightSkin','ARMATURE');modifier.object=rig
 obj.parent=rig
 obj.shape_key_add(name='Basis')
-blink=obj.shape_key_add(name='Blink')
-plume=obj.shape_key_add(name='PlumeSway')
-for i,tag in enumerate(TAGS):
-    p=game(Vector(V[i]))
-    if tag=='blink':
-        p.y=1.704+(p.y-1.704)*.07
-        blink.data[i].co=xyz(p)
-    elif tag=='plume':
-        p.x+=.07*max(0,(p.y-1.91)/.17)
-        plume.data[i].co=xyz(p)
+MORPHS=['Blink','PlumeSway','Smile','Focus','Surprised','Hurt']
+affected={}
+for name in MORPHS:
+    shape=obj.shape_key_add(name=name)
+    changed=0
+    for i,tag in enumerate(TAGS):
+        p=SOURCE_POSITIONS[i].copy();original=p.copy()
+        corner=min(1,abs(p.x)/.055)
+        if name=='Blink' and tag in ('eye','upper_lid','lower_lid'):
+            p.y=1.704+(p.y-1.704)*.025
+        elif name=='PlumeSway' and tag=='plume':
+            p.x+=.07*max(0,(p.y-1.91)/.17)
+        elif name=='Smile':
+            if tag in ('mouth','lower_lip'):
+                p.y+=.004+.016*corner**1.5
+            elif tag=='mouth_inner':
+                p.y=1.599+(p.y-1.597)*5.5;p.x*=1.1
+            elif tag=='teeth':
+                p.y=1.604+(p.y-1.601)*3.5
+            elif tag in ('eye','upper_lid','lower_lid'):
+                p.y=1.707+(p.y-1.706)*.87
+            elif tag=='brow':p.y+=.003
+        elif name=='Focus':
+            if tag=='brow':p.y+=-.016+.023*min(1,abs(p.x)/.11)
+            elif tag in ('eye','upper_lid','lower_lid'):p.y=1.704+(p.y-1.706)*.77
+            elif tag in ('mouth','lower_lip'):p.y-=.004*corner
+        elif name=='Surprised':
+            if tag=='brow':p.y+=.017
+            elif tag in ('eye','upper_lid','lower_lid'):p.y=1.708+(p.y-1.706)*1.18
+            elif tag=='mouth_inner':p.y=1.596+(p.y-1.597)*15;p.x*=.8
+            elif tag=='mouth':p.y-=.012*(1-corner);p.x*=.82
+            elif tag in ('lower_lip','teeth'):p.y-=.014
+        elif name=='Hurt':
+            if tag=='brow':p.y+=.014-.022*corner
+            elif tag in ('eye','upper_lid','lower_lid'):p.y=1.702+(p.y-1.706)*.45
+            elif tag in ('mouth','lower_lip'):p.y-=.011*corner
+            elif tag=='mouth_inner':p.y=1.593+(p.y-1.597)*6
+            elif tag=='teeth':p.y-=.005
+        if (p-original).length>.000001:
+            shape.data[i].co=xyz(head_point(p) if WEIGHTS[i].get('Head',0)>.99 else p)
+            changed+=1
+    affected[name]=changed
 
 bpy.context.view_layer.objects.active=obj
 obj.select_set(True);rig.select_set(True)
@@ -410,9 +461,11 @@ bpy.ops.wm.save_as_mainfile(filepath=str(blend))
 bpy.ops.export_scene.gltf(filepath=str(DEST/'knight.glb'),export_format='GLB',use_selection=True,export_animations=False,export_skins=True,export_morph=True,export_attributes=True,export_yup=True)
 binary=DEST/'knight.glb'
 manifest={
- 'character':'knight','revision':'authored-knight-1','source_generator':'tools/build_knight_asset.py',
+ 'character':'knight','revision':'authored-knight-2-expressions','source_generator':'tools/build_knight_asset.py',
  'blender_version':bpy.app.version_string,'mesh_vertices':len(V),'triangles':triangle_count,
- 'material_surfaces':1,'painted_material_regions':len(MATS),'bones':len(rig.data.bones),'morph_targets':['Blink','PlumeSway'],
+ 'material_surfaces':1,'painted_material_regions':len(MATS),'bones':len(rig.data.bones),'morph_targets':MORPHS,
+ 'morph_affected_vertices':affected,
+ 'blink_closure_y':head_point(Vector((0,1.704,0))).y,
  'asset_sha256':hashlib.sha256(binary.read_bytes()).hexdigest(),'asset_bytes':binary.stat().st_size,
  'rig_source':'Quaternius Universal Base Characters, CC0 1.0; original skeleton retained',
  'geometry':'New Lamont Labs mesh, costume, face, helmet, plume, weapon and shield, authored by the source generator',
@@ -422,4 +475,13 @@ manifest={
  'physical_phone_tested':False,
 }
 (DEST/'PROVENANCE.json').write_text(json.dumps(manifest,indent=2)+'\n')
+# Rebuilding owned geometry must update its exact byte record, never its rights.
+registry_path=ROOT/'assets/asset_registry.json'
+if registry_path.is_file():
+    registry=json.loads(registry_path.read_text())
+    entry=next(e for e in registry['assets'] if e['id']=='mysticrun-authored-knight')
+    assert entry['publisher']=='Lamont Labs' and entry['license']=='LicenseRef-LamontLabs-Original'
+    entry['files']=[{'path':binary.relative_to(ROOT).as_posix(),'sha256':manifest['asset_sha256'],'bytes':manifest['asset_bytes']}]
+    entry['modifications']=['Original weighted face, costume and equipment; refined open helmet and six facial/secondary morph targets.','Retained previously admitted CC0 humanoid skeleton; original body mesh not reused.']
+    registry_path.write_text(json.dumps(registry,indent=2)+'\n')
 print('KNIGHT_ASSET',json.dumps(manifest))

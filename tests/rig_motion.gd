@@ -16,7 +16,10 @@ func run() -> void:
 		if kind=="knight":
 			var mesh:MeshInstance3D=hero.authored_mesh
 			check(is_instance_valid(mesh) and mesh.mesh.get_surface_count()==1,"Knight: authored mesh uses one main material surface")
-			check(mesh.mesh.get_blend_shape_count()==2 and str(mesh.mesh.get_blend_shape_name(0))=="Blink" and str(mesh.mesh.get_blend_shape_name(1))=="PlumeSway","Knight: expression and plume morph targets survive import")
+			var expected_shapes:Array[String]=["Blink","PlumeSway","Smile","Focus","Surprised","Hurt"]
+			var imported_shapes:Array[String]=[]
+			for shape in range(mesh.mesh.get_blend_shape_count()):imported_shapes.append(str(mesh.mesh.get_blend_shape_name(shape)))
+			check(imported_shapes==expected_shapes,"Knight: all six expression and plume morph targets survive import")
 			var arrays:Array=mesh.mesh.surface_get_arrays(0)
 			var vertices:PackedVector3Array=arrays[Mesh.ARRAY_VERTEX]
 			var indices:PackedInt32Array=arrays[Mesh.ARRAY_INDEX]

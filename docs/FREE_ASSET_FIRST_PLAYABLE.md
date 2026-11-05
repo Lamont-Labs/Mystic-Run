@@ -1,5 +1,7 @@
 # MysticRun — first free-asset playable integration
 
+Follow-up: [Knight geometry and expression refinement](KNIGHT_EXPRESSION_REFINEMENT.md) builds on this first milestone. The implementation and counts below describe the earlier environment/pipeline integration.
+
 Lamont Labs · November 4, 2026
 Development branch: `quality/free-asset-foundry`
 Starting source: `e38e5a3eb27c996560f3e55251109833acd4569d` (published Knight build 1016)

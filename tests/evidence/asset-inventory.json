@@ -4,6 +4,6 @@
   "assets": 4,
   "runtime_files": 24,
   "checks": 45,
-  "source_bytes": 4184664,
+  "source_bytes": 4512956,
   "scope": "Reviewed rights metadata, local license evidence, exact hashes, complete 3D inventory and glTF dependencies; no store or device certification"
 }

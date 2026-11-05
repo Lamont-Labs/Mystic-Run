@@ -1,0 +1,79 @@
+{
+  "baseline": "19105d494285ca760b753a3e675198eb63921249",
+  "engine": "4.7.2.stable.official.ed1daf0bf",
+  "godot_assertions": 828,
+  "godot_failures": 0,
+  "python_tests": 20,
+  "python_failures": 0,
+  "inventory": {
+    "status": "PASS",
+    "schema": 1,
+    "assets": 4,
+    "runtime_files": 24,
+    "checks": 45,
+    "source_bytes": 4512956,
+    "scope": "Reviewed rights metadata, local license evidence, exact hashes, complete 3D inventory and glTF dependencies; no store or device certification"
+  },
+  "knight": {
+    "character": "knight",
+    "revision": "authored-knight-2-expressions",
+    "source_generator": "tools/build_knight_asset.py",
+    "blender_version": "4.3.2",
+    "mesh_vertices": 14498,
+    "triangles": 24328,
+    "material_surfaces": 1,
+    "painted_material_regions": 13,
+    "bones": 65,
+    "morph_targets": [
+      "Blink",
+      "PlumeSway",
+      "Smile",
+      "Focus",
+      "Surprised",
+      "Hurt"
+    ],
+    "morph_affected_vertices": {
+      "Blink": 1174,
+      "PlumeSway": 252,
+      "Smile": 1734,
+      "Focus": 1550,
+      "Surprised": 1734,
+      "Hurt": 1732
+    },
+    "blink_closure_y": 1.7092100381851196,
+    "asset_sha256": "1be8296c2effc4c2a8b8b42ee529e8ca764dcf9af6923fc49ba6279c56c4bf23",
+    "asset_bytes": 1662012,
+    "rig_source": "Quaternius Universal Base Characters, CC0 1.0; original skeleton retained",
+    "geometry": "New Lamont Labs mesh, costume, face, helmet, plume, weapon and shield, authored by the source generator",
+    "base_body_mesh_reused": false,
+    "motion_source": "Existing Quaternius CC0 authored-motion library, sampled by game/rig_motion.gd",
+    "concept_reference": "MysticRun fantasy heroes concept sheet, November 3, 2026",
+    "texture_method": "UV-mapped mesh with linear per-vertex authored color gradients; secondary UV stores metallic/roughness values for one runtime material; no bitmap texture atlas in this revision",
+    "physical_phone_tested": false
+  },
+  "source_rebuild_byte_identical": true,
+  "core_content_scenes_unchanged": true,
+  "physical_phone_tested": false,
+  "new_installable_android_release_published": false,
+  "rendered_review": {
+    "course": "endless",
+    "damage": 0,
+    "distance_m": 148.193,
+    "frames": 240,
+    "handoffs": 0,
+    "recording_fps": 30,
+    "runner": "knight",
+    "scope": "Actual desktop render with disclosed automated controls; not human playability, on-device performance or art approval",
+    "seed": 73129,
+    "selected_character_preserved": true
+  },
+  "implementation_sha256": {
+    "tools/build_knight_asset.py": "9145a99f6cfe2164435bdf33573239ecc3b554a2288834a8186c86e8d5fad42f",
+    "game/hero.gd": "a8b54dbd16ca5f5b629606e5a8ba70f2d1323f8c709604f6847f105fd5d760f1",
+    "game/main.gd": "27a2b4c999e74b5299fbef96007eec642ecf567a033fb7b8102ddaa4f175b5bb",
+    "assets/shaders/authored_character.gdshader": "237a7c94476ccea470aa0513d42e836472bd63fcb0be1219d18f618743944906",
+    "tests/rig_motion.gd": "f1093e369a40c7355af9a595e9c6824373ee53cf3a782d6de2b9ec2901653f30",
+    "tests/knight_expressions.gd": "cefa0b6559de87f41f7f6cb967e870add359058b0971604f1f41e05e2b609ac2",
+    "tests/preview_knight_expressions.gd": "18364762cca1d90837506cbea013d7096922aa97559ca9b557705e1417aa992b"
+  }
+}

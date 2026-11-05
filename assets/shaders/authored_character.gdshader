@@ -1,5 +1,7 @@
 shader_type spatial;
-render_mode diffuse_burley, specular_schlick_ggx;
+render_mode diffuse_burley, specular_schlick_ggx, shadows_disabled;
+// Sculpted gradients and direct lighting keep the face readable. The instance
+// still casts a ground shadow; tiny hair/eyelid shadows do not dirty the face.
 // glTF vertex colors are linear. Blender exports UV V as 1-V.
 uniform bool sentinel_palette=false;
 void fragment(){

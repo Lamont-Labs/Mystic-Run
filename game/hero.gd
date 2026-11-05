@@ -32,6 +32,11 @@ var landing_spring:float=0.0
 var cape_fabric:ShaderMaterial
 var authored_mesh:MeshInstance3D
 var blink_clock:float=0.0
+var face_shapes:Dictionary={}
+var face_weights:Dictionary={"Smile":0.0,"Focus":0.0,"Surprised":0.0,"Hurt":0.0}
+var expression_override:String="auto"
+var facial_state:String="neutral"
+var hurt_left:float=0.0
 
 func configure(kind: String) -> void:
 	identity=kind
@@ -87,6 +92,8 @@ func _build() -> void:
 		if child is MeshInstance3D:
 			if identity=="knight":
 				authored_mesh=child
+				for shape_index in range(child.mesh.get_blend_shape_count()):
+					face_shapes[str(child.mesh.get_blend_shape_name(shape_index))]=shape_index
 				var authored_material:=ShaderMaterial.new()
 				authored_material.shader=AUTHORED_SHADER
 				authored_material.set_shader_parameter("sentinel_palette",false)
@@ -257,10 +264,8 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 func animate(delta: float) -> void:
 	clock+=delta
 	if is_instance_valid(authored_mesh):
-		blink_clock=fposmod(blink_clock+delta,4.1)
-		var blink_amount:float=maxf(0.0,1.0-absf(blink_clock-3.75)/.085)
-		authored_mesh.set_blend_shape_value(0,0.0 if reduced_motion else blink_amount)
-		authored_mesh.set_blend_shape_value(1,0.0 if reduced_motion else sin(clock*5.5)*.55)
+		_animate_face(delta)
+	hurt_left=maxf(0.0,hurt_left-delta)
 	attack_time=maxf(0,attack_time-delta)
 	celebration_left=maxf(0,celebration_left-delta);traversal_left=maxf(0,traversal_left-delta)
 	power_time=maxf(0,power_time-delta)
@@ -300,6 +305,38 @@ func attack(direction:int=1) -> void:
 func power() -> void:
 	power_time=.7
 	motion.power()
+
+func set_expression(expression:String="auto") -> bool:
+	# Used by the character stage; gameplay normally follows the existing state.
+	if expression not in ["auto","neutral","alert","pleased","determined","surprised","hurt"]:return false
+	expression_override=expression
+	return true
+
+func react_to_hit() -> void:
+	hurt_left=.55
+
+func _face_value(shape:String,value:float) -> void:
+	if face_shapes.has(shape):authored_mesh.set_blend_shape_value(int(face_shapes[shape]),value)
+
+func _animate_face(delta:float) -> void:
+	blink_clock=fposmod(blink_clock+delta,4.1)
+	var blink:float=0.0 if reduced_motion else maxf(0.0,1.0-absf(blink_clock-3.75)/.085)
+	facial_state=expression_override
+	if facial_state=="auto":
+		facial_state="hurt" if hurt_left>0 else "pleased" if celebration_left>0 else "determined" if attack_time>0 or power_time>0 or (get_meta("sentinel",false) and threat_intensity>.2) else "surprised" if airborne else "alert" if moving else "neutral"
+	var targets:Dictionary={"Smile":0.0,"Focus":0.0,"Surprised":0.0,"Hurt":0.0}
+	match facial_state:
+		"pleased":targets.Smile=.85
+		"determined":targets.Focus=.85
+		"surprised":targets.Surprised=.65
+		"hurt":targets.Hurt=.85
+		"alert":targets.Focus=.18
+	for shape in targets:
+		face_weights[shape]=lerpf(float(face_weights[shape]),float(targets[shape]),1.0-exp(-delta*16.0))
+		# Suppress the expression during closure so additive eye morphs cannot invert.
+		_face_value(shape,float(face_weights[shape])*(1.0-blink))
+	_face_value("Blink",blink)
+	_face_value("PlumeSway",0.0 if reduced_motion else sin(clock*5.5)*.55)
 
 
 func celebrate() -> void:celebration_left=.75
