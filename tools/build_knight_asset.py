@@ -323,7 +323,7 @@ tube([(-.105,1.789,.151),(-.025,1.789,.160),(.058,1.780,.159),(.09,1.773,.150)],
 pts,uv,faces=[],[],[]
 nr,ns=12,40
 def helmet_bottom(a):
-    return 1.62+.19*max(0,math.cos(a))**.65
+    return 1.615+.215*max(0,math.cos(a))**.70
 
 for j in range(nr):
     t=j/nr
@@ -354,7 +354,9 @@ for side in (-1,1):
     tube([(side*.151,1.77,.036),(side*.164,1.69,.04),(side*.139,1.585,.071)],[.009,.012,.01],SILVER,'Head')
 # Raised crown ridge and a swept horsehair plume; rear silhouette matches the cape.
 tube([(0,1.806,.143),(0,1.884,.091),(0,1.927,-.015),(0,1.875,-.146),(0,1.74,-.194)],[.012,.015,.017,.013,.008],SILVER,'Head',10,4)
-tube([(0,1.91,-.043),(0,2.045,-.12),(0,2.075,-.27),(.02,1.998,-.38),(.03,1.90,-.40)],[.025,.06,.07,.045,.004],RED,'Head',12,5,'plume')
+# A long, tapered, rear-swept crest replaces the compact upright curl.
+# Keep the same Head weighting and 'plume' tag for PlumeSway.
+tube([(0,1.91,-.043),(0,2.045,-.105),(0,2.095,-.245),(.012,2.073,-.39),(.025,2.01,-.52),(.035,1.945,-.61)],[.025,.049,.060,.046,.026,.003],RED,'Head',12,5,'plume')
 
 # Sword: enclosed steel volume with a swept tip and a clean central ridge.
 hand=REST['hand_r'];hx,hy,hz=hand
