@@ -1,6 +1,6 @@
 # MysticRun development queue
 
-Lamont Labs · November 4, 2026
+Lamont Labs · November 5, 2026
 
 Work proceeds one item at a time. Save and verify each checkpoint before beginning the next item.
 
@@ -13,7 +13,8 @@ Work proceeds one item at a time. Save and verify each checkpoint before beginni
 | Distinct Gargoyle with weighted wings and crouch | `2e4606d6ae24941d8d825408eb3a815d59621863` |
 | Distinct Witch with facial morphs, braid and casting staff | `dbbbb65100742c238e9b2055d88b6f6cb978c9d1` |
 | Gargoyle curved exterior surfaces and geometric regression check | `GARGOYLE_SURFACE_REFINEMENT.md` and its checkpoint commit |
-| Character material and surface finish | `MATERIAL_FINISH_REFINEMENT.md` and its source-bound engine review |
+| Character material and surface finish | `67bbd5cef7d60952730e143b9a4f3ebe86c333c4` and `MATERIAL_FINISH_REFINEMENT.md` |
+| Separately installed Art Preview 0.6.2 / build 1017 | Verified APK and source identity in `ART_PREVIEW_BUILD.md` |
 
 The code, generators, rights records, model hashes and actual engine review frames are in draft PR #5 on `quality/free-asset-foundry`. The published installable release remains build 1016. Development validation is not final art approval or Google Play readiness.
 
