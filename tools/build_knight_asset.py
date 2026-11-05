@@ -274,11 +274,28 @@ for suffix in ('l','r'):
     shoulder,elbow,hand=(REST[n+'_'+suffix] for n in ('upperarm','lowerarm','hand'))
     limb(shoulder,elbow,[.075,.087,.085,.068,.059,.055],NAVY,'upperarm_'+suffix)
     limb(elbow,hand,[.055,.066,.075,.062,.045,.04],NAVY,'lowerarm_'+suffix)
-    center=shoulder+Vector((side*.035,.012,0))
+    # MR-ART-016: a stepped, tapered shoulder plate instead of a ball-shaped
+    # pauldron. The outward shoulder flare is intentional, but the inner edge
+    # hugs the upper arm. Lower ring resolution preserves the mobile tri cap.
+    center=shoulder+Vector((side*.025,.005,0))
     cx,cy,cz=center
-    loft([(cx,cy-.070,cz,.13,.115),(cx,cy-.03,cz,.147,.14),(cx,cy+.055,cz,.115,.113),(cx,cy+.10,cz,.065,.066),(cx,cy+.115,cz,.008,.008)],BLUE,'upperarm_'+suffix,sides=24)
-    loft([(cx,cy-.075,cz,.133,.118),(cx,cy-.055,cz,.143,.132)],GOLD,'upperarm_'+suffix,sides=24,steps=1)
-    for zsign in (-1,1):ellipsoid(center+Vector((side*.09,.00,zsign*.11)),(.014,.014,.01),GOLD,'upperarm_'+suffix,8,12)
+    loft([(cx,cy-.095,cz,.094,.077),
+          (cx+side*.017,cy-.064,cz,.113,.090),
+          (cx+side*.032,cy-.016,cz,.123,.098),
+          (cx+side*.026,cy+.033,cz,.107,.083),
+          (cx+side*.006,cy+.082,cz,.063,.056),
+          (cx,cy+.103,cz,.009,.009)],
+         BLUE,'upperarm_'+suffix,sides=16,steps=1)
+    # Thin articulated lower rim, not a second inflated armor sphere.
+    loft([(cx,cy-.099,cz,.098,.081),
+          (cx+side*.017,cy-.084,cz,.112,.089)],
+         GOLD,'upperarm_'+suffix,sides=16,steps=1)
+    # Distinct central ridge with a subtle gold perimeter on the front face.
+    tube([(cx+side*.007,cy+.075,cz+.051),
+          (cx+side*.038,cy+.031,cz+.084),
+          (cx+side*.049,cy-.023,cz+.096),
+          (cx+side*.029,cy-.082,cz+.078)],
+         [.004,.007,.008,.003],SILVER,'upperarm_'+suffix,6,2)
     mid=elbow.lerp(hand,.58)
     ellipsoid(mid+Vector((0,0,.025)),(.12,.083,.091),BLUE,'lowerarm_'+suffix,12,24)
     for t in (.12,.90):
