@@ -4,6 +4,12 @@ Lamont Labs · November 5, 2026
 
 Work proceeds one item at a time. Save and verify each checkpoint before beginning the next item.
 
+## Current owner priority
+
+The owner rejected the remaining visual quality on November 5 and requested actual 3D asset generation and acquisition. `ASSET_BATCH_01.md` records five original props, 28 downloaded environment meshes, four rigged outfit assemblies and 20 modular clothing parts, with a standalone Godot review project. These are staged candidates, delivered as an asset ZIP and rebuildable from pinned sources. They have not replaced the current playable cast.
+
+The next task is one visibly stronger Knight benchmark using intentional costume construction, head geometry, armor and materials, followed by motion and chase-camera review. The profiling and phone tasks below remain open and follow that benchmark.
+
 ## Completed checkpoints
 
 | Work | Saved source or evidence |

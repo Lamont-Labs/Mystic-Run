@@ -1,0 +1,103 @@
+{
+  "schema": 1,
+  "generator": "tools/build_asset_batch01.py",
+  "blender": "4.3.2",
+  "runtime_integration": false,
+  "assets": [
+    {
+      "id": "skyguard_sword",
+      "path": "review/assets/original/skyguard_sword.glb",
+      "purpose": "Knight weapon candidate with forged blade, inlaid fuller and wrapped grip",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "triangles": 1668,
+      "materials": 3,
+      "textures": 0,
+      "rigged": false,
+      "sha256": "4c98b4005fdc7f24d15b608e130faa8415f3746cd1344741eb57ddd7bf9cf0ad",
+      "bytes": 50300,
+      "dimensions_blender_xyz": [
+        0.6304,
+        0.118,
+        1.5
+      ],
+      "status": "REVIEW_ONLY"
+    },
+    {
+      "id": "moonspire_staff",
+      "path": "review/assets/original/moonspire_staff.glb",
+      "purpose": "Witch staff candidate with a layered crescent and suspended crystal",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "triangles": 5004,
+      "materials": 3,
+      "textures": 0,
+      "rigged": false,
+      "sha256": "4a2deec010677bc87726e6acb050357bf262df8b2e13a690b2db3785b842ad73",
+      "bytes": 134364,
+      "dimensions_blender_xyz": [
+        0.634,
+        0.1559,
+        2.1514
+      ],
+      "status": "REVIEW_ONLY"
+    },
+    {
+      "id": "citadel_lantern",
+      "path": "review/assets/original/citadel_lantern.glb",
+      "purpose": "Repeatable castle lantern with framed luminous windows and pointed enamel roof",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "triangles": 1476,
+      "materials": 3,
+      "textures": 0,
+      "rigged": false,
+      "sha256": "f9c381679bece87a992cd2b7049bafae1804244a72ea74110b6df85818ab23aa",
+      "bytes": 41184,
+      "dimensions_blender_xyz": [
+        0.48,
+        0.48,
+        1.2639
+      ],
+      "status": "REVIEW_ONLY"
+    },
+    {
+      "id": "relic_waystone",
+      "path": "review/assets/original/relic_waystone.glb",
+      "purpose": "Landmark or checkpoint art candidate with inset runes and caged crystal",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "triangles": 668,
+      "materials": 3,
+      "textures": 0,
+      "rigged": false,
+      "sha256": "88f1511476b49d9c903ca43e860f350eaac0c0d83a9c3dd2a802f4647fce0c9b",
+      "bytes": 25980,
+      "dimensions_blender_xyz": [
+        1.06,
+        1.06,
+        2.04
+      ],
+      "status": "REVIEW_ONLY"
+    },
+    {
+      "id": "skybridge_gateway",
+      "path": "review/assets/original/skybridge_gateway.glb",
+      "purpose": "Off-route signature architecture with cut masonry, inset panels and heraldic metalwork",
+      "publisher": "Lamont Labs",
+      "license": "LicenseRef-LamontLabs-Original",
+      "triangles": 3316,
+      "materials": 2,
+      "textures": 0,
+      "rigged": false,
+      "sha256": "4ecdaa9231838276e88a5778cc6bc342ec94e11738f8564d8a13ee2857ef269a",
+      "bytes": 178616,
+      "dimensions_blender_xyz": [
+        6.2,
+        1.18,
+        4.76
+      ],
+      "status": "REVIEW_ONLY"
+    }
+  ]
+}

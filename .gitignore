@@ -11,3 +11,7 @@ __pycache__/
 .signing/
 art/**/*.blend
 art/**/*.blend1
+art/asset_batch_01/source/
+art/asset_batch_01/.texture-cache/
+art/asset_batch_01/review/.godot/
+art/asset_batch_01/review/assets/

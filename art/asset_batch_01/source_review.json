@@ -1,0 +1,71 @@
+{
+  "baseline": "46239afe06531b94971c4a9bb087d4d087663ddf",
+  "reviewed_sources": [
+    {
+      "path": "docs/ART_DIRECTION.md",
+      "sha256": "3a694f17a91225ee92fbb78ef54c13d0e2e899b2c82bbe432063712941c8bea9",
+      "bytes": 4110
+    },
+    {
+      "path": "docs/MASTER_DEVELOPMENT_BLUEPRINT.md",
+      "sha256": "5a90171febf7c9f5f46f4ba01450611b506ee81e2a102135baccdd073f54cd14",
+      "bytes": 61789
+    },
+    {
+      "path": "docs/ANDROID_UPDATE_IDENTITY.md",
+      "sha256": "7970f6ef9e821ca18811bdb86128d59b5368bc2428b580ee01435970f72a54b8",
+      "bytes": 2705
+    },
+    {
+      "path": "docs/MATERIAL_FINISH_REFINEMENT.md",
+      "sha256": "1102d0d82251eb49630c3dfa56f3de6724b5ca0a1b17fc4132088e7baa218836",
+      "bytes": 4612
+    },
+    {
+      "path": "assets/asset_registry.json",
+      "sha256": "4b17b81667a5d8db0acb2f2a623716320d4a3d971e366306c2b32cb22e2df40f",
+      "bytes": 12151
+    },
+    {
+      "path": "game/hero.gd",
+      "sha256": "6a6972ad5dabda18d19d811b72a1bb068d57bd7ae0b422126c80b2921e170ff2",
+      "bytes": 16213
+    },
+    {
+      "path": "game/world.gd",
+      "sha256": "2595fe5f8328505c450d752f38cf2c7625c8be47dffad4e0ec31ffc5dcaf8775",
+      "bytes": 22586
+    },
+    {
+      "path": "game/asset_districts.gd",
+      "sha256": "816e38f40c7dfcea73a711e65209907ed0ac76796b9ce1b5e9d1450b403ce248",
+      "bytes": 4937
+    },
+    {
+      "path": "game/rig_motion.gd",
+      "sha256": "36282cddbbe44b488da0f3d856c592152ad6a9e846c2e4f1a7e963924dee5127",
+      "bytes": 4739
+    },
+    {
+      "path": "tools/asset_foundry.py",
+      "sha256": "97af5a8e4bf31148bfe6b48165ca275672e3c260bcfc9b4e9a58198634aae364",
+      "bytes": 10474
+    },
+    {
+      "path": "tools/build_knight_asset.py",
+      "sha256": "9145a99f6cfe2164435bdf33573239ecc3b554a2288834a8186c86e8d5fad42f",
+      "bytes": 25093
+    },
+    {
+      "path": "tools/character_mesh.py",
+      "sha256": "b8f92c384208de4d2bc2fce7d0762473108480b8dc989b06c4fca2ee646683b0",
+      "bytes": 13131
+    },
+    {
+      "path": "project source attachment",
+      "name": "01-MysticRun-Free-3D-Asset-Asset-Foundry-Android-Build-and-Google-Play-Readiness-Report.docx",
+      "sha256": "0b3d2376edbcd80192aa6c4caa05f23465e9e180efd304c92eaa0570449f12e9",
+      "bytes": 35978
+    }
+  ]
+}
