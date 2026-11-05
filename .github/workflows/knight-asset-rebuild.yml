@@ -72,10 +72,10 @@ jobs:
           entries=[]
           for file in sorted(base.rglob('*.png')):
               data=file.read_bytes()
-              assert data[:8] == b'\\x89PNG\\r\\n\\x1a\\n' and len(data)>1000, file
+              assert data[:8] == bytes.fromhex('89504e470d0a1a0a') and len(data)>1000, file
               entries.append({'path':file.as_posix(),'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
           assert len(entries)>=4, entries
-          (base/'capture-manifest.json').write_text(json.dumps({'source':'Actual Godot 4.7.2 Compatibility rendering of rebuilt Knight GLB','captures':entries,'scope':'Desktop software rendering; no phone FPS or art approval'},indent=2)+'\\n')
+          (base/'capture-manifest.json').write_text(json.dumps({'source':'Actual Godot 4.7.2 Compatibility rendering of rebuilt Knight GLB','captures':entries,'scope':'Desktop software rendering; no phone FPS or art approval'},indent=2))
           print('KNIGHT_CAPTURE_MANIFEST',len(entries))
           PY
       - name: Upload generated asset and evidence (review only)
