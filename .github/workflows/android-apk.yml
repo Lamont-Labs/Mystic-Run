@@ -27,6 +27,13 @@ jobs:
           target.write_bytes(base64.b64decode(encoded,validate=True))
           target.chmod(0o600)
           PY
+      - name: Verify permanent development signing certificate
+        env:
+          RELAY_KEY_PASSWORD: ${{ secrets.RELAY_DEVELOPMENT_KEY_PASSWORD }}
+        run: |
+          test -n "$RELAY_KEY_PASSWORD" || { echo 'Permanent signing password secret missing'; exit 1; }
+          keytool -exportcert -alias androiddebugkey -keystore "${RUNNER_TEMP}/owner-development.keystore" -storepass:env RELAY_KEY_PASSWORD > "${RUNNER_TEMP}/signing-cert.der"
+          echo '6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf  '"${RUNNER_TEMP}/signing-cert.der" | sha256sum -c -
       - name: Install pinned editor and Android templates
         run: |
           python3 tools/bootstrap_godot.py --cache "${RUNNER_TEMP}/godot" > "${RUNNER_TEMP}/godot-path"
@@ -44,7 +51,7 @@ jobs:
         env:
           RELAY_KEY_PASSWORD: ${{ secrets.RELAY_DEVELOPMENT_KEY_PASSWORD }}
         run: |
-          python3 tools/build_android.py --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --keystore "${RUNNER_TEMP}/owner-development.keystore" --version-code "$((1000 + GITHUB_RUN_NUMBER))" --version-name 0.6.1
+          python3 tools/build_android.py --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --keystore "${RUNNER_TEMP}/owner-development.keystore" --version-code "$((2000 + GITHUB_RUN_NUMBER))" --version-name 0.6.2
       - name: Preserve APK and evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
