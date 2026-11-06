@@ -1,0 +1,71 @@
+name: Knight gameplay camera evidence
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ['art/runtime-asset-integration']
+    paths:
+      - 'game/main.gd'
+      - 'tests/preview_character_benchmark.gd'
+      - 'tools/render_preview.py'
+      - '.github/workflows/knight-camera-evidence.yml'
+
+permissions:
+  contents: read
+
+jobs:
+  camera-evidence:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - name: Check out exact branch revision
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Install free software renderer
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb libgl1-mesa-dri libgl1 libx11-6 libxrandr2 libxi6 libxcursor1 libxinerama1
+      - name: Obtain pinned Godot and import game assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/bootstrap_godot.py --cache "${RUNNER_TEMP}/godot" > godot-path.txt
+          "$(cat godot-path.txt)" --headless --path . --editor --import --quit
+      - name: Capture actual chase camera at 540x960
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/render_preview.py --godot "$(cat godot-path.txt)" --output camera-evidence --character knight --script res://tests/preview_character_benchmark.gd --frames 100 --resolution 540x960
+      - name: Validate screenshots and benchmark provenance
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import hashlib,json,struct
+          from pathlib import Path
+          root=Path('camera-evidence')
+          shots=sorted(root.glob('knight-benchmark-*.png'))
+          assert len(shots)>=1, f'No gameplay screenshots: {list(root.iterdir())}'
+          evidence=[]
+          for path in shots:
+              data=path.read_bytes()
+              assert data[:8]==b'\x89PNG\r\n\x1a\n' and len(data)>1000,path
+              width,height=struct.unpack('>II',data[16:24])
+              assert width==540 and height==960,(path,width,height)
+              evidence.append({'file':path.name,'sha256':hashlib.sha256(data).hexdigest(),'width':width,'height':height})
+          bench=json.loads((root/'benchmark.json').read_text())
+          assert bench['runner']=='knight' and bench['selected_character_preserved'] is True,bench
+          assert bench['frames']==100 and bench['handoffs']==0,bench
+          report={'commit':'${{ github.sha }}','captures':evidence,'benchmark':bench,'scope':'Desktop render only; visual occlusion and Android performance require review'}
+          (root/'camera-evidence-manifest.json').write_text(json.dumps(report,indent=2))
+          print(json.dumps(report,indent=2))
+          PY
+      - name: Upload visual evidence even on failure
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: knight-camera-evidence
+          path: |
+            camera-evidence/
+            godot-path.txt
+          retention-days: 14
+          if-no-files-found: warn
