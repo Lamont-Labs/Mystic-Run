@@ -113,7 +113,9 @@ m.ellipsoid((0,1.655,.257),(.047,.001,.002),IVORY,'Head',6,16,'teeth')
 # Solid, curved membranes with scalloped outlines and deforming finger spars.
 for suffix,side in [('l',1),('r',-1)]:
     origin=Vector((side*.20,1.42,-.13))
-    tips=[Vector((side*.42,1.87,-.20)),Vector((side*.76,2.07,-.22)),Vector((side*1.12,1.78,-.26)),Vector((side*1.07,1.31,-.34)),Vector((side*.73,1.04,-.37)),Vector((side*.33,1.075,-.23))]
+    # Tuck the outer flight feathers into a readable chase-camera silhouette.
+    # Keep the membrane's six scallops, the four control bones and rig weights.
+    tips=[Vector((side*.42,1.85,-.20)),Vector((side*.70,1.98,-.22)),Vector((side*.94,1.76,-.26)),Vector((side*.93,1.36,-.34)),Vector((side*.68,1.11,-.37)),Vector((side*.33,1.075,-.23))]
     def weights(p,suffix=suffix):
         t=min(.72,max(0,(abs(p.x)-.41)/.82))
         return {'wing_root_'+suffix:1-t,'wing_tip_'+suffix:t}
@@ -174,11 +176,11 @@ def deform(name,p,tag):
     return p
 
 m.export({name:lambda p,tag,n=name:deform(n,p,tag) for name in ['Blink','Smile','Focus','Surprised','Hurt']},{
-    'revision':'authored-gargoyle-2','source_generator':'tools/build_gargoyle_asset.py',
+    'revision':'authored-gargoyle-3','source_generator':'tools/build_gargoyle_asset.py',
     'geometry':'Original Lamont Labs stone body, muzzle, horns, hands, feet, sash, wing membranes and spars.',
     'rig_source':'Previously admitted Quaternius CC0 humanoid skeleton, plus four original wing control bones.',
     'motion_source':'Existing admitted CC0 authored motion; original cosmetic wing control in game/hero.gd.',
     'blink_closure_y':1.793,
     'tube_side_faces_outward':True,
-    'modifications':['Original nonhuman visible geometry and five facial morph targets.','Four added wing bones and weighted curved membranes, retained humanoid motion rig.','Outward-facing curved detail surfaces for solid brows, horns, claws, piping and wing spars.'],
+    'modifications':['Original nonhuman visible geometry and five facial morph targets.','Four added wing bones and weighted curved membranes, retained humanoid motion rig.','Outward-facing curved detail surfaces for solid brows, horns, claws, piping and wing spars.','Compact outer wing contour for improved chase-camera readability without changing rig or wing controls.'],
 })
