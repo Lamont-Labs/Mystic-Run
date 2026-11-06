@@ -20,13 +20,17 @@ jobs:
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-      - name: Install Blender asset generator
+      - name: Install pinned Blender 4.3.2 with bundled Python dependencies
+        shell: bash
         run: |
-          sudo apt-get update
-          sudo apt-get install -y blender
-          blender --version
+          set -euo pipefail
+          curl -fL --retry 3 --output /tmp/blender.tar.xz https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz
+          echo '4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  /tmp/blender.tar.xz' | sha256sum --check
+          mkdir -p /tmp/mystic-blender
+          tar -xJf /tmp/blender.tar.xz -C /tmp/mystic-blender --strip-components=1
+          /tmp/mystic-blender/blender --background --factory-startup --python-exit-code 1 --python-expr "import bpy, numpy; assert bpy.app.version[:3] == (4,3,2)"
       - name: Generate original 3D scenery from source
-        run: blender --background --python tools/build_asset_batch01.py
+        run: /tmp/mystic-blender/blender --background --factory-startup --python-exit-code 1 --python tools/build_asset_batch01.py
       - name: Install authored geometry in game runtime
         run: |
           python3 - <<'PY'
