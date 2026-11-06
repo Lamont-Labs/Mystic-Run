@@ -95,7 +95,7 @@ jobs:
           print('GARGOYLE_CAPTURE_MANIFEST',len(entries))
           PY
       - name: Integrate verified Gargoyle asset into branch
-        if: ${{ github.event_name == 'workflow_dispatch' && inputs.integrate }}
+        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.integrate) }}
         shell: bash
         run: |
           set -euo pipefail
