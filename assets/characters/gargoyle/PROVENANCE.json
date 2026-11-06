@@ -1,5 +1,5 @@
 {
-  "revision": "authored-gargoyle-2",
+  "revision": "authored-gargoyle-3",
   "source_generator": "tools/build_gargoyle_asset.py",
   "geometry": "Original Lamont Labs stone body, muzzle, horns, hands, feet, sash, wing membranes and spars.",
   "rig_source": "Previously admitted Quaternius CC0 humanoid skeleton, plus four original wing control bones.",
@@ -9,7 +9,8 @@
   "modifications": [
     "Original nonhuman visible geometry and five facial morph targets.",
     "Four added wing bones and weighted curved membranes, retained humanoid motion rig.",
-    "Outward-facing curved detail surfaces for solid brows, horns, claws, piping and wing spars."
+    "Outward-facing curved detail surfaces for solid brows, horns, claws, piping and wing spars.",
+    "Compact outer wing contour for improved chase-camera readability without changing rig or wing controls."
   ],
   "character": "gargoyle",
   "blender_version": "4.3.2",
@@ -39,8 +40,8 @@
     "Hurt": 1915
   },
   "seam_normals_averaged": true,
-  "asset_sha256": "303d5e9a96638098a37a39a780c0f6b5ae7752fefa3127ffb6de2e8f703c957a",
-  "asset_bytes": 1506972,
+  "asset_sha256": "31d9e1c7aa04b44598060b5dd228fdfebba089862f347a4a4b061e53473b6b1f",
+  "asset_bytes": 1507608,
   "base_body_mesh_reused": false,
   "physical_phone_tested": false
 }
