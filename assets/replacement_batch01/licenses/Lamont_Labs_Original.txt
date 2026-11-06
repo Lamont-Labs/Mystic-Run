@@ -1,0 +1,11 @@
+MysticRun asset batch 01 original prop artwork
+Copyright 2026 Lamont Labs. All rights reserved.
+
+Skyguard sword, Moonspire staff, Citadel lantern, Relic waystone and Skybridge
+gateway are original geometry and vertex paint authored for this project by
+tools/build_asset_batch01.py. They contain no downloaded mesh components.
+
+LicenseRef-LamontLabs-Original records the owner's project artwork. It is not
+an open-source license or a grant to third parties. The downloaded KayKit and
+Quaternius assets retain the separate CC0 dedication preserved in their exact
+source license files. This notice does not relicense those third-party assets.

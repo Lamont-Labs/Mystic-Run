@@ -106,7 +106,7 @@ func _build() -> void:
 	match identity:
 		"knight":
 			mats.gold.next_pass=null
-			_build_cape(.38,1.43,.46,-.18)
+			_build_cape(.31,1.43,.58,-.18)
 		"gargoyle": _configure_wings()
 		"witch": _configure_witch_controls()
 	motion.advance(0.1,false,false,false,identity)
@@ -195,7 +195,9 @@ func animate(delta: float) -> void:
 	var squash:float=0 if reduced_motion or not moving or airborne or sliding else cos(clock*26*motion.locomotion_rate)*.025
 	body.position.y=bounce+(0.0 if reduced_motion else sin(clock*2)*.014)+absf(cheer)*.16
 	body.scale=Vector3(base_scale*1.12*(1+special*.10+spring-squash*.5),base_scale*.98*(1-special*.08-spring+squash),base_scale*1.12*(1+special*.10+spring-squash*.5))
-	if is_instance_valid(cape_fabric):cape_fabric.set_shader_parameter("motion_amount",0.0 if reduced_motion else 1.0)
+	if is_instance_valid(cape_fabric):
+		cape_fabric.set_shader_parameter("motion_amount",0.0 if reduced_motion else (1.0 if moving else 0.25))
+		cape_fabric.set_shader_parameter("motion_speed",clampf(motion.locomotion_rate,0.55,1.65) if moving else 0.5)
 	body.rotation.y=facing+sin(attack_time/.4*PI)*swipe_direction*.24+cheer*.08
 	body.rotation.x=lerpf(body.rotation.x,(-.12 if sliding else -.035 if moving else 0)+special*.08,1-exp(-delta*14))
 	body.visible=not (identity=="witch" and traversal_left>.3 and traversal_left<.47)
@@ -277,12 +279,19 @@ func _animate_wings(delta:float) -> void:
 	skeleton.force_update_all_bone_transforms()
 	var gliding:bool=airborne or traversal_left>0
 	var fold:float=1.43 if sliding else .10 if gliding else .94
-	var flutter:float=0.0 if reduced_motion else sin(clock*(8.0 if gliding else 3.0))*(.13 if gliding else .025)
+	# Wing roots carry the main sweep; tips lag and flex independently.
+	# Keep reduced-motion and slide-clearance behavior deterministic.
+	var frequency:float=8.0 if gliding else 5.0 if moving else 2.0
+	var amplitude:float=.15 if gliding else .065 if moving else .012
 	for control in wing_controls:
 		var side:float=control.side
 		var tip:bool=control.tip
+		var phase:float=clock*frequency-(.72 if tip else 0.0)
+		var flutter:float=0.0 if reduced_motion or sliding else sin(phase)*amplitude
+		var secondary:float=0.0 if reduced_motion or sliding else sin(phase*.53+side*.7)*amplitude*.35
 		var yaw:float=side*((.36 if sliding else .12 if gliding else .24) if tip else fold+flutter)
-		var lift:float=side*(flutter*.45 if tip else flutter)
+		if tip:yaw+=side*(flutter*.75+secondary)
+		var lift:float=side*(flutter*(.75 if tip else .35)+secondary)
 		var pitch:float=-1.25 if sliding and not tip else 0.0
 		var target:Quaternion=(Quaternion(control.right,pitch)*Quaternion(control.up,yaw)*Quaternion(control.forward,lift)*Quaternion(control.rest)).normalized()
 		if sliding and not tip:

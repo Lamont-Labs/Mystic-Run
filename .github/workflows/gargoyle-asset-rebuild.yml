@@ -1,0 +1,132 @@
+name: Gargoyle asset rebuild evidence
+
+on:
+  workflow_dispatch:
+    inputs:
+      integrate:
+        description: 'Commit verified regenerated Gargoyle assets to this branch'
+        required: false
+        type: boolean
+        default: false
+  push:
+    branches: ['art/runtime-asset-integration']
+    paths:
+      - 'tools/build_gargoyle_asset.py'
+      - 'tools/character_mesh.py'
+      - '.github/workflows/gargoyle-asset-rebuild.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  rebuild:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - name: Checkout
+        uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Install Blender 4.3.2 for isolated asset rebuild
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --output /tmp/blender.tar.xz https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz
+          echo '4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  /tmp/blender.tar.xz' | sha256sum --check
+          sha256sum /tmp/blender.tar.xz | tee blender-archive-sha256.txt
+          mkdir -p /tmp/mystic-blender
+          tar -xJf /tmp/blender.tar.xz -C /tmp/mystic-blender --strip-components=1
+          /tmp/mystic-blender/blender --background --factory-startup --python-expr "import bpy; assert bpy.app.version[:3] == (4,3,2), bpy.app.version_string"
+      - name: Rebuild Gargoyle GLB and provenance
+        run: /tmp/mystic-blender/blender --background --factory-startup --python-exit-code 1 --python tools/build_gargoyle_asset.py
+      - name: Validate generated Gargoyle GLB
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s assets/characters/gargoyle/gargoyle.glb
+          python3 - <<'PY'
+          import json,struct
+          from pathlib import Path
+          p=Path('assets/characters/gargoyle/gargoyle.glb')
+          raw=p.read_bytes()
+          assert raw[:4]==b'glTF' and struct.unpack_from('<I',raw,8)[0]==len(raw)
+          print(json.dumps({'asset':str(p),'bytes':len(raw),'valid_glb_header':True}))
+          PY
+      - name: Verify source-to-output modifications are isolated
+        shell: bash
+        run: |
+          set -euo pipefail
+          git status --short | tee gargoyle-generated-files.txt
+          git diff --name-only | while read -r file; do
+            case "$file" in
+              assets/characters/gargoyle/gargoyle.glb|assets/characters/gargoyle/PROVENANCE.json|assets/asset_registry.json) ;;
+              *) echo "Unexpected tracked change: $file"; exit 1 ;;
+            esac
+          done
+      - name: Import regenerated Gargoyle in pinned Godot
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/bootstrap_godot.py --cache "${RUNNER_TEMP}/godot" > godot-binary-path.txt
+          "$(cat godot-binary-path.txt)" --headless --path . --editor --import --quit
+          "$(cat godot-binary-path.txt)" --headless --path . --script res://tests/rig_motion.gd
+      - name: Capture actual Godot Gargoyle turnaround and chase-camera frames
+        shell: bash
+        run: |
+          set -euo pipefail
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends xvfb libgl1-mesa-dri libgl1 libx11-6 libxrandr2 libxi6 libxcursor1 libxinerama1
+          mkdir -p gargoyle-render-evidence/stage gargoyle-render-evidence/chase
+          python3 tools/render_preview.py --godot "$(cat godot-binary-path.txt)" --output gargoyle-render-evidence/stage --character gargoyle --script res://tests/preview_authored_character.gd --frames 120
+          python3 tools/render_preview.py --godot "$(cat godot-binary-path.txt)" --output gargoyle-render-evidence/chase --character gargoyle --script res://tests/preview_character_benchmark.gd --frames 100
+          test -s gargoyle-render-evidence/stage/gargoyle-front.png
+          test -s gargoyle-render-evidence/stage/gargoyle-rear.png
+          test -s gargoyle-render-evidence/stage/gargoyle-side.png
+          test -s gargoyle-render-evidence/chase/gargoyle-benchmark-0040.png
+          python3 - <<'PY'
+          import hashlib, json
+          from pathlib import Path
+          base=Path('gargoyle-render-evidence')
+          entries=[]
+          for file in sorted(base.rglob('*.png')):
+              data=file.read_bytes()
+              assert data[:8] == bytes.fromhex('89504e470d0a1a0a') and len(data)>1000, file
+              entries.append({'path':file.as_posix(),'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
+          assert len(entries)>=4, entries
+          (base/'capture-manifest.json').write_text(json.dumps({'source':'Actual Godot 4.7.2 Compatibility rendering of rebuilt Gargoyle GLB','captures':entries,'scope':'Desktop software rendering; no phone FPS or art approval'},indent=2))
+          print('GARGOYLE_CAPTURE_MANIFEST',len(entries))
+          PY
+      - name: Integrate verified Gargoyle asset into branch
+        if: ${{ github.event_name == 'push' || (github.event_name == 'workflow_dispatch' && inputs.integrate) }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "art/runtime-asset-integration"
+          git diff --name-only | while read -r file; do
+            case "$file" in
+              assets/characters/gargoyle/gargoyle.glb|assets/characters/gargoyle/PROVENANCE.json|assets/asset_registry.json) ;;
+              *) echo "Refusing unexpected tracked change: $file"; exit 1 ;;
+            esac
+          done
+          git add -- assets/characters/gargoyle/gargoyle.glb assets/characters/gargoyle/PROVENANCE.json assets/asset_registry.json
+          if git diff --cached --quiet; then
+            echo 'Regenerated asset already matches committed files'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Integrate verified Gargoyle authored GLB and provenance'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Upload generated asset and evidence (review only)
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: gargoyle-rebuild-review
+          path: |
+            assets/characters/gargoyle/gargoyle.glb
+            assets/characters/gargoyle/PROVENANCE.json
+            assets/asset_registry.json
+            gargoyle-generated-files.txt
+            blender-archive-sha256.txt
+            godot-binary-path.txt
+            gargoyle-render-evidence/
+          retention-days: 14
+          if-no-files-found: warn

@@ -496,12 +496,12 @@ func _physics_process(delta: float) -> void:
 	hero_key.position=Vector3(motor.position.x+2.6,ground_y+3.5,3.0)
 	hero_rim.position=Vector3(motor.position.x-2.5,ground_y+3.2,-1.0)
 	var target_height:float=ground_y+3.2+clampf(motor.position.y-ground_y,0,2)*.10
-	var view_target:=Vector3(motor.position.x*.70,target_height,6.1)
+	var view_target:=Vector3(motor.position.x*.70,target_height,5.55)
 	camera.position=camera.position.lerp(view_target,1-exp(-delta*8))
 	camera.position.x=clampf(camera.position.x,motor.position.x-.9,motor.position.x+.9)
 	var ahead_height:float=CourseProfile.height_at(distance+18) if course_id!="training" else 0.0
-	camera.look_at(Vector3(motor.position.x*.50,1.45+lerpf(ground_y,ahead_height,.62),-18))
-	var target_fov:float=66.0 if profile.settings.reduced_motion else 72+clampf(run_speed-18,0,6)*.65
+	camera.look_at(Vector3(motor.position.x*.50,1.45+lerpf(ground_y,ahead_height,.62),-16.0))
+	var target_fov:float=64.0 if profile.settings.reduced_motion else 69.0+clampf(run_speed-18,0,6)*.65
 	camera.fov=lerpf(camera.fov,target_fov,1-exp(-delta*4))
 	impact_shake=maxf(0,impact_shake-delta*4)
 	camera.h_offset=0 if profile.settings.reduced_motion else sin(clock*63)*impact_shake*.022;camera.v_offset=0 if profile.settings.reduced_motion else cos(clock*77)*impact_shake*.015

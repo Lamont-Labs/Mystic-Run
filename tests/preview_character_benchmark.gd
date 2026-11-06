@@ -17,7 +17,7 @@ func run() -> void:
 	for i in range(4):await physics_frame
 	for i in range(length):
 		game._qa_control()
-		if i in [40,360,750,1200,1650]:await game._capture(identity+"-benchmark-%04d"%i)
+		if i in [40,80,120,360,750,1200,1650]:await game._capture(identity+"-benchmark-%04d"%i)
 		await process_frame
 	var result:Dictionary={"frames":length,"recording_fps":30,"seed":73129,"runner":identity,"course":"endless","distance_m":game.distance,"damage":game.run_damage,"handoffs":game.total_handoffs,"selected_character_preserved":game.selected==identity and game.core.active_character==identity,"scope":"Actual desktop render with disclosed automated controls; not human playability, on-device performance or art approval"}
 	print("CHARACTER_BENCHMARK ",JSON.stringify(result))

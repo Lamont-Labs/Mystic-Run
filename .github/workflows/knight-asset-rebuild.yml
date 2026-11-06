@@ -3,9 +3,10 @@ name: Knight asset rebuild evidence
 on:
   workflow_dispatch:
   push:
-    branches: ['art/asset-upgrade-batch-01']
+    branches: ['art/asset-upgrade-batch-01', 'art/runtime-asset-integration']
     paths:
       - 'tools/build_knight_asset.py'
+      - 'tools/character_mesh.py'
       - 'tools/verify_knight_glb.py'
       - '.github/workflows/knight-asset-rebuild.yml'
 

@@ -1,0 +1,81 @@
+name: MysticRun replacement scenery integration check
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - art/runtime-asset-integration
+    paths:
+      - game/asset_districts.gd
+      - tools/build_asset_batch01.py
+      - tools/import_handoff_assets.py
+      - .github/workflows/verify-replacement-scenery.yml
+
+permissions:
+  contents: write
+
+jobs:
+  replacement-scenery:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - name: Install pinned Blender 4.3.2 with bundled Python dependencies
+        shell: bash
+        run: |
+          set -euo pipefail
+          curl -fL --retry 3 --output /tmp/blender.tar.xz https://download.blender.org/release/Blender4.3/blender-4.3.2-linux-x64.tar.xz
+          echo '4da1c956673c0485e63054e563ee69198cc8f80d8157dd7592dffc8a6a5592e6  /tmp/blender.tar.xz' | sha256sum --check
+          mkdir -p /tmp/mystic-blender
+          tar -xJf /tmp/blender.tar.xz -C /tmp/mystic-blender --strip-components=1
+          /tmp/mystic-blender/blender --background --factory-startup --python-exit-code 1 --python-expr "import bpy, numpy; assert bpy.app.version[:3] == (4,3,2)"
+      - name: Generate original 3D scenery from source
+        run: /tmp/mystic-blender/blender --background --factory-startup --python-exit-code 1 --python tools/build_asset_batch01.py
+      - name: Install authored geometry in game runtime
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          import shutil,struct
+          src=Path('art/asset_batch_01/review/assets/original')
+          dst=Path('assets/replacement_batch01/original')
+          dst.mkdir(parents=True,exist_ok=True)
+          for name in ('citadel_lantern','moonspire_staff','relic_waystone','skybridge_gateway','skyguard_sword'):
+              file=src/(name+'.glb')
+              data=file.read_bytes()
+              assert len(data)>20 and data[:4]==b'glTF' and struct.unpack_from('<I',data,8)[0]==len(data),name
+              shutil.copyfile(file,dst/file.name)
+              print(name,len(data))
+          assert len(list(dst.glob('*.glb')))==5
+          PY
+      - name: Install pinned Godot editor
+        run: |
+          python3 tools/bootstrap_godot.py --cache "${RUNNER_TEMP}/godot" > "${RUNNER_TEMP}/godot-path"
+      - name: Import project and verify runtime resource loading
+        run: |
+          GODOT="$(cat "${RUNNER_TEMP}/godot-path")"
+          "$GODOT" --headless --path . --editor --import --quit
+          "$GODOT" --headless --path . --script tools/check_replacement_scenery.gd
+      - name: Commit verified original scenery to development branch
+        if: ${{ github.event_name == 'push' && github.ref_name == 'art/runtime-asset-integration' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- assets/replacement_batch01/original/citadel_lantern.glb assets/replacement_batch01/original/moonspire_staff.glb assets/replacement_batch01/original/relic_waystone.glb assets/replacement_batch01/original/skybridge_gateway.glb assets/replacement_batch01/original/skyguard_sword.glb
+          test "$(git diff --cached --name-only | wc -l)" -le 5
+          if git diff --cached --quiet; then
+            echo 'Original scenery already integrated'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Integrate verified original replacement scenery GLBs'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+      - name: Preserve verified geometry and logs for build handoff
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mysticrun-replacement-scenery
+          path: |
+            assets/replacement_batch01/original/*.glb
+            art/asset_batch_01/original-assets.json
+          if-no-files-found: error
+          retention-days: 30
