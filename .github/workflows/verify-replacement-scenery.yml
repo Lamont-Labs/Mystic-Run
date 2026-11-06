@@ -39,13 +39,13 @@ jobs:
           src=Path('art/asset_batch_01/review/assets/original')
           dst=Path('assets/replacement_batch01/original')
           dst.mkdir(parents=True,exist_ok=True)
-          for name in ('skybridge_gateway','relic_waystone'):
+          for name in ('citadel_lantern','moonspire_staff','relic_waystone','skybridge_gateway','skyguard_sword'):
               file=src/(name+'.glb')
               data=file.read_bytes()
               assert len(data)>20 and data[:4]==b'glTF' and struct.unpack_from('<I',data,8)[0]==len(data),name
               shutil.copyfile(file,dst/file.name)
               print(name,len(data))
-          assert len(list(dst.glob('*.glb')))==2
+          assert len(list(dst.glob('*.glb')))==5
           PY
       - name: Install pinned Godot editor
         run: |
@@ -60,8 +60,8 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          git add -- assets/replacement_batch01/original/skybridge_gateway.glb assets/replacement_batch01/original/relic_waystone.glb
-          test "$(git diff --cached --name-only | wc -l)" -le 2
+          git add -- assets/replacement_batch01/original/citadel_lantern.glb assets/replacement_batch01/original/moonspire_staff.glb assets/replacement_batch01/original/relic_waystone.glb assets/replacement_batch01/original/skybridge_gateway.glb assets/replacement_batch01/original/skyguard_sword.glb
+          test "$(git diff --cached --name-only | wc -l)" -le 5
           if git diff --cached --quiet; then
             echo 'Original scenery already integrated'
             exit 0
