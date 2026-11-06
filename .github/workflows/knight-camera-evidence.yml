@@ -7,6 +7,7 @@ on:
     paths:
       - 'game/main.gd'
       - 'game/hero.gd'
+      - 'assets/shaders/embroidered_cloth.gdshader'
       - 'tests/preview_character_benchmark.gd'
       - 'tools/render_preview.py'
       - '.github/workflows/knight-camera-evidence.yml'
