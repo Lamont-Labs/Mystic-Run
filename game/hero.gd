@@ -106,7 +106,7 @@ func _build() -> void:
 	match identity:
 		"knight":
 			mats.gold.next_pass=null
-			_build_cape(.38,1.43,.46,-.18)
+			_build_cape(.31,1.43,.58,-.18)
 		"gargoyle": _configure_wings()
 		"witch": _configure_witch_controls()
 	motion.advance(0.1,false,false,false,identity)
