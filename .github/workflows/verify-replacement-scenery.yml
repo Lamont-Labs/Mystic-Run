@@ -12,7 +12,7 @@ on:
       - .github/workflows/verify-replacement-scenery.yml
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   replacement-scenery:
@@ -51,6 +51,21 @@ jobs:
           GODOT="$(cat "${RUNNER_TEMP}/godot-path")"
           "$GODOT" --headless --path . --editor --import --quit
           "$GODOT" --headless --path . --script tools/check_replacement_scenery.gd
+      - name: Commit verified original scenery to development branch
+        if: ${{ github.event_name == 'push' && github.ref_name == 'art/runtime-asset-integration' }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          git add -- assets/replacement_batch01/original/skybridge_gateway.glb assets/replacement_batch01/original/relic_waystone.glb
+          test "$(git diff --cached --name-only | wc -l)" -le 2
+          if git diff --cached --quiet; then
+            echo 'Original scenery already integrated'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Integrate verified original replacement scenery GLBs'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
       - name: Preserve verified geometry and logs for build handoff
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
