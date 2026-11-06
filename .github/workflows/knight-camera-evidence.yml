@@ -100,7 +100,7 @@ jobs:
               for frame in (40,80,120):
                   path=root/f'{character}-benchmark-{frame:04d}.png'
                   data=path.read_bytes()
-                  assert len(data)>1000 and data[:8]==b'\\x89PNG\\r\\n\\x1a\\n',path
+                  assert len(data)>1000 and data[:8]==b'\x89PNG\r\n\x1a\n',path
                   assert struct.unpack('>II',data[16:24])==(540,960),path
                   screenshots.append({'file':path.name,'sha256':hashlib.sha256(data).hexdigest()})
               evidence.append({'character':character,'benchmark':report,'screenshots':screenshots})
