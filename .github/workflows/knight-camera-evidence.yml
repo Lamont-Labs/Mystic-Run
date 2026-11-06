@@ -9,6 +9,7 @@ on:
       - 'game/hero.gd'
       - 'assets/shaders/embroidered_cloth.gdshader'
       - 'tests/preview_character_benchmark.gd'
+      - 'tests/knight_cloth_response.gd'
       - 'tools/render_preview.py'
       - '.github/workflows/knight-camera-evidence.yml'
 
@@ -37,6 +38,23 @@ jobs:
         run: |
           set -euo pipefail
           python3 tools/render_preview.py --godot "$(cat godot-path.txt)" --output camera-evidence --character knight --script res://tests/preview_character_benchmark.gd --frames 130 --resolution 540x960
+      - name: Compare idle, running and fast cloth response
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 tools/render_preview.py --godot "$(cat godot-path.txt)" --output cloth-response-evidence --character knight --script res://tests/knight_cloth_response.gd --frames 90 --resolution 540x960
+          python3 - <<'PY'
+          import json
+          from pathlib import Path
+          root=Path('cloth-response-evidence')
+          report=json.loads((root/'cloth-response.json').read_text())
+          assert report['passed'] is True,report
+          assert [x['state'] for x in report['states']]==['idle','run','fast'],report
+          for state in ('idle','run','fast'):
+              path=root/f'knight-cloth-{state}.png'
+              assert path.exists() and path.stat().st_size>1000,path
+          print(json.dumps(report,indent=2))
+          PY
       - name: Validate screenshots and benchmark provenance
         shell: bash
         run: |
@@ -68,6 +86,7 @@ jobs:
           name: knight-camera-evidence
           path: |
             camera-evidence/
+            cloth-response-evidence/
             godot-path.txt
           retention-days: 14
           if-no-files-found: warn
