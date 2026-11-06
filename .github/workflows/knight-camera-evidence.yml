@@ -35,7 +35,7 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          python3 tools/render_preview.py --godot "$(cat godot-path.txt)" --output camera-evidence --character knight --script res://tests/preview_character_benchmark.gd --frames 100 --resolution 540x960
+          python3 tools/render_preview.py --godot "$(cat godot-path.txt)" --output camera-evidence --character knight --script res://tests/preview_character_benchmark.gd --frames 130 --resolution 540x960
       - name: Validate screenshots and benchmark provenance
         shell: bash
         run: |
@@ -45,7 +45,7 @@ jobs:
           from pathlib import Path
           root=Path('camera-evidence')
           shots=sorted(root.glob('knight-benchmark-*.png'))
-          assert len(shots)>=1, f'No gameplay screenshots: {list(root.iterdir())}'
+          assert len(shots)>=3, f'No gameplay screenshots: {list(root.iterdir())}'
           evidence=[]
           for path in shots:
               data=path.read_bytes()
@@ -55,7 +55,7 @@ jobs:
               evidence.append({'file':path.name,'sha256':hashlib.sha256(data).hexdigest(),'width':width,'height':height})
           bench=json.loads((root/'benchmark.json').read_text())
           assert bench['runner']=='knight' and bench['selected_character_preserved'] is True,bench
-          assert bench['frames']==100 and bench['handoffs']==0,bench
+          assert bench['frames']==130 and bench['handoffs']==0,bench
           report={'commit':'${{ github.sha }}','captures':evidence,'benchmark':bench,'scope':'Desktop render only; visual occlusion and Android performance require review'}
           (root/'camera-evidence-manifest.json').write_text(json.dumps(report,indent=2))
           print(json.dumps(report,indent=2))
