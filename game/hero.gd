@@ -279,12 +279,19 @@ func _animate_wings(delta:float) -> void:
 	skeleton.force_update_all_bone_transforms()
 	var gliding:bool=airborne or traversal_left>0
 	var fold:float=1.43 if sliding else .10 if gliding else .94
-	var flutter:float=0.0 if reduced_motion else sin(clock*(8.0 if gliding else 3.0))*(.13 if gliding else .025)
+	# Wing roots carry the main sweep; tips lag and flex independently.
+	# Keep reduced-motion and slide-clearance behavior deterministic.
+	var frequency:float=8.0 if gliding else 5.0 if moving else 2.0
+	var amplitude:float=.15 if gliding else .065 if moving else .012
 	for control in wing_controls:
 		var side:float=control.side
 		var tip:bool=control.tip
+		var phase:float=clock*frequency-(.72 if tip else 0.0)
+		var flutter:float=0.0 if reduced_motion or sliding else sin(phase)*amplitude
+		var secondary:float=0.0 if reduced_motion or sliding else sin(phase*.53+side*.7)*amplitude*.35
 		var yaw:float=side*((.36 if sliding else .12 if gliding else .24) if tip else fold+flutter)
-		var lift:float=side*(flutter*.45 if tip else flutter)
+		if tip:yaw+=side*(flutter*.75+secondary)
+		var lift:float=side*(flutter*(.75 if tip else .35)+secondary)
 		var pitch:float=-1.25 if sliding and not tip else 0.0
 		var target:Quaternion=(Quaternion(control.right,pitch)*Quaternion(control.up,yaw)*Quaternion(control.forward,lift)*Quaternion(control.rest)).normalized()
 		if sliding and not tip:
