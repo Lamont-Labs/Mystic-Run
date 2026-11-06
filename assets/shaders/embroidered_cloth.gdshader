@@ -4,12 +4,13 @@ uniform float half_width=0.44;
 uniform float top=1.42;
 uniform float bottom=0.38;
 uniform float motion_amount=1.0;
+uniform float motion_speed=1.0;
 uniform vec4 cloth_color:source_color=vec4(1.0,0.35,0.25,1.0);
 varying vec3 cloth_position;
 void vertex(){
  cloth_position=VERTEX;
  float v=clamp((top-VERTEX.y)/(top-bottom),0.0,1.0);
- // Root stays anchored; two waves give the lower hem a slower follow-through.\n float hem_weight=v*v*(3.0-2.0*v);\n float stride_wave=sin(TIME*6.5-v*3.2)*0.033;\n float follow_wave=sin(TIME*3.2+VERTEX.x*4.5-v*2.0)*0.018;\n VERTEX.z+=motion_amount*hem_weight*(stride_wave+follow_wave);\n VERTEX.x+=motion_amount*hem_weight*0.010*sin(TIME*4.1-v*2.4+VERTEX.x*3.0);
+ // Root stays anchored; two waves give the lower hem a slower follow-through.\n float hem_weight=v*v*(3.0-2.0*v);\n float stride_wave=sin(TIME*6.5*motion_speed-v*3.2)*0.033;\n float follow_wave=sin(TIME*3.2*motion_speed+VERTEX.x*4.5-v*2.0)*0.018;\n VERTEX.z+=motion_amount*hem_weight*(stride_wave+follow_wave);\n VERTEX.x+=motion_amount*hem_weight*0.010*sin(TIME*4.1*motion_speed-v*2.4+VERTEX.x*3.0);
 }
 void fragment(){
  float v=clamp((top-cloth_position.y)/(top-bottom),0.0,1.0);
