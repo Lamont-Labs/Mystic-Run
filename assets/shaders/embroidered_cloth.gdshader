@@ -9,7 +9,7 @@ varying vec3 cloth_position;
 void vertex(){
  cloth_position=VERTEX;
  float v=clamp((top-VERTEX.y)/(top-bottom),0.0,1.0);
- VERTEX.z+=motion_amount*v*v*(sin(TIME*4.0+v*2.2)*0.024+sin(TIME*2.7+VERTEX.x*3.2+v*1.5)*0.011);
+ // Root stays anchored; two waves give the lower hem a slower follow-through.\n float hem_weight=v*v*(3.0-2.0*v);\n float stride_wave=sin(TIME*6.5-v*3.2)*0.033;\n float follow_wave=sin(TIME*3.2+VERTEX.x*4.5-v*2.0)*0.018;\n VERTEX.z+=motion_amount*hem_weight*(stride_wave+follow_wave);\n VERTEX.x+=motion_amount*hem_weight*0.010*sin(TIME*4.1-v*2.4+VERTEX.x*3.0);
 }
 void fragment(){
  float v=clamp((top-cloth_position.y)/(top-bottom),0.0,1.0);
