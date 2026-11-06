@@ -195,7 +195,9 @@ func animate(delta: float) -> void:
 	var squash:float=0 if reduced_motion or not moving or airborne or sliding else cos(clock*26*motion.locomotion_rate)*.025
 	body.position.y=bounce+(0.0 if reduced_motion else sin(clock*2)*.014)+absf(cheer)*.16
 	body.scale=Vector3(base_scale*1.12*(1+special*.10+spring-squash*.5),base_scale*.98*(1-special*.08-spring+squash),base_scale*1.12*(1+special*.10+spring-squash*.5))
-	if is_instance_valid(cape_fabric):cape_fabric.set_shader_parameter("motion_amount",0.0 if reduced_motion else 1.0)
+	if is_instance_valid(cape_fabric):
+		cape_fabric.set_shader_parameter("motion_amount",0.0 if reduced_motion else (1.0 if moving else 0.25))
+		cape_fabric.set_shader_parameter("motion_speed",clampf(motion.locomotion_rate,0.55,1.65) if moving else 0.5)
 	body.rotation.y=facing+sin(attack_time/.4*PI)*swipe_direction*.24+cheer*.08
 	body.rotation.x=lerpf(body.rotation.x,(-.12 if sliding else -.035 if moving else 0)+special*.08,1-exp(-delta*14))
 	body.visible=not (identity=="witch" and traversal_left>.3 and traversal_left<.47)
