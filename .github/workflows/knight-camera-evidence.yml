@@ -79,6 +79,34 @@ jobs:
           (root/'camera-evidence-manifest.json').write_text(json.dumps(report,indent=2))
           print(json.dumps(report,indent=2))
           PY
+      - name: Validate reusable gameplay camera benchmark for all characters
+        shell: bash
+        run: |
+          set -euo pipefail
+          for character in knight gargoyle witch; do
+            python3 tools/render_preview.py --godot "$(cat godot-path.txt)" --output "character-evidence/$character" --character "$character" --script res://tests/preview_character_benchmark.gd --frames 130 --resolution 540x960
+          done
+          python3 - <<'PY'
+          import hashlib,json,struct
+          from pathlib import Path
+          evidence=[]
+          for character in ('knight','gargoyle','witch'):
+              root=Path('character-evidence')/character
+              report=json.loads((root/'benchmark.json').read_text())
+              assert report['runner']==character,report
+              assert report['selected_character_preserved'] is True,report
+              assert report['frames']==130 and report['handoffs']==0,report
+              screenshots=[]
+              for frame in (40,80,120):
+                  path=root/f'{character}-benchmark-{frame:04d}.png'
+                  data=path.read_bytes()
+                  assert len(data)>1000 and data[:8]==b'\\x89PNG\\r\\n\\x1a\\n',path
+                  assert struct.unpack('>II',data[16:24])==(540,960),path
+                  screenshots.append({'file':path.name,'sha256':hashlib.sha256(data).hexdigest()})
+              evidence.append({'character':character,'benchmark':report,'screenshots':screenshots})
+          Path('character-evidence/manifest.json').write_text(json.dumps({'commit':'${{ github.sha }}','characters':evidence,'scope':'Desktop-only visual and gameplay smoke checks, not final art approval'},indent=2))
+          print(json.dumps(evidence,indent=2))
+          PY
       - name: Upload visual evidence even on failure
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
@@ -87,6 +115,7 @@ jobs:
           path: |
             camera-evidence/
             cloth-response-evidence/
+            character-evidence/
             godot-path.txt
           retention-days: 14
           if-no-files-found: warn
