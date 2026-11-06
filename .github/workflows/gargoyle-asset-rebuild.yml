@@ -2,6 +2,12 @@ name: Gargoyle asset rebuild evidence
 
 on:
   workflow_dispatch:
+    inputs:
+      integrate:
+        description: 'Commit verified regenerated Gargoyle assets to this branch'
+        required: false
+        type: boolean
+        default: false
   push:
     branches: ['art/runtime-asset-integration']
     paths:
@@ -10,7 +16,7 @@ on:
       - '.github/workflows/gargoyle-asset-rebuild.yml'
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   rebuild:
@@ -86,8 +92,29 @@ jobs:
               entries.append({'path':file.as_posix(),'bytes':len(data),'sha256':hashlib.sha256(data).hexdigest()})
           assert len(entries)>=4, entries
           (base/'capture-manifest.json').write_text(json.dumps({'source':'Actual Godot 4.7.2 Compatibility rendering of rebuilt Gargoyle GLB','captures':entries,'scope':'Desktop software rendering; no phone FPS or art approval'},indent=2))
-          print('KNIGHT_CAPTURE_MANIFEST',len(entries))
+          print('GARGOYLE_CAPTURE_MANIFEST',len(entries))
           PY
+      - name: Integrate verified Gargoyle asset into branch
+        if: ${{ github.event_name == 'workflow_dispatch' && inputs.integrate }}
+        shell: bash
+        run: |
+          set -euo pipefail
+          test "${GITHUB_REF_NAME}" = "art/runtime-asset-integration"
+          git diff --name-only | while read -r file; do
+            case "$file" in
+              assets/characters/gargoyle/gargoyle.glb|assets/characters/gargoyle/PROVENANCE.json|assets/asset_registry.json) ;;
+              *) echo "Refusing unexpected tracked change: $file"; exit 1 ;;
+            esac
+          done
+          git add -- assets/characters/gargoyle/gargoyle.glb assets/characters/gargoyle/PROVENANCE.json assets/asset_registry.json
+          if git diff --cached --quiet; then
+            echo 'Regenerated asset already matches committed files'
+            exit 0
+          fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Integrate verified Gargoyle authored GLB and provenance'
+          git push origin "HEAD:${GITHUB_REF_NAME}"
       - name: Upload generated asset and evidence (review only)
         if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
