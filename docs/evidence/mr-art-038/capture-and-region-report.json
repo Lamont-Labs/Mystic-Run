@@ -1,11 +1,17 @@
 {
-  "status": "TECHNICAL PASS / VISUAL HOLD",
+  "status": "CONCEPT-ALIGNED FRONT/REAR ART / ACTION-POSE LIMITATION",
   "concept_binary_available": true,
   "approved_concept_path": "references/01-character-concept.png",
   "approved_concept_sha256": "07e7541d8d5a91d1733186930d5d4ed759400021c8af3391f068ade217f01e71",
   "owner_confirmed_visual_authority_for": ["Knight", "Gargoyle", "Witch"],
   "owner_said_3d_is_not_required": true,
-  "visual_approval_blocker": "Current game models remain visually simpler than the approved illustration; representation direction has not yet been chosen",
+  "owner_selected_2d_gameplay_presentation": true,
+  "visual_approval_blocker": null,
+  "action_pose_limitation": "Approved sheet supplies front/rear stance views only; sprites use whole-figure movement and do not provide independent action poses",
+  "concept_sprite_gameplay_preview": {
+    "path": "docs/previews/mr-art-038/concept-sprites-gameplay.jpg",
+    "sha256": "5f9c641638c5fce5dcd893f9c79d266f046f5b0170a0cbde131aa527f180ecd5"
+  },
   "before_glb_sha256": "f87a74d4d4f70a511305ebcbeb2998f7aa665e74427e010e9a2bccb623c961f3",
   "after_glb_sha256": "0600c08ef102d93d8a15205b667ad18ea825eaf5ebd96ad97decfa0b1f39bc97",
   "preserved_non_upper_armor_regions": {

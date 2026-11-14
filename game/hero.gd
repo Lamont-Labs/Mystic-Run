@@ -29,6 +29,9 @@ var was_airborne:bool=false
 var landing_spring:float=0.0
 var cape_fabric:ShaderMaterial
 var authored_mesh:MeshInstance3D
+var concept_sprite:Sprite3D
+var concept_textures:Dictionary={}
+var concept_sprite_height:float=2.15
 var blink_clock:float=0.0
 var face_shapes:Dictionary={}
 var face_weights:Dictionary={"Smile":0.0,"Focus":0.0,"Surprised":0.0,"Hurt":0.0}
@@ -101,6 +104,8 @@ func _build() -> void:
 			authored_material.set_shader_parameter("character_kind",["knight","gargoyle","witch"].find(identity))
 			authored_material.set_shader_parameter("finish_detail",FINISH_DETAIL)
 			child.material_override=authored_material
+	model.visible=false
+	_build_concept_sprite()
 	motion=Motion.new()
 	motion.configure(skeleton,identity)
 	match identity:
@@ -113,6 +118,25 @@ func _build() -> void:
 	if identity=="gargoyle":_animate_wings(1.0)
 	if identity=="witch":_animate_witch_controls(1.0)
 	skeleton.force_update_all_bone_transforms()
+
+func _build_concept_sprite() -> void:
+	var heights:Dictionary={"knight":2.15,"gargoyle":2.48,"witch":2.22}
+	concept_sprite_height=float(heights[identity])
+	concept_textures={
+		"front":load("res://assets/characters/concept-sprites/"+identity+"_front.png"),
+		"rear":load("res://assets/characters/concept-sprites/"+identity+"_rear.png"),
+	}
+	concept_sprite=Sprite3D.new()
+	concept_sprite.name="ApprovedConceptSprite"
+	concept_sprite.texture=concept_textures.front
+	concept_sprite.billboard=BaseMaterial3D.BILLBOARD_ENABLED
+	concept_sprite.shaded=false
+	concept_sprite.double_sided=true
+	concept_sprite.alpha_cut=SpriteBase3D.ALPHA_CUT_DISABLED
+	concept_sprite.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR
+	concept_sprite.pixel_size=concept_sprite_height/float(concept_sprite.texture.get_height())
+	concept_sprite.position.y=concept_sprite_height*.5
+	body.add_child(concept_sprite)
 
 func sentinel() -> void:
 	facing=0;body.rotation.y=0
@@ -127,6 +151,8 @@ func sentinel() -> void:
 			child.material_override.set_shader_parameter("highlight_color",Color("ea5b88"))
 	if is_instance_valid(authored_mesh):
 		authored_mesh.material_override.set_shader_parameter("sentinel_palette",true)
+	if is_instance_valid(concept_sprite):
+		concept_sprite.modulate=Color("d7bcff")
 	set_meta("sentinel",true)
 
 
@@ -171,6 +197,14 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 
 func animate(delta: float) -> void:
 	clock+=delta
+	if is_instance_valid(concept_sprite):
+		var view:String="front" if absf(wrapf(facing,-PI,PI))<PI*.5 else "rear"
+		if concept_sprite.texture!=concept_textures[view]:
+			concept_sprite.texture=concept_textures[view]
+			concept_sprite.pixel_size=concept_sprite_height/float(concept_sprite.texture.get_height())
+		concept_sprite.scale=Vector3(1.0,.72 if sliding else 1.0,1.0)
+		concept_sprite.position.y=concept_sprite_height*(.5 if not sliding else .35)
+		concept_sprite.rotation.z=sin(attack_time/.4*PI)*swipe_direction*.055 if attack_time>0 else 0.0
 	if is_instance_valid(authored_mesh):
 		_animate_face(delta)
 	hurt_left=maxf(0.0,hurt_left-delta)

@@ -3,7 +3,7 @@
 Date: 2026-11-05
 Branch: `art/asset-upgrade-batch-01`
 Source: user-uploaded `1000048042.png` (1536 × 1024), supplied in conversation. **Image binary not yet committed to repository.**
-Decision: **REFERENCE VISUALLY RECOVERED / MODEL VISUAL HOLD**
+Decision: **APPROVED SOURCE / 2D GAMEPLAY VIEWS INTEGRATED / ACTION-POSE LIMITATION**
 
 ## Reference identity
 The supplied sheet is titled **MysticRun Character Concept** and shows front three-quarter and rear views of the Knight, Gargoyle and Witch. It is the current visual source of truth for all three characters. This is a concept illustration, not a ready-to-import 3D model or production texture atlas.
@@ -61,3 +61,9 @@ the approved visual authority for all three characters. A 3D implementation
 is not a requirement; do not sacrifice the illustrated identity to preserve a
 particular rendering technique. This approval confirms the reference, not
 automatic visual acceptance of existing game models.
+
+On November 14, 2026, the owner selected concept fidelity over 3D gameplay
+rendering. The current gameplay characters use transparent front/rear cutouts
+from this sheet. Existing 3D models and rigs remain preserved but hidden.
+Only the supplied stance views are available, so these sprites do not provide
+independent run, jump, slide, or attack poses.

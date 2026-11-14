@@ -3,7 +3,7 @@
 Date: 2026-11-14  
 Issue: https://github.com/Lamont-Labs/Mystic-Run/issues/11  
 Branch: `art/mr-art-038-replacement-armor`  
-Decision: **TECHNICAL PASS / VISUAL HOLD**
+Decision: **CONCEPT-ALIGNED FRONT/REAR ART / ACTION-POSE LIMITATION**
 
 ## Source authority and preservation
 
@@ -37,12 +37,13 @@ chest emblem with a dimensional four-point turquoise star and gold binding.
 Assigned armor-only satin metallic/roughness values and broad deterministic
 vertex-painted enamel gradients; retained steel-blue/gold identity.
 
-No new rig, animation clips, material draw calls, external models, bitmap
-textures, paid services or runtime behavior were introduced. The head,
+The original GLB replacement introduced no new rig, animation clips, material
+draw calls, external models, bitmap textures, paid services or runtime
+behavior. The later 2D gameplay presentation is described below. The head,
 helmet/plume source, boots, lower armor, face, weapons and cloak source were
 not reauthored. Broad gold edge separation, richer armor sculpting and the
-existing helmet/limb presentation still need visual review; this is not an
-approved full-character redesign.
+existing helmet/limb presentation were not part of this bounded 3D pass; it is
+not a full-character redesign.
 
 ## Exported asset measurements
 
@@ -94,9 +95,9 @@ Reviewed front, side, rear, run, attack, jump, slide and chase stills. The
 floating chest inset/tube clutter is removed and the shoulders have a more
 defined plate outline. The sampled baseline rear cape had a visible blue
 armor intrusion that is not apparent in the candidate rear capture.
-These are sampled observations, not full-animation clipping clearance.
-Existing joint gaps, stylized proportions and inherited helmet/plume detail
-remain part of the visual hold.
+These are sampled observations, not full-animation clipping clearance. They
+describe the preserved 3D fallback asset; gameplay now presents the 2D
+concept cutouts documented below.
 
 ## Technical checks
 
@@ -122,7 +123,7 @@ See [run summary](evidence/mr-art-038/run-summary.json) and structural reports.
   unit tests passed. The Knight's exact binary record was updated without
   changing rights metadata.
 
-## Approved concept, comparison and remaining hold
+## Approved concept and selected 2D gameplay presentation
 
 The owner supplied and explicitly approved the complete 1536 × 1024 sheet on
 November 14, 2026. Its exact binary is now tracked at
@@ -132,27 +133,41 @@ See [the owner-approved reference record](MR_ART_030_APPROVED_CONCEPT_REFERENCE.
 This resolves the missing-image blocker. The owner also explicitly said the
 characters do not have to be 3D.
 
-Matched front views of the approved sheet and actual current Godot characters
-are in [the cast comparison](previews/mr-art-038/concept-vs-current-cast.jpg).
-The existing Knight keeps recognizable blue-and-gold armor and red cape, but
-its armor layers, plume, face, sculpted highlights and ornament remain much
-simpler than the illustration. The Gargoyle keeps teal skin, wings and its
-purple waist wrap, but misses the concept's broad muscular sculpted stone
-forms, large wing presentation and richer surface finish. The Witch keeps her
-purple hat, silver braid and coat, but lacks the concept's expressive
-illustration, sweeping clothes and detailed jewelry/props. The current models
-are useful gameplay stand-ins, **not visually accepted matches**.
+The owner chose concept fidelity over a 3D-only presentation. The game now uses
+2D cutouts derived from the exact approved PNG for all three playable
+characters. The extraction script crops the supplied front and rear poses,
+removes only the connected pale backdrop, and records source and output hashes
+in `assets/characters/concept-sprites/PROVENANCE.json`. Character RGB pixels
+come directly from the approved sheet; no paid service, generated art, or
+redrawn character pixels were used.
 
-Therefore this Knight-only pass remains **TECHNICAL PASS / VISUAL HOLD**. It
-does not claim that providing an approved reference makes the current asset
-visually accepted. The game need not preserve 3D characters; choosing between
-reworked 3D models and 2D illustrated sprites is a separate production
-direction decision, not silently taken in this bounded armor PR.
+Actual gameplay captures for all three characters are in
+[the concept-sprite gameplay preview](previews/mr-art-038/concept-sprites-gameplay.jpg).
+The game selects the front or rear supplied view based on facing. Existing run
+bob, movement, jump, slide squash, attack timing, and gameplay effects continue.
+Because the sheet contains only front and rear stance illustrations, each
+sprite moves as one illustrated figure: it does not have limb-by-limb run,
+jump, slide, or attack poses. This is the selected trade-off, not a claim of
+full action-animation fidelity.
 
-No physical Android, sustained performance or final art acceptance is
-claimed. No Android identity/export preset/signing configuration changed;
-no signing keys, APK/AAB, release or merge were produced. The dedicated
-branch does not match the Android build/publish push triggers.
+The existing GLBs remain in the project, hidden from rendering but loaded with
+their skeletons, skinning and morphs for compatibility, verification, and
+future fallback. The Knight still has exactly 65 bones, six morphs, and
+23,242 exported triangles under the 25,000 limit. The MR-ART-038 replacement
+armor asset remains preserved; current gameplay presentation now uses the
+approved 2D illustration instead of that model.
+
+The supplied front and rear images are directly derived from the approved
+artwork. Their static-view appearance is concept-aligned. Pose-specific 2D
+artwork is not present, so action-pose matching remains limited to whole-sprite
+motion. The earlier [3D cast comparison](previews/mr-art-038/concept-vs-current-cast.jpg)
+is retained as historical evidence for why the owner chose the 2D path.
+
+No physical Android or sustained performance is claimed. The supplied static
+front/rear illustrations are directly represented; no action-pose art is
+claimed. No Android identity/export preset/signing configuration changed; no
+signing keys, APK/AAB, release or merge were produced. The dedicated branch
+does not match the Android build/publish push triggers.
 
 ## Reproduction
 
