@@ -1,0 +1,137 @@
+{
+  "decision": "TECHNICAL PASS / VISUAL HOLD",
+  "date_utc": "2026-11-14",
+  "source_baseline_commit": "e100529ed53739a31b9a8bbf4392ece3fd8c90cf",
+  "latest_knight_art_tip": "31d4849c45cf6661dd806ac0e13019169719fc34",
+  "runtime_integration_tip": "d775bc562f3ac5f4de62dd76cd553b014bfa4388",
+  "baseline_generator_byte_identical_to_art_tip": true,
+  "blender_version": "4.4.3",
+  "godot_version": "4.7.2.stable.official.ed1daf0bf",
+  "renderer": "Compatibility / Mesa llvmpipe",
+  "reproducible_rebuild_same_sha256": true,
+  "regressions": [
+    {
+      "name": "run_tests",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 0.43
+    },
+    {
+      "name": "runner_controls",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 0.42
+    },
+    {
+      "name": "asset_districts",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 0.81
+    },
+    {
+      "name": "adventure",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 3.65
+    },
+    {
+      "name": "scene_interactions",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 13.22
+    },
+    {
+      "name": "tilt_and_elevation",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 6.69
+    },
+    {
+      "name": "rig_motion",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 0.73
+    },
+    {
+      "name": "knight_expressions",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 0.6
+    },
+    {
+      "name": "knight_cloth_response",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 3.02
+    },
+    {
+      "name": "gargoyle_asset",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 1.53
+    },
+    {
+      "name": "witch_asset",
+      "exit": 0,
+      "error_log": false,
+      "seconds": 2.56
+    },
+    {
+      "name": "scene-knight",
+      "exit": 0,
+      "error_log": false
+    },
+    {
+      "name": "scene-gargoyle",
+      "exit": 0,
+      "error_log": false
+    },
+    {
+      "name": "scene-witch",
+      "exit": 0,
+      "error_log": false
+    }
+  ],
+  "core_assertions": {
+    "checks": 427,
+    "engine": "4.7.2-stable (official)",
+    "failed": 0,
+    "failures": []
+  },
+  "verifier_unit_tests": {
+    "passed": 9,
+    "failed": 0
+  },
+  "asset_foundry_unit_tests": {
+    "passed": 10,
+    "failed": 0
+  },
+  "rights_inventory": {
+    "status": "PASS",
+    "schema": 1,
+    "assets": 7,
+    "runtime_files": 27,
+    "checks": 51,
+    "source_bytes": 8010141,
+    "scope": "Reviewed rights metadata, local license evidence, exact hashes, complete 3D inventory and glTF dependencies; no store or device certification"
+  },
+  "protected_source_unchanged": [
+    "project.godot",
+    "export_presets.cfg",
+    "game",
+    "core",
+    "scenes",
+    "content",
+    "tools/build_android.py",
+    "tools/sign_android.py",
+    ".github/workflows/android-apk.yml",
+    ".github/workflows/android-compile.yml",
+    ".github/workflows/publish-android.yml"
+  ],
+  "physical_phone_tested": false,
+  "approved_concept_binary_available": false,
+  "apk_or_aab_built": false,
+  "keys_generated": false,
+  "release_published": false,
+  "paid_services_used": false
+}

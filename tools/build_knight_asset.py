@@ -92,6 +92,12 @@ def color_for(mat, p, uv, tag=''):
         center_light=max(0.0,1.0-abs(p[0])/.27)
         upper_light=max(0.0,min(1.0,(p[1]-1.08)/.34))
         h *= .83+.18*center_light+.10*upper_light
+    if tag in ('cuirass', 'pauldron') and mat == BLUE:
+        # Broad, deterministic enamel planes, not extra tubes or random noise.
+        # Preserve the steel-blue palette; darken recesses and the lower return.
+        front = max(0.0, min(1.0, (p[2]+.10)/.30))
+        h = .78+.14*uv[1]+.13*front
+        h += .10*max(0.0, 1.0-abs(uv[0]-.10)*9)
     return tuple(min(1, max(0, c*h)) for c in base[:3])+(1,)
 
 
@@ -101,7 +107,9 @@ def mesh(points, faces, mat, bone, uvs=None, tag=''):
         uv = uvs[i] if uvs else (0.5, 0.5)
         V.append(xyz(p)); UV.append(uv); COL.append(color_for(mat, p, uv, tag))
         params=MATS[mat].node_tree.nodes.get('Principled BSDF').inputs
-        PBR.append((params['Metallic'].default_value,params['Roughness'].default_value))
+        # Armor-only satin finish; skin, cloth, weapons and other cast untouched.
+        PBR.append((.32, .56) if mat == BLUE and tag in ('cuirass', 'pauldron')
+                   else (params['Metallic'].default_value,params['Roughness'].default_value))
         WEIGHTS.append(bone(p) if callable(bone) else {bone: 1.0})
         TAGS.append(tag)
     F.extend(tuple(offset+i for i in f) for f in faces)
@@ -192,6 +200,43 @@ def tube(points, radii, mat, bone, sides=8, steps=2, tag=''):
     mesh(pts,faces,mat,bone,uv,tag)
 
 
+def armor_shell(rows, bone, tag, sides=16, ridge=.0, neckline=.0, slope=.0):
+    """Closed, shaped plate shell with an integrated gold lower binding.
+
+    Explicit profile breaks and a broad front ridge replace the round loft.
+    The first two rows form the binding, not an appended torus. Duplicating
+    vertices at the binding gives the gold/blue transition a crisp normal.
+    """
+    rings = []
+    for j, (cx, y, cz, width, depth) in enumerate(rows):
+        ring = []
+        for i in range(sides):
+            a = math.tau*i/sides
+            sx, sz = math.sin(a), math.cos(a)
+            x = math.copysign(abs(sx)**.78, sx)
+            z = math.copysign(abs(sz)**.82, sz)
+            front = max(0.0, sz)
+            height = y+slope*x
+            if j == len(rows)-1:
+                height -= neckline*front**3
+            ring.append((cx+x*width, height,
+                         cz+z*depth+ridge*front**6))
+        rings.append(ring)
+    # Only split the binding boundary. Share the blue rings so the broad
+    # sculpted planes shade continuously instead of looking like flat bands.
+    for first, last, mat in [(0, 1, GOLD), (1, len(rows)-1, BLUE)]:
+        pts = [p for ring in rings[first:last+1] for p in ring]
+        faces = [(j*sides+i, j*sides+(i+1)%sides,
+                  (j+1)*sides+(i+1)%sides, (j+1)*sides+i)
+                 for j in range(last-first) for i in range(sides)]
+        uv = [(i/sides, k/(len(rows)-1)) for k in range(first,last+1)
+              for i in range(sides)]
+        mesh(pts, faces, mat, bone, uv, tag)
+    # Close both ends; no open surfaces or new bones/material draw calls.
+    mesh(rings[0], [tuple(range(sides-1, -1, -1))], GOLD, bone, tag=tag)
+    mesh(rings[-1], [tuple(range(sides))], BLUE, bone, tag=tag)
+
+
 def limb(a,b,radii,mat,bone):
     direction=(Vector(b)-Vector(a)).normalized()
     lengths=[0,.08,.28,.65,.9,1]
@@ -234,28 +279,26 @@ def torso_weights(p):
 
 
 loft([(0,.85,.02,.16,.12),(0,.99,.01,.18,.135),(0,1.12,.00,.16,.125),(0,1.30,0,.24,.16),(0,1.43,0,.245,.14),(0,1.48,.01,.11,.09)],NAVY,torso_weights)
-# MR-ART-036: sculpt the existing chest shell instead of adding another
-# rounded volume. A narrower waist, expanded upper breastplate and stronger
-# forward ridge create a layered heroic silhouette at unchanged ring density.
-loft([(0,1.045,0,.165,.132),(0,1.09,.005,.184,.147),
-      (0,1.22,.012,.229,.181),(0,1.31,.000,.256,.198),
-      (0,1.385,-.004,.255,.173),(0,1.435,-.008,.219,.122)],
-     BLUE,'spine_03',sides=20,steps=2,tag='chest_armor')
-loft([(0,1.045,0,.175,.142),(0,1.065,0,.184,.15),(0,1.08,0,.19,.15)],GOLD,'spine_03',steps=2)
+# MR-ART-038: replace the round chest, inset plates and tube edging together.
+# A pinched waist, broad upper planes, central keel and lowered front neckline
+# are authored into one closed shell. No stacked floating chest insets.
+armor_shell([(0,1.065,0,.166,.132),(0,1.086,0,.174,.142),
+             (0,1.16,.001,.194,.153),(0,1.30,-.004,.249,.175),
+             (0,1.385,-.009,.249,.151),(0,1.438,-.012,.220,.128)],
+            'spine_03','cuirass',sides=20,ridge=.026,neckline=.055)
+# Neck binding follows the actual V-shaped opening, with no cross-chest rope.
 for side in (-1,1):
-    tube([(side*.215,1.418,.082),(side*.19,1.40,.139),(side*.12,1.355,.177),(0,1.305,.199)],[.012]*4,GOLD,'spine_03')
-    tube([(side*.205,1.17,.115),(side*.15,1.13,.157),(0,1.10,.17)],[.009]*3,GOLD,'spine_03')
-# Raised lateral breastplate insets frame the central chest emblem.
-# The panels use the existing plate primitive and spine_03 weight.
-for side in (-1,1):
-    plate([(side*.094,1.385),(side*.210,1.365),
-           (side*.220,1.277),(side*.139,1.232),
-           (side*.090,1.287)],.174,.017,BLUE,'spine_03',.005)
-    tube([(side*.100,1.385,.195),(side*.199,1.359,.198),
-          (side*.207,1.285,.199),(side*.146,1.243,.197)],
-         [.006,.008,.007,.004],GOLD,'spine_03',6,2)
-star(0,1.31,.196,.081,GOLD,'spine_03')
-plate([(-.025,1.31),(0,1.35),(.025,1.31),(0,1.268)],.218,.012,GEM,'spine_03')
+    tube([(side*.212,1.438,.026),(side*.175,1.429,.082),
+          (side*.095,1.401,.124),(0,1.383,.142)],
+         [.007,.007,.007,.006],GOLD,'spine_03',6,1)
+# Dimensional four-point turquoise chest star within its warm-gold binding.
+for scale, z, depth, mat in [(1.0,.197,.010,GOLD),(.76,.220,.010,GEM)]:
+    outline=[]
+    for i in range(8):
+        angle=math.pi*.5+i*math.pi/4
+        radius=(.079 if i%2==0 else .025)*scale
+        outline.append((math.cos(angle)*radius*.86,1.30+math.sin(angle)*radius))
+    plate(outline,z,depth,mat,'spine_03',.003)
 
 # Belt, shaped buckle, hanging tassets, straps and visible rivets.
 loft([(0,.96,.015,.19,.15),(0,1.005,.015,.19,.15)],LEATHER,'pelvis',steps=1)
@@ -296,27 +339,22 @@ for suffix in ('l','r'):
     shoulder,elbow,hand=(REST[n+'_'+suffix] for n in ('upperarm','lowerarm','hand'))
     limb(shoulder,elbow,[.075,.087,.085,.068,.059,.055],NAVY,'upperarm_'+suffix)
     limb(elbow,hand,[.055,.066,.075,.062,.045,.04],NAVY,'lowerarm_'+suffix)
-    # MR-ART-027: tighten the shoulder silhouette for chase-camera readability.
-    # Preserve the upperarm skin weight and existing ring count/triangle budget.
+    # MR-ART-038: replace each spherical shell/rim/ridge with two overlapping
+    # armor lames. Shaped outer overhangs and integrated gold edges articulate
+    # the shoulder without exceeding its former envelope or adding bones.
     center=shoulder+Vector((side*.018,.005,0))
     cx,cy,cz=center
-    loft([(cx,cy-.095,cz,.085,.069),
-          (cx+side*.012,cy-.064,cz,.098,.080),
-          (cx+side*.023,cy-.016,cz,.106,.086),
-          (cx+side*.019,cy+.033,cz,.092,.074),
-          (cx+side*.004,cy+.082,cz,.058,.051),
-          (cx,cy+.103,cz,.009,.009)],
-         BLUE,'upperarm_'+suffix,sides=16,steps=1)
-    # Narrow lower rim follows the revised armor shell.
-    loft([(cx,cy-.099,cz,.089,.073),
-          (cx+side*.012,cy-.084,cz,.097,.079)],
-         GOLD,'upperarm_'+suffix,sides=16,steps=1)
-    # Ridge remains distinct without adding more polygons.
-    tube([(cx+side*.005,cy+.075,cz+.046),
-          (cx+side*.028,cy+.031,cz+.073),
-          (cx+side*.035,cy-.023,cz+.084),
-          (cx+side*.021,cy-.082,cz+.070)],
-         [.004,.007,.008,.003],SILVER,'upperarm_'+suffix,6,2)
+    armor_shell([(cx+side*.016,cy-.099,cz,.086,.069),
+                 (cx+side*.017,cy-.085,cz,.091,.075),
+                 (cx+side*.020,cy-.042,cz,.096,.077),
+                 (cx+side*.011,cy-.009,cz,.075,.063)],
+                'upperarm_'+suffix,'pauldron',sides=12,ridge=.005,slope=-side*.012)
+    armor_shell([(cx+side*.024,cy-.034,cz,.109,.087),
+                 (cx+side*.024,cy-.020,cz,.111,.087),
+                 (cx+side*.016,cy+.043,cz,.097,.078),
+                 (cx,cy+.087,cz,.061,.052),
+                 (cx-side*.006,cy+.101,cz,.021,.019)],
+                'upperarm_'+suffix,'pauldron',sides=12,ridge=.006,slope=-side*.018)
     mid=elbow.lerp(hand,.58)
     ellipsoid(mid+Vector((0,0,.025)),(.12,.083,.091),BLUE,'lowerarm_'+suffix,12,24)
     for t in (.12,.90):
@@ -539,12 +577,15 @@ bpy.context.view_layer.objects.active=obj
 obj.select_set(True);rig.select_set(True)
 data.calc_loop_triangles()
 triangle_count=len(data.loop_triangles)
+assert triangle_count <= 25000, f"Knight exceeds mobile triangle budget: {triangle_count}"
+assert len(rig.data.bones) == 65, "Knight must retain the original 65-bone rig"
+assert all(affected[name] > 0 for name in MORPHS), "Every morph must affect real geometry"
 blend=EDITABLE/'knight.blend'
 bpy.ops.wm.save_as_mainfile(filepath=str(blend))
 bpy.ops.export_scene.gltf(filepath=str(DEST/'knight.glb'),export_format='GLB',use_selection=True,export_animations=False,export_skins=True,export_morph=True,export_attributes=True,export_yup=True)
 binary=DEST/'knight.glb'
 manifest={
- 'character':'knight','revision':'authored-knight-2-expressions','source_generator':'tools/build_knight_asset.py',
+ 'character':'knight','revision':'mr-art-038-replacement-upper-armor','source_generator':'tools/build_knight_asset.py',
  'blender_version':bpy.app.version_string,'mesh_vertices':len(V),'triangles':triangle_count,
  'material_surfaces':1,'painted_material_regions':len(MATS),'bones':len(rig.data.bones),'morph_targets':MORPHS,
  'morph_affected_vertices':affected,
@@ -556,6 +597,8 @@ manifest={
  'concept_reference':'MysticRun fantasy heroes concept sheet, November 3, 2026',
  'texture_method':'UV-mapped mesh with linear per-vertex authored color gradients; secondary UV stores metallic/roughness values for one runtime material; no bitmap texture atlas in this revision',
  'physical_phone_tested':False,
+ 'visual_status':'HOLD: approved concept PNG unavailable; no exact-match certification',
+ 'bounded_change':'Replacement cuirass, articulated two-lame pauldrons, turquoise four-point star and armor-only satin finish; existing head, plume, cape, limbs, weapons, rig and morph rules retained',
 }
 (DEST/'PROVENANCE.json').write_text(json.dumps(manifest,indent=2)+'\n')
 # Rebuilding owned geometry must update its exact byte record, never its rights.
