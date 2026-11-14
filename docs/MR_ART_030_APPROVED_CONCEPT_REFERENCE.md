@@ -44,4 +44,20 @@ The supplied sheet is titled **MysticRun Character Concept** and shows front thr
 4. Hold visual approval until a new build demonstrates meaningful improvement.
 
 ## Provenance and persistence
-This Markdown report is a durable GitHub record of the uploaded reference and its design constraints. The source PNG itself is currently a conversation attachment, **not a verified GitHub-tracked asset**. A separate binary upload is needed to make the visual source permanently accessible to the build workflow.
+This Markdown report is a durable GitHub record of the uploaded reference and its design constraints.
+
+## Owner confirmation and tracked source
+
+On November 14, 2026, the owner supplied the original 1536 × 1024 concept-sheet
+PNG and confirmed: **“This is exactly what the characters are supposed to
+look like. They do not have to be 3D.”**
+
+The exact, unmodified binary is tracked at
+[`references/01-character-concept.png`](../references/01-character-concept.png).
+SHA-256:
+`07e7541d8d5a91d1733186930d5d4ed759400021c8af3391f068ade217f01e71`.
+It replaces the previously missing source-image blocker. The illustration is
+the approved visual authority for all three characters. A 3D implementation
+is not a requirement; do not sacrifice the illustrated identity to preserve a
+particular rendering technique. This approval confirms the reference, not
+automatic visual acceptance of existing game models.

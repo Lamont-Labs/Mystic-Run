@@ -122,15 +122,32 @@ See [run summary](evidence/mr-art-038/run-summary.json) and structural reports.
   unit tests passed. The Knight's exact binary record was updated without
   changing rights metadata.
 
-## Approval blocker and exclusions
+## Approved concept, comparison and remaining hold
 
-**The approved concept PNG is unavailable.** Neither `1000048042.png` nor
-`references/01-character-concept.png` exists in this workspace. Live trees
-of both active art branches had no concept/reference-named PNG. MR-ART-030
-explicitly records the owner-uploaded binary as never committed. The textual
-design cues in MR-ART-030 remain the only available authority; no substitute
-image was invented. An exact concept match or side-by-side visual
-certification is **blocked** until the actual approved PNG is supplied.
+The owner supplied and explicitly approved the complete 1536 × 1024 sheet on
+November 14, 2026. Its exact binary is now tracked at
+`references/01-character-concept.png`; SHA-256:
+`07e7541d8d5a91d1733186930d5d4ed759400021c8af3391f068ade217f01e71`.
+See [the owner-approved reference record](MR_ART_030_APPROVED_CONCEPT_REFERENCE.md).
+This resolves the missing-image blocker. The owner also explicitly said the
+characters do not have to be 3D.
+
+Matched front views of the approved sheet and actual current Godot characters
+are in [the cast comparison](previews/mr-art-038/concept-vs-current-cast.jpg).
+The existing Knight keeps recognizable blue-and-gold armor and red cape, but
+its armor layers, plume, face, sculpted highlights and ornament remain much
+simpler than the illustration. The Gargoyle keeps teal skin, wings and its
+purple waist wrap, but misses the concept's broad muscular sculpted stone
+forms, large wing presentation and richer surface finish. The Witch keeps her
+purple hat, silver braid and coat, but lacks the concept's expressive
+illustration, sweeping clothes and detailed jewelry/props. The current models
+are useful gameplay stand-ins, **not visually accepted matches**.
+
+Therefore this Knight-only pass remains **TECHNICAL PASS / VISUAL HOLD**. It
+does not claim that providing an approved reference makes the current asset
+visually accepted. The game need not preserve 3D characters; choosing between
+reworked 3D models and 2D illustrated sprites is a separate production
+direction decision, not silently taken in this bounded armor PR.
 
 No physical Android, sustained performance or final art acceptance is
 claimed. No Android identity/export preset/signing configuration changed;
