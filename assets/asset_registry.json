@@ -333,6 +333,64 @@
           "bytes": 232453
         }
       ]
+    },
+    {
+      "cost_usd": 0,
+      "commercial_use": false,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": true,
+      "id": "mysticrun-owner-provided-concept-sprites",
+      "publisher": "MysticRun owner-provided concept art",
+      "license": "LicenseRef-MysticRun-Owner-Provided-NonCommercial",
+      "sources": [
+        "references/01-character-concept.png",
+        "tools/extract_concept_sprites.py",
+        "assets/characters/concept-sprites/PROVENANCE.json"
+      ],
+      "edition": "Noncommercial MysticRun game-use authorization",
+      "license_evidence": {
+        "path": "assets/licenses/mysticrun-owner-provided-noncommercial.txt",
+        "sha256": "8082d19e17b914edc1dbe6a96de4ccac9801ef2bf0817ae9f198d37b57262730",
+        "bytes": 584
+      },
+      "modifications": [
+        "Cropped the six front/rear character views from the owner-provided approved sheet and removed only edge-connected pale background.",
+        "Use is limited to noncommercial distribution as part of MysticRun; commercial use is not authorized."
+      ],
+      "derived_from": [],
+      "files": [
+        {
+          "path": "assets/characters/concept-sprites/gargoyle_front.png",
+          "sha256": "c951ffb00ec55770a387ace46aa3a5db1877b812c074b33a19bb273f15466aa1",
+          "bytes": 399496
+        },
+        {
+          "path": "assets/characters/concept-sprites/gargoyle_rear.png",
+          "sha256": "ed7110818292c90f880dc1edaca8b78316a82fb824c47e88e53b6e3f17ccf81b",
+          "bytes": 211887
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_front.png",
+          "sha256": "ef4cf8b977f2ca622ba8aeabe2e443f18a28d478e7481e6282f2b3cce1ec6f0a",
+          "bytes": 375118
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_rear.png",
+          "sha256": "11d02d535a213241be61ee4cdccdcbaa2420d51a6db883a49b5a99806b5f8457",
+          "bytes": 172899
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_front.png",
+          "sha256": "8f6b881e36bfec868b0274f5c1e47226b3d9c8798a039a49fbbbda317f9b8f0c",
+          "bytes": 410463
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_rear.png",
+          "sha256": "87d90ecbfbfa7d7e51e8c164824a33cbc1a71b7a97fefa2be33c544fcbcaa792",
+          "bytes": 177914
+        }
+      ]
     }
   ]
 }

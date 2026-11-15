@@ -67,3 +67,8 @@ rendering. The current gameplay characters use transparent front/rear cutouts
 from this sheet. Existing 3D models and rigs remain preserved but hidden.
 Only the supplied stance views are available, so these sprites do not provide
 independent run, jump, slide, or attack poses.
+
+The owner authorized game use for MysticRun on a noncommercial basis only.
+The runtime asset inventory records that permission with commercial use
+disallowed and a required credit; the in-game Credits screen states the limit.
+Do not treat this as permission for commercial distribution.

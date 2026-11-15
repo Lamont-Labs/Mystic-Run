@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Import pinned free assets and verify the runtime 3D asset inventory offline.
+"""Import pinned free assets and verify the complete runtime asset inventory.
 
 Usage: asset_foundry.py import-kaykit [--source-dir /path/to/publisher/repo]
        asset_foundry.py verify [--report /path/to/report.json]
@@ -22,7 +22,25 @@ ROOT = Path(__file__).resolve().parents[1]
 LOCK = "assets/sources/kaykit-medieval.lock.json"
 REGISTRY = "assets/asset_registry.json"
 DESTINATION = "assets/environment/kaykit"
-ALLOWED_LICENSES = {"CC0-1.0", "LicenseRef-LamontLabs-Original"}
+LICENSE_RIGHTS = {
+    "CC0-1.0": {
+        "commercial_use": True,
+        "modification": True,
+        "game_distribution": True,
+    },
+    "LicenseRef-LamontLabs-Original": {
+        "commercial_use": True,
+        "modification": True,
+        "game_distribution": True,
+    },
+    "LicenseRef-MysticRun-Owner-Provided-NonCommercial": {
+        "commercial_use": False,
+        "modification": True,
+        "game_distribution": True,
+    },
+}
+OWNER_PROVIDED_LICENSE = "LicenseRef-MysticRun-Owner-Provided-NonCommercial"
+OWNER_PROVIDED_PUBLISHER = "MysticRun owner-provided concept art"
 RUNTIME_EXTENSIONS = {".gltf", ".glb", ".bin", ".res", ".png", ".jpg", ".webp"}
 
 
@@ -74,13 +92,21 @@ def verify(root: Path = ROOT) -> dict:
         if identifier in identifiers:
             raise ValueError(f"Duplicate asset id: {identifier}")
         identifiers.add(identifier)
-        if entry["license"] not in ALLOWED_LICENSES or entry["cost_usd"] != 0:
+        expected_rights = LICENSE_RIGHTS.get(entry["license"])
+        if expected_rights is None or entry["cost_usd"] != 0:
             raise ValueError(f"Unapproved license or price: {identifier}")
         if entry["license"] == "LicenseRef-LamontLabs-Original" and entry.get("publisher") != "Lamont Labs":
             raise ValueError("Original-art license cannot be assigned to an external publisher")
-        for right in ("commercial_use", "modification", "game_distribution"):
-            if entry.get(right) is not True:
-                raise ValueError(f"Missing reviewed {right} permission: {identifier}")
+        if entry["license"] == OWNER_PROVIDED_LICENSE:
+            if entry.get("publisher") != OWNER_PROVIDED_PUBLISHER:
+                raise ValueError("Owner-provided license must identify its project source")
+            if entry.get("attribution_required") is not True:
+                raise ValueError("Owner-provided license requires in-game attribution")
+        if not isinstance(entry.get("attribution_required"), bool):
+            raise ValueError(f"Missing reviewed attribution requirement: {identifier}")
+        for right, permitted in expected_rights.items():
+            if entry.get(right) is not permitted:
+                raise ValueError(f"Incorrect {right} permission for {identifier}")
         if not entry.get("publisher") or not entry.get("sources") or not entry.get("modifications"):
             raise ValueError(f"Incomplete provenance: {identifier}")
         if not entry.get("files"):
@@ -131,7 +157,7 @@ def verify(root: Path = ROOT) -> dict:
                             checks += 1
     return {"status": "PASS", "schema": 1, "assets": len(entries), "runtime_files": len(covered),
             "checks": checks, "source_bytes": total_bytes,
-            "scope": "Reviewed rights metadata, local license evidence, exact hashes, complete 3D inventory and glTF dependencies; no store or device certification"}
+            "scope": "Reviewed scoped rights metadata, local evidence, exact hashes, complete runtime inventory and glTF dependencies; no store or device certification"}
 
 
 def import_kaykit(source_dir: Path | None, root: Path = ROOT) -> dict:

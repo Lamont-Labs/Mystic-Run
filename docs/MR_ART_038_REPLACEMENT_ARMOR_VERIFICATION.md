@@ -141,6 +141,12 @@ in `assets/characters/concept-sprites/PROVENANCE.json`. Character RGB pixels
 come directly from the approved sheet; no paid service, generated art, or
 redrawn character pixels were used.
 
+The owner authorized use in MysticRun on a noncommercial basis only.
+`assets/asset_registry.json` records commercial use as disallowed, game
+distribution as allowed, and required credit; the game Credits screen and
+`assets/licenses/mysticrun-owner-provided-noncommercial.txt` state that limit.
+This is not a commercial-use license.
+
 Actual gameplay captures for all three characters are in
 [the concept-sprite gameplay preview](previews/mr-art-038/concept-sprites-gameplay.jpg).
 The game selects the front or rear supplied view based on facing. Existing run

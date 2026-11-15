@@ -71,6 +71,38 @@ class AssetAdmissionTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "commercial_use"):
             verify(self.root)
 
+    def test_owner_provided_noncommercial_game_art_is_admitted_with_exact_scope(self):
+        result = verify(self.root)
+        self.assertEqual(result["status"], "PASS")
+        entry = next(
+            asset for asset in self.registry["assets"]
+            if asset["license"] == "LicenseRef-MysticRun-Owner-Provided-NonCommercial"
+        )
+        self.assertFalse(entry["commercial_use"])
+        self.assertTrue(entry["modification"])
+        self.assertTrue(entry["game_distribution"])
+        self.assertTrue(entry["attribution_required"])
+
+    def test_owner_provided_noncommercial_art_cannot_claim_commercial_use(self):
+        entry = next(
+            asset for asset in self.registry["assets"]
+            if asset["license"] == "LicenseRef-MysticRun-Owner-Provided-NonCommercial"
+        )
+        entry["commercial_use"] = True
+        self.save()
+        with self.assertRaisesRegex(ValueError, "Incorrect commercial_use"):
+            verify(self.root)
+
+    def test_owner_provided_art_requires_attribution(self):
+        entry = next(
+            asset for asset in self.registry["assets"]
+            if asset["license"] == "LicenseRef-MysticRun-Owner-Provided-NonCommercial"
+        )
+        entry["attribution_required"] = False
+        self.save()
+        with self.assertRaisesRegex(ValueError, "requires in-game attribution"):
+            verify(self.root)
+
     def test_cyclic_provenance_fails(self):
         self.registry["assets"][0]["derived_from"] = ["mysticrun-authored-knight"]
         self.save()
