@@ -8,6 +8,11 @@ const PIECE_NAMES := ["CATHEDRAL ARCADE","OPEN CROWN BRIDGE","RIBBED VAULT","REL
 const PAINT = preload("res://assets/shaders/comic_world.gdshader")
 const CourseProfile=preload("res://core/course_profile.gd")
 const AssetDistricts=preload("res://game/asset_districts.gd")
+const PREMIUM_BACKDROPS := {
+	"knight": preload("res://assets/environment/premium-2d/knight_backdrop.jpg"),
+	"gargoyle": preload("res://assets/environment/premium-2d/gargoyle_backdrop.jpg"),
+	"witch": preload("res://assets/environment/premium-2d/witch_backdrop.jpg"),
+}
 
 var themes: Dictionary = {}
 var chunks: Array[MeshInstance3D] = []
@@ -26,6 +31,8 @@ var secret_meshes:Dictionary={}
 var lanterns:Array[Node3D]=[]
 var sky_props:Array[Node3D]=[]
 var sky_birds:Array[Node3D]=[]
+var horizon_plate:MeshInstance3D
+var horizon_material:StandardMaterial3D
 
 
 func _paint(hex: String, metal: float=0.0, glow: float=0.0) -> ShaderMaterial:
@@ -189,6 +196,8 @@ func set_theme(kind: String) -> void:
 	current_theme = kind
 	for chunk in chunks:
 		chunk.mesh = themes[kind][int(chunk.get_meta("variant",0))]
+	if is_instance_valid(horizon_material):
+		horizon_material.albedo_texture=PREMIUM_BACKDROPS.get(kind,PREMIUM_BACKDROPS["knight"])
 
 
 func update(distance: float, delta: float) -> void:
@@ -238,18 +247,18 @@ func _build_horizon() -> void:
 	var b = Geo.new()
 	# A distant painted city plate supplies architectural detail and cloud layers;
 	# nearby arches, road, props, characters and effects are rendered in 3D.
-	var plate:=MeshInstance3D.new()
+	horizon_plate=MeshInstance3D.new()
 	var quad:=QuadMesh.new()
 	quad.size=Vector2(360,540)
-	plate.mesh=quad
-	var matte:=StandardMaterial3D.new()
-	matte.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
-	matte.disable_fog=true
-	matte.albedo_texture=load("res://assets/environment/cloud-castle-v2.jpg")
-	matte.albedo_color=Color.WHITE
-	plate.material_override=matte
-	plate.position=Vector3(0,-20,-235)
-	add_child(plate)
+	horizon_plate.mesh=quad
+	horizon_material=StandardMaterial3D.new()
+	horizon_material.shading_mode=BaseMaterial3D.SHADING_MODE_UNSHADED
+	horizon_material.disable_fog=true
+	horizon_material.albedo_texture=PREMIUM_BACKDROPS.get(current_theme,PREMIUM_BACKDROPS["knight"])
+	horizon_material.albedo_color=Color.WHITE
+	horizon_plate.material_override=horizon_material
+	horizon_plate.position=Vector3(0,-20,-235)
+	add_child(horizon_plate)
 	machine = Node3D.new()
 	machine.position = Vector3(0, 39, -170)
 	add_child(machine)

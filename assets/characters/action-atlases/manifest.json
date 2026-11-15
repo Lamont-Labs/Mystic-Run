@@ -1,0 +1,659 @@
+{
+  "schema": 1,
+  "generator": "Replit image-editing tool",
+  "pipeline": "tools/build_premium_2d_assets.py",
+  "source_authority": "references/01-character-concept.png",
+  "source_sha256": "07e7541d8d5a91d1733186930d5d4ed759400021c8af3391f068ade217f01e71",
+  "commercial_use_claimed": false,
+  "background_processing": "Remove only edge-connected bright cyan studio background; crop and bottom-align to the approved rear frame size.",
+  "characters": {
+    "knight": {
+      "atlas": {
+        "path": "assets/characters/action-atlases/knight_actions.png",
+        "sha256": "5f5959c5a9c61480205f615f6340040466ad5a2d9c7b51a43240cfef70a1a077",
+        "bytes": 1554228
+      },
+      "atlas_dimensions": [
+        1236,
+        1456
+      ],
+      "frame_size": [
+        306,
+        361
+      ],
+      "gutter_px": 4,
+      "columns": 4,
+      "rows": 4,
+      "frames": {
+        "run_rear_0": {
+          "region": [
+            0,
+            0,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_run_rear_phase_0.png",
+            "sha256": "f204ec92e94d5fb3dacdc4111e25d7704f056ddd0267847866f07adc075a833f",
+            "bytes": 1094779
+          },
+          "prompt_summary": "Rear run cycle phase one; preserve the star cape, left shield, right sword and armor."
+        },
+        "run_rear_1": {
+          "region": [
+            310,
+            0,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_run_rear_phase_1.png",
+            "sha256": "b3f4711c844b030b5a8bfcfaa415392a29c3c578a0d9271df0a2b7ddd115e049",
+            "bytes": 1124763
+          },
+          "prompt_summary": "Rear run cycle phase two; preserve the star cape, left shield, right sword and armor."
+        },
+        "jump_rear": {
+          "region": [
+            620,
+            0,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_jump_rear.png",
+            "sha256": "d7c4c81332fa1b44be7f5adbe7bfcc2d1a095ab2b773ed6eacfb1f1ac7daffdd",
+            "bytes": 1150695
+          },
+          "prompt_summary": "Airborne rear jump with both feet lifted and the cape rising."
+        },
+        "slide_rear": {
+          "region": [
+            930,
+            0,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_slide_rear.png",
+            "sha256": "e08467439cf7b951d2e11597f6e20fe387b6e07c65c7fa9fc1e5bebfd1370054",
+            "bytes": 1145870
+          },
+          "prompt_summary": "Low rear running slide with knees bent and cape trailing."
+        },
+        "fall_rear": {
+          "region": [
+            0,
+            365,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_fall_rear.png",
+            "sha256": "39ff697b86100fabb656100b44805c67050dc7865d22efd4c4585ed5a2089012",
+            "bytes": 1115124
+          },
+          "prompt_summary": "Rear falling pose with arms open and legs trailing."
+        },
+        "attack_rear": {
+          "region": [
+            310,
+            365,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_attack_rear.png",
+            "sha256": "c354f712cdbccc49302aa64a741dc35176acac809c28e34eede90dda6c592b22",
+            "bytes": 1136882
+          },
+          "prompt_summary": "Rear sword strike with the shield held on the left."
+        },
+        "block_rear": {
+          "region": [
+            620,
+            365,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_block_rear.png",
+            "sha256": "c81c5c55ab76af1f2fd945f8ed1505a7727828fc1efeb754fe6d063d9eee7cff",
+            "bytes": 1170139
+          },
+          "prompt_summary": "Rear defensive pose with the shield raised."
+        },
+        "damage_rear": {
+          "region": [
+            930,
+            365,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_damage_rear.png",
+            "sha256": "0d408800a72f12bdf83a243a4ed9c55fbead340098931ba6ac16ea8a297fff0d",
+            "bytes": 1097858
+          },
+          "prompt_summary": "Rear damage flinch with shoulders hunched and sword lowered."
+        },
+        "special_rear": {
+          "region": [
+            0,
+            730,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_special_rear.png",
+            "sha256": "5a3c330a96839f03666ff8e6c82598d37b998c5c025cacd30fe2b94873885498",
+            "bytes": 1107572
+          },
+          "prompt_summary": "Rear special-ability stance with sword and shield spread wide."
+        },
+        "land_rear": {
+          "region": [
+            310,
+            730,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_land_rear.png",
+            "sha256": "53ffe71e619e8e33fa1cbb73043e7b217b6526e883059bdb7422db86c90e075f",
+            "bytes": 1108889
+          },
+          "prompt_summary": "Rear landing recovery with both boots planted."
+        },
+        "dodge_rear": {
+          "region": [
+            620,
+            730,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_dodge_rear.png",
+            "sha256": "0c0d1d4bc840031277729704eb3ab5a95ab8152a0f93bc5feb3e69f3a777d0df",
+            "bytes": 1078242
+          },
+          "prompt_summary": "Rear sidestep dodge with the shield and sword held in their original hands."
+        },
+        "victory_rear": {
+          "region": [
+            930,
+            730,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_victory_rear.png",
+            "sha256": "557c9ca363639d79a8cad67b0cf2ed11da2c4d2a3996dbc9d13fdd3055db56d2",
+            "bytes": 1056160
+          },
+          "prompt_summary": "Rear victory pose with the sword and shield raised."
+        },
+        "defeat_rear": {
+          "region": [
+            0,
+            1095,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_defeat_rear.png",
+            "sha256": "6526e3af5f4aebe5017f0110754959cad67843cb556b8f105e58ef1db843702b",
+            "bytes": 1144157
+          },
+          "prompt_summary": "Rear kneeling defeat pose with head bowed."
+        },
+        "dodge_right_rear": {
+          "region": [
+            310,
+            1095,
+            306,
+            361
+          ],
+          "source": {
+            "path": "art/premium-2d/source/knight_dodge_right_rear.png",
+            "sha256": "46a29a4be4b20ee95f5f0ba18ad09771125baf66de601e499800b1aa6b102241",
+            "bytes": 1098912
+          },
+          "prompt_summary": "Rear sidestep dodge to the right, preserving shield and sword hands."
+        }
+      }
+    },
+    "gargoyle": {
+      "atlas": {
+        "path": "assets/characters/action-atlases/gargoyle_actions.png",
+        "sha256": "60f9115439b0b53d8c212f9b754e9f70149a2cdc12654401f060fc1c7effa310",
+        "bytes": 2223200
+      },
+      "atlas_dimensions": [
+        1496,
+        1376
+      ],
+      "frame_size": [
+        371,
+        341
+      ],
+      "gutter_px": 4,
+      "columns": 4,
+      "rows": 4,
+      "frames": {
+        "run_rear_0": {
+          "region": [
+            0,
+            0,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_run_rear_phase_0.png",
+            "sha256": "2b02dad1480083ae6464000794bda6213c6f661f54a7d93b5b7902b997f9d4a7",
+            "bytes": 1291827
+          },
+          "prompt_summary": "Rear run cycle phase one; preserve stone anatomy, horns, wings and star cloth."
+        },
+        "run_rear_1": {
+          "region": [
+            375,
+            0,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_run_rear_phase_1.png",
+            "sha256": "2adae1c4bcf5f07410790a91959f07d33d05dca3a664e5fea3c1c08b2a7ac25e",
+            "bytes": 1215377
+          },
+          "prompt_summary": "Rear run cycle phase two; preserve stone anatomy, horns, wings and star cloth."
+        },
+        "jump_rear": {
+          "region": [
+            750,
+            0,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_jump_rear.png",
+            "sha256": "a395c248e7166b757e98804038998a7575a7da8c1b90f0eaae8513410d2556ab",
+            "bytes": 1187389
+          },
+          "prompt_summary": "Airborne rear jump with the wings spread and legs tucked."
+        },
+        "slide_rear": {
+          "region": [
+            1125,
+            0,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_slide_rear.png",
+            "sha256": "ffc1ee55f1a263544c33cb5abde8d2a90fdc97431a65553ed1d9e477da85ce62",
+            "bytes": 1084843
+          },
+          "prompt_summary": "Low rear running slide with wings swept back."
+        },
+        "attack_rear": {
+          "region": [
+            0,
+            345,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_attack_rear.png",
+            "sha256": "08340aa277ef78bf7c1eb1d8ea998012232359408f1e8c8e26041e403939daa5",
+            "bytes": 1279216
+          },
+          "prompt_summary": "Rear punch attack with the wings open and feet braced."
+        },
+        "damage_rear": {
+          "region": [
+            375,
+            345,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_damage_rear.png",
+            "sha256": "ccdff479a1ac4c986b6620d3f92058505e69d1298c59ba9a4f8de8a950327068",
+            "bytes": 1188066
+          },
+          "prompt_summary": "Rear damage flinch with hunched shoulders and wings drawn inward."
+        },
+        "special_rear": {
+          "region": [
+            750,
+            345,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_special_rear.png",
+            "sha256": "f1a11f9fcce7ce9b582602116344d4c2a13b89531000e66f21bfff2e0990832e",
+            "bytes": 1256840
+          },
+          "prompt_summary": "Rear special stance with raised fists and high-spread wings."
+        },
+        "land_rear": {
+          "region": [
+            1125,
+            345,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_land_rear.png",
+            "sha256": "8dd052e46bdab3b534607a27a4b626e20f987e667ef3f0668acf191c84bf77b3",
+            "bytes": 1183495
+          },
+          "prompt_summary": "Rear landing recovery with claws planted and wings settling."
+        },
+        "dodge_rear": {
+          "region": [
+            0,
+            690,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_dodge_rear.png",
+            "sha256": "5c792241f441f740ff15c4b5f985c6ce113d3f593af392f35dea640777be6dc9",
+            "bytes": 1140516
+          },
+          "prompt_summary": "Rear sidestep dodge balanced by the original wings."
+        },
+        "fall_rear": {
+          "region": [
+            375,
+            690,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_fall_rear.png",
+            "sha256": "5c935d88b919d37904f22dc0e9f82c15577d2e290cc1386a8954d3287dee46a1",
+            "bytes": 1143265
+          },
+          "prompt_summary": "Rear fall pose with arms spread and legs trailing."
+        },
+        "block_rear": {
+          "region": [
+            750,
+            690,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_block_rear.png",
+            "sha256": "ebad6108856fb67eaeb927b01aeda4f2f1ed2a2ac9ff2368e78eb84e8320c3c9",
+            "bytes": 1244009
+          },
+          "prompt_summary": "Rear defensive block with arms crossed and wings folded."
+        },
+        "victory_rear": {
+          "region": [
+            1125,
+            690,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_victory_rear.png",
+            "sha256": "c723566bedd44c62548467c6286fc29de77a23e594cb4772413d0facdcc25e08",
+            "bytes": 1313135
+          },
+          "prompt_summary": "Rear victory pose with fists raised and wings open."
+        },
+        "defeat_rear": {
+          "region": [
+            0,
+            1035,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_defeat_rear.png",
+            "sha256": "f965ce996218f8b3d07b251187647bdb11c704c8976c1550aa68140a8d6477a4",
+            "bytes": 1143900
+          },
+          "prompt_summary": "Rear low defeat pose with head bowed and wings drooped."
+        },
+        "dodge_right_rear": {
+          "region": [
+            375,
+            1035,
+            371,
+            341
+          ],
+          "source": {
+            "path": "art/premium-2d/source/gargoyle_dodge_right_rear.png",
+            "sha256": "68318f3334d9b8618825a0280f9ccb2a86b75c3276f8ac20eeb8b0b90852890c",
+            "bytes": 1181483
+          },
+          "prompt_summary": "Rear sidestep dodge to the right, balanced by the wings."
+        }
+      }
+    },
+    "witch": {
+      "atlas": {
+        "path": "assets/characters/action-atlases/witch_actions.png",
+        "sha256": "16bf2dde92505e2a050c73fb4cdbfd2fd5ee5805345d550be2347c83b1cd1ca9",
+        "bytes": 1665884
+      },
+      "atlas_dimensions": [
+        1204,
+        1472
+      ],
+      "frame_size": [
+        298,
+        365
+      ],
+      "gutter_px": 4,
+      "columns": 4,
+      "rows": 4,
+      "frames": {
+        "run_rear_0": {
+          "region": [
+            0,
+            0,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_run_rear_phase_0.png",
+            "sha256": "504daaeb795aa8aa294a93ee8a4e7ddc1a7373c27cefe19890652ce5fccbca92",
+            "bytes": 1142859
+          },
+          "prompt_summary": "Rear run cycle phase one; preserve the hat, braid, robe, pouch and right-hand staff."
+        },
+        "run_rear_1": {
+          "region": [
+            302,
+            0,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_run_rear_phase_1.png",
+            "sha256": "1948edbde31bf59411c9847270c7e3b5de4dcb52c3741bf9e2e2bf7c5263ac81",
+            "bytes": 1090547
+          },
+          "prompt_summary": "Rear run cycle phase two; preserve the hat, braid, robe, pouch and right-hand staff."
+        },
+        "jump_rear": {
+          "region": [
+            604,
+            0,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_jump_rear.png",
+            "sha256": "6c412efda40ced7bf39702fbe940bdf62c6dbb0d5e083df932f4a5ac015c04c8",
+            "bytes": 1119236
+          },
+          "prompt_summary": "Airborne rear jump with bent knees, lifted robe and right-hand staff."
+        },
+        "slide_rear": {
+          "region": [
+            906,
+            0,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_slide_rear.png",
+            "sha256": "123449ebca685f7561f86796d3ab38c89a078e1624bbe2cd49583abc107f6b66",
+            "bytes": 1146524
+          },
+          "prompt_summary": "Rear low running slide with the right-hand staff and robe trailing."
+        },
+        "attack_rear": {
+          "region": [
+            0,
+            369,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_attack_rear.png",
+            "sha256": "6241fd32dd8672a7cbc9fa90ca22b6acb08db711611e13dae99c39962e09db82",
+            "bytes": 1107815
+          },
+          "prompt_summary": "Rear spell attack with the original staff thrust to the right."
+        },
+        "damage_rear": {
+          "region": [
+            302,
+            369,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_damage_rear.png",
+            "sha256": "e980927278af7c4061a6bd652a41ab0ac3308f5a2ff003bd762570c575592749",
+            "bytes": 1089571
+          },
+          "prompt_summary": "Rear damage flinch with the staff lowered on the right."
+        },
+        "special_rear": {
+          "region": [
+            604,
+            369,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_special_rear.png",
+            "sha256": "4f8000f0561061a80ea3abf1b794ea4cd31a4d38d24d0ee83475c42f14aee75b",
+            "bytes": 1169297
+          },
+          "prompt_summary": "Rear special stance with the original staff raised."
+        },
+        "land_rear": {
+          "region": [
+            906,
+            369,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_land_rear.png",
+            "sha256": "cb75e931ecedbad17e8146353f2f6d860e8cd990b2b7749a65151d0e5220df82",
+            "bytes": 1110807
+          },
+          "prompt_summary": "Rear landing recovery with both boots planted and staff held right."
+        },
+        "dodge_rear": {
+          "region": [
+            0,
+            738,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_dodge_rear.png",
+            "sha256": "4ca61d2590a0a678419ec769ea2f9a6633919423321714654524530357453ce1",
+            "bytes": 1075822
+          },
+          "prompt_summary": "Rear sidestep dodge with the original staff held right."
+        },
+        "fall_rear": {
+          "region": [
+            302,
+            738,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_fall_rear.png",
+            "sha256": "28ccc8cd4255c6b350dca28ed897b57396d5b550633843ff80b3be171d7e2213",
+            "bytes": 1137792
+          },
+          "prompt_summary": "Rear fall pose with arms open and the staff held right."
+        },
+        "block_rear": {
+          "region": [
+            604,
+            738,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_block_rear.png",
+            "sha256": "cc9ae4e87cf04419407dfc10fb53176027b5a3964a47d57eadc4552b5bc15ba3",
+            "bytes": 1178249
+          },
+          "prompt_summary": "Rear defensive block with the staff and left arm guarding."
+        },
+        "victory_rear": {
+          "region": [
+            906,
+            738,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_victory_rear.png",
+            "sha256": "714fd1ce3e2f8fcff5503266420b2be23a4da96e7dffccf4bb86f1160d11b80b",
+            "bytes": 1066054
+          },
+          "prompt_summary": "Rear victory pose with the staff and left arm raised."
+        },
+        "defeat_rear": {
+          "region": [
+            0,
+            1107,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_defeat_rear.png",
+            "sha256": "f4a95a146658eecb1f35fac77f89ce65b484f78433f1c9fe4a1be2e5ab6c58ff",
+            "bytes": 1116532
+          },
+          "prompt_summary": "Rear kneeling defeat pose with staff lowered."
+        },
+        "dodge_right_rear": {
+          "region": [
+            302,
+            1107,
+            298,
+            365
+          ],
+          "source": {
+            "path": "art/premium-2d/source/witch_dodge_right_rear.png",
+            "sha256": "41ac38563960001d34893cd2ae37bf7cec0d02020c511063857cdd5ad10c427d",
+            "bytes": 1164008
+          },
+          "prompt_summary": "Rear sidestep dodge to the right with the staff still in her right hand."
+        }
+      }
+    }
+  }
+}

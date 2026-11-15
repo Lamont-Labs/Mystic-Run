@@ -3,7 +3,9 @@
   "coverage_roots": [
     "assets/models",
     "assets/characters",
-    "assets/environment/kaykit"
+    "assets/environment/kaykit",
+    "assets/environment/premium-2d",
+    "assets/characters/action-atlases"
   ],
   "assets": [
     {
@@ -348,7 +350,9 @@
         "tools/extract_concept_sprites.py",
         "assets/characters/concept-sprites/PROVENANCE.json",
         "tools/generate_concept_action_sprites.py",
-        "assets/characters/concept-sprites/ACTION_PROVENANCE.json"
+        "assets/characters/concept-sprites/ACTION_PROVENANCE.json",
+        "tools/build_premium_2d_assets.py",
+        "assets/characters/concept-sprites/atlases/manifest.json"
       ],
       "edition": "Noncommercial MysticRun game-use authorization",
       "license_evidence": {
@@ -358,151 +362,28 @@
       },
       "modifications": [
         "Cropped the six front/rear character views from the owner-provided approved sheet and removed only edge-connected pale background.",
-        "Added locally drawn front/rear running, jumping, sliding, basic attack, landing, and special-power pose frames for Knight, Gargoyle, and Witch; generated at no cost from authored drawing primitives, guided by the supplied concept sheet.",
+        "Preserved older locally drawn action studies as source material; they are not loaded by current gameplay.",
+        "Packed the approved front/rear cutouts into per-character atlases without changing any character pixels; gameplay reads the atlas regions.",
+        "Source-conditioned rear action poses are tracked separately from the exact approved front/rear concept cutouts.",
         "Use is limited to noncommercial distribution as part of MysticRun; commercial use is not authorized.",
-        "Required credit: Character illustrations: MysticRun owner-provided concept art and locally generated action-pose artwork; noncommercial game use only."
+        "Required credit: Character illustrations: MysticRun owner-provided concept art and generated source-conditioned poses; noncommercial game use only."
       ],
       "derived_from": [],
       "files": [
         {
-          "path": "assets/characters/concept-sprites/gargoyle_front.png",
-          "sha256": "c951ffb00ec55770a387ace46aa3a5db1877b812c074b33a19bb273f15466aa1",
-          "bytes": 399496
+          "path": "assets/characters/concept-sprites/atlases/gargoyle_atlas.png",
+          "sha256": "6113d6deb00b491d581453837a25f4cf85bd1f27131119f7ea402a704eb8f7bc",
+          "bytes": 508659
         },
         {
-          "path": "assets/characters/concept-sprites/gargoyle_rear.png",
-          "sha256": "ed7110818292c90f880dc1edaca8b78316a82fb824c47e88e53b6e3f17ccf81b",
-          "bytes": 211887
+          "path": "assets/characters/concept-sprites/atlases/knight_atlas.png",
+          "sha256": "051723aba56787dc2a600074c3f0cfcf9788a4863b7b22760355924abbfdf2f4",
+          "bytes": 420142
         },
         {
-          "path": "assets/characters/concept-sprites/knight_front.png",
-          "sha256": "ef4cf8b977f2ca622ba8aeabe2e443f18a28d478e7481e6282f2b3cce1ec6f0a",
-          "bytes": 375118
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_rear.png",
-          "sha256": "11d02d535a213241be61ee4cdccdcbaa2420d51a6db883a49b5a99806b5f8457",
-          "bytes": 172899
-        },
-        {
-          "path": "assets/characters/concept-sprites/witch_front.png",
-          "sha256": "8f6b881e36bfec868b0274f5c1e47226b3d9c8798a039a49fbbbda317f9b8f0c",
-          "bytes": 410463
-        },
-        {
-          "path": "assets/characters/concept-sprites/witch_rear.png",
-          "sha256": "87d90ecbfbfa7d7e51e8c164824a33cbc1a71b7a97fefa2be33c544fcbcaa792",
-          "bytes": 177914
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_run_0_front.png",
-          "sha256": "afca72411b47c0962944a3d7f1a4fc302637a439f7a870f7f5b81d1234f171fb",
-          "bytes": 30115
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_run_0_rear.png",
-          "sha256": "9a6a2c2dbfe1bc7412936413b885426e9def5ba56058efdc5ea395eac1edb329",
-          "bytes": 29941
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_run_1_front.png",
-          "sha256": "34b46f22ed9649b772bc4e4933b81703e3291064852f2e992d3c07f6fca3190a",
-          "bytes": 30407
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_run_1_rear.png",
-          "sha256": "5b6f34d6f5bce62b1f0eeae96217062297a81b2918b8bee47831f56bd839859c",
-          "bytes": 30110
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_jump_front.png",
-          "sha256": "8895c5d1f9ea0c48f63cc3ca754a80a8363bc908e7c4fdb00a21227278083b59",
-          "bytes": 28661
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_jump_rear.png",
-          "sha256": "7886b0aee355cd6add7e8fa69b07de4d0888a0f7a6eeec2458467d27e86c908d",
-          "bytes": 28282
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_slide_front.png",
-          "sha256": "990ff24c782057349039467d9a0d23018c6b509a89e1d60bf8f90b97191628d7",
-          "bytes": 25237
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_slide_rear.png",
-          "sha256": "0c0d6ea0e053369b6232343c206bd5f7082242da1656d2c284f9bfadbbb707c3",
-          "bytes": 25011
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_attack_front.png",
-          "sha256": "826ad0fa3dd30f6df8c47fda5295c37e3e252e9f46819a1e437c7255ae5ec946",
-          "bytes": 28885
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_attack_rear.png",
-          "sha256": "6a4edf24e6ccf57a6aa669944bc04945fcbca8fdf03a078e14d9bb28b8821403",
-          "bytes": 28668
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_landing_front.png",
-          "sha256": "40dd176a267dc15b13cf3fcb8d23085bc70e7b1a8b54f2273ecdf0931050a797",
-          "bytes": 27404
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_landing_rear.png",
-          "sha256": "b8bb55454e0a0e855924ee08dffc5191a640c1559751ffcaceaf449f38b794d8",
-          "bytes": 27213
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_power_front.png",
-          "sha256": "b3bf11b3ca7d4708f8f55d121b4325346019890241d549e03b295a17386b791a",
-          "bytes": 33253
-        },
-        {
-          "path": "assets/characters/concept-sprites/knight_power_rear.png",
-          "sha256": "e4b70964a18ee65d7dccb04f8ad2a3ad0df5a91207231d5ee9c4814d91096047",
-          "bytes": 32950
-        },
-        {
-          "path": "assets/characters/concept-sprites/gargoyle_run_0_front.png",
-          "sha256": "2e35b06ab473510ac3bc7eeb83ec72eb2e134263e77e5bf75eef56f700684e04",
-          "bytes": 34563
-        },
-        {
-          "path": "assets/characters/concept-sprites/gargoyle_run_0_rear.png",
-          "sha256": "6dbbd0b4c985087fc1c1509dbc45218047bb119d3748b5b2860fcf7f805b7141",
-          "bytes": 34200
-        },
-        {
-          "path": "assets/characters/concept-sprites/gargoyle_run_1_front.png",
-          "sha256": "e618dc683d38b8a60be08c71f905971db0a2bf2ba05c5f9d83c7180c7f4ec435",
-          "bytes": 35141
-        },
-        {
-          "path": "assets/characters/concept-sprites/gargoyle_run_1_rear.png",
-          "sha256": "1ea67cb72998031ed7b786a03d368f5109873f98257fa52862a53e0115b546f0",
-          "bytes": 34655
-        },
-        {
-          "path": "assets/characters/concept-sprites/gargoyle_jump_front.png",
-          "sha256": "cf653c0fa95c39ca0fc3e03c4f6e370c354cd79b46623983b7168818d83d0a0f",
-          "bytes": 37314
-        },
-        {
-          "path": "assets/characters/concept-sprites/gargoyle_jump_rear.png",
-          "sha256": "1f7ae9f4843cc80962a6de95885661e7f8400e9acb36a1841cda957b2fb7a3b0",
-          "bytes": 37234
-        },
-        {
-          "path": "assets/characters/concept-sprites/gargoyle_slide_front.png",
-          "sha256": "62552555a22e2183affaf0a052a2fa6b542662224be047b5d0956b3b30ca0b80",
-          "bytes": 28928
-        },
-        {
-          "path": "assets/characters/concept-sprites/gargoyle_slide_rear.png",
-          "sha256": "f863b587021b925a18830f8faef426a59590ed0a724c510ed4de21772cf68723",
-          "bytes": 29028
+          "path": "assets/characters/concept-sprites/atlases/witch_atlas.png",
+          "sha256": "d7eb5d14f425769fd6f5540368da9ddaba180c443923ca2b592f2ea0f3ddfee3",
+          "bytes": 443608
         },
         {
           "path": "assets/characters/concept-sprites/gargoyle_attack_front.png",
@@ -513,6 +394,21 @@
           "path": "assets/characters/concept-sprites/gargoyle_attack_rear.png",
           "sha256": "d3564bfe33eb8ebc94b035eff407025907c462c1b354c08940cc64a01d0039eb",
           "bytes": 35705
+        },
+        {
+          "path": "assets/characters/concept-sprites/gargoyle_front.png",
+          "sha256": "c951ffb00ec55770a387ace46aa3a5db1877b812c074b33a19bb273f15466aa1",
+          "bytes": 399496
+        },
+        {
+          "path": "assets/characters/concept-sprites/gargoyle_jump_front.png",
+          "sha256": "cf653c0fa95c39ca0fc3e03c4f6e370c354cd79b46623983b7168818d83d0a0f",
+          "bytes": 37314
+        },
+        {
+          "path": "assets/characters/concept-sprites/gargoyle_jump_rear.png",
+          "sha256": "1f7ae9f4843cc80962a6de95885661e7f8400e9acb36a1841cda957b2fb7a3b0",
+          "bytes": 37234
         },
         {
           "path": "assets/characters/concept-sprites/gargoyle_landing_front.png",
@@ -535,44 +431,119 @@
           "bytes": 44915
         },
         {
-          "path": "assets/characters/concept-sprites/witch_run_0_front.png",
-          "sha256": "74db18de2b4b1b99d9c3fd6b8c5eb2cf85787ee340e20d962655712bfd9d145a",
-          "bytes": 31956
+          "path": "assets/characters/concept-sprites/gargoyle_rear.png",
+          "sha256": "ed7110818292c90f880dc1edaca8b78316a82fb824c47e88e53b6e3f17ccf81b",
+          "bytes": 211887
         },
         {
-          "path": "assets/characters/concept-sprites/witch_run_0_rear.png",
-          "sha256": "8fab08f431759e6c94aef568a68baafa588496ab99049e9ba395c03ba4329056",
-          "bytes": 31752
+          "path": "assets/characters/concept-sprites/gargoyle_run_0_front.png",
+          "sha256": "2e35b06ab473510ac3bc7eeb83ec72eb2e134263e77e5bf75eef56f700684e04",
+          "bytes": 34563
         },
         {
-          "path": "assets/characters/concept-sprites/witch_run_1_front.png",
-          "sha256": "22d942653f9e103ef743e7a1915c94c8e5cbc3280e4ffb205978cd25e0d0051f",
-          "bytes": 31788
+          "path": "assets/characters/concept-sprites/gargoyle_run_0_rear.png",
+          "sha256": "6dbbd0b4c985087fc1c1509dbc45218047bb119d3748b5b2860fcf7f805b7141",
+          "bytes": 34200
         },
         {
-          "path": "assets/characters/concept-sprites/witch_run_1_rear.png",
-          "sha256": "5a2524c85db9dc6db6be0a776462d37e229ec3dca6b7bba70f492575e8214b90",
-          "bytes": 31562
+          "path": "assets/characters/concept-sprites/gargoyle_run_1_front.png",
+          "sha256": "e618dc683d38b8a60be08c71f905971db0a2bf2ba05c5f9d83c7180c7f4ec435",
+          "bytes": 35141
         },
         {
-          "path": "assets/characters/concept-sprites/witch_jump_front.png",
-          "sha256": "c750dd02d52e4235832952e9f236252a0f3ba1dce15527c818596a623146ec07",
-          "bytes": 30751
+          "path": "assets/characters/concept-sprites/gargoyle_run_1_rear.png",
+          "sha256": "1ea67cb72998031ed7b786a03d368f5109873f98257fa52862a53e0115b546f0",
+          "bytes": 34655
         },
         {
-          "path": "assets/characters/concept-sprites/witch_jump_rear.png",
-          "sha256": "10311bebbec150e2ee459b3ef9ce5ae672314dc5cf616a502e8ada5f576e51b3",
-          "bytes": 30558
+          "path": "assets/characters/concept-sprites/gargoyle_slide_front.png",
+          "sha256": "62552555a22e2183affaf0a052a2fa6b542662224be047b5d0956b3b30ca0b80",
+          "bytes": 28928
         },
         {
-          "path": "assets/characters/concept-sprites/witch_slide_front.png",
-          "sha256": "8bd86dd1d42081b46ba77265f65079aa7129f55764ba0409bdaefabf8ded445f",
-          "bytes": 27656
+          "path": "assets/characters/concept-sprites/gargoyle_slide_rear.png",
+          "sha256": "f863b587021b925a18830f8faef426a59590ed0a724c510ed4de21772cf68723",
+          "bytes": 29028
         },
         {
-          "path": "assets/characters/concept-sprites/witch_slide_rear.png",
-          "sha256": "47b5346b45ba389c826bcbd5352249e0d4793be931f80eae9cb18c0351fc78db",
-          "bytes": 27414
+          "path": "assets/characters/concept-sprites/knight_attack_front.png",
+          "sha256": "826ad0fa3dd30f6df8c47fda5295c37e3e252e9f46819a1e437c7255ae5ec946",
+          "bytes": 28885
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_attack_rear.png",
+          "sha256": "6a4edf24e6ccf57a6aa669944bc04945fcbca8fdf03a078e14d9bb28b8821403",
+          "bytes": 28668
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_front.png",
+          "sha256": "ef4cf8b977f2ca622ba8aeabe2e443f18a28d478e7481e6282f2b3cce1ec6f0a",
+          "bytes": 375118
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_jump_front.png",
+          "sha256": "8895c5d1f9ea0c48f63cc3ca754a80a8363bc908e7c4fdb00a21227278083b59",
+          "bytes": 28661
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_jump_rear.png",
+          "sha256": "7886b0aee355cd6add7e8fa69b07de4d0888a0f7a6eeec2458467d27e86c908d",
+          "bytes": 28282
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_landing_front.png",
+          "sha256": "40dd176a267dc15b13cf3fcb8d23085bc70e7b1a8b54f2273ecdf0931050a797",
+          "bytes": 27404
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_landing_rear.png",
+          "sha256": "b8bb55454e0a0e855924ee08dffc5191a640c1559751ffcaceaf449f38b794d8",
+          "bytes": 27213
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_power_front.png",
+          "sha256": "b3bf11b3ca7d4708f8f55d121b4325346019890241d549e03b295a17386b791a",
+          "bytes": 33253
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_power_rear.png",
+          "sha256": "e4b70964a18ee65d7dccb04f8ad2a3ad0df5a91207231d5ee9c4814d91096047",
+          "bytes": 32950
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_rear.png",
+          "sha256": "11d02d535a213241be61ee4cdccdcbaa2420d51a6db883a49b5a99806b5f8457",
+          "bytes": 172899
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_run_0_front.png",
+          "sha256": "afca72411b47c0962944a3d7f1a4fc302637a439f7a870f7f5b81d1234f171fb",
+          "bytes": 30115
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_run_0_rear.png",
+          "sha256": "9a6a2c2dbfe1bc7412936413b885426e9def5ba56058efdc5ea395eac1edb329",
+          "bytes": 29941
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_run_1_front.png",
+          "sha256": "34b46f22ed9649b772bc4e4933b81703e3291064852f2e992d3c07f6fca3190a",
+          "bytes": 30407
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_run_1_rear.png",
+          "sha256": "5b6f34d6f5bce62b1f0eeae96217062297a81b2918b8bee47831f56bd839859c",
+          "bytes": 30110
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_slide_front.png",
+          "sha256": "990ff24c782057349039467d9a0d23018c6b509a89e1d60bf8f90b97191628d7",
+          "bytes": 25237
+        },
+        {
+          "path": "assets/characters/concept-sprites/knight_slide_rear.png",
+          "sha256": "0c0d6ea0e053369b6232343c206bd5f7082242da1656d2c284f9bfadbbb707c3",
+          "bytes": 25011
         },
         {
           "path": "assets/characters/concept-sprites/witch_attack_front.png",
@@ -583,6 +554,21 @@
           "path": "assets/characters/concept-sprites/witch_attack_rear.png",
           "sha256": "eeb395daca0259e622f5d558739eea9015d7b4e36be702d76494b2b9e649f89b",
           "bytes": 31270
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_front.png",
+          "sha256": "8f6b881e36bfec868b0274f5c1e47226b3d9c8798a039a49fbbbda317f9b8f0c",
+          "bytes": 410463
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_jump_front.png",
+          "sha256": "c750dd02d52e4235832952e9f236252a0f3ba1dce15527c818596a623146ec07",
+          "bytes": 30751
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_jump_rear.png",
+          "sha256": "10311bebbec150e2ee459b3ef9ce5ae672314dc5cf616a502e8ada5f576e51b3",
+          "bytes": 30558
         },
         {
           "path": "assets/characters/concept-sprites/witch_landing_front.png",
@@ -603,6 +589,405 @@
           "path": "assets/characters/concept-sprites/witch_power_rear.png",
           "sha256": "7e6b893890c483bff27caed7de8f60abc9622afeb1428da4bc228712fe04fcae",
           "bytes": 40544
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_rear.png",
+          "sha256": "87d90ecbfbfa7d7e51e8c164824a33cbc1a71b7a97fefa2be33c544fcbcaa792",
+          "bytes": 177914
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_run_0_front.png",
+          "sha256": "74db18de2b4b1b99d9c3fd6b8c5eb2cf85787ee340e20d962655712bfd9d145a",
+          "bytes": 31956
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_run_0_rear.png",
+          "sha256": "8fab08f431759e6c94aef568a68baafa588496ab99049e9ba395c03ba4329056",
+          "bytes": 31752
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_run_1_front.png",
+          "sha256": "22d942653f9e103ef743e7a1915c94c8e5cbc3280e4ffb205978cd25e0d0051f",
+          "bytes": 31788
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_run_1_rear.png",
+          "sha256": "5a2524c85db9dc6db6be0a776462d37e229ec3dca6b7bba70f492575e8214b90",
+          "bytes": 31562
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_slide_front.png",
+          "sha256": "8bd86dd1d42081b46ba77265f65079aa7129f55764ba0409bdaefabf8ded445f",
+          "bytes": 27656
+        },
+        {
+          "path": "assets/characters/concept-sprites/witch_slide_rear.png",
+          "sha256": "47b5346b45ba389c826bcbd5352249e0d4793be931f80eae9cb18c0351fc78db",
+          "bytes": 27414
+        }
+      ]
+    },
+    {
+      "cost_usd": 0,
+      "commercial_use": false,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "id": "mysticrun-replit-generated-backdrops",
+      "publisher": "Replit image-generation tool",
+      "license": "LicenseRef-MysticRun-Replit-Generated-NonCommercial",
+      "sources": [
+        "tools/build_premium_2d_assets.py",
+        "assets/environment/premium-2d/PROVENANCE.json",
+        "art/premium-2d/source/mysticrun_citadel_dawn.png",
+        "art/premium-2d/source/mysticrun_enchanted_forest.png",
+        "art/premium-2d/source/mysticrun_crystal_canyon.png"
+      ],
+      "edition": "Generated for MysticRun in Replit",
+      "license_evidence": {
+        "path": "assets/licenses/mysticrun-replit-generated-art-noncommercial.txt",
+        "sha256": "38045b886ab0cdab64fc61c775a660bfcbc2f743c79b8a9004214e08d599840e",
+        "bytes": 740
+      },
+      "modifications": [
+        "Generated three original, character-free fantasy backgrounds with Replit image generation.",
+        "Preserved the original generated PNGs; made portrait 2:3 JPEG gameplay crops without changing the character concept artwork.",
+        "Use is recorded as noncommercial project art; no commercial-use claim is made."
+      ],
+      "derived_from": [],
+      "files": [
+        {
+          "path": "art/premium-2d/source/mysticrun_citadel_dawn.png",
+          "sha256": "696bb3c4d9dbd74e02a3f43fca793a715bb276b4191d9c52512aa071c6a3bc0e",
+          "bytes": 1526433
+        },
+        {
+          "path": "art/premium-2d/source/mysticrun_crystal_canyon.png",
+          "sha256": "c4ba0ac0932e7889db11ed9e2c864527aceb3dd61a24c304f1dda5d34ecce2e9",
+          "bytes": 1489605
+        },
+        {
+          "path": "art/premium-2d/source/mysticrun_enchanted_forest.png",
+          "sha256": "971968bf6c0e596d61f6e4f688b582b6d849278f21291412d8d3d190bfa810a1",
+          "bytes": 1988840
+        },
+        {
+          "path": "assets/environment/premium-2d/gargoyle_backdrop.jpg",
+          "sha256": "ff503fff491472e072e7065dc438368c55e7d4f301d0496c67639fe995896dbf",
+          "bytes": 199088
+        },
+        {
+          "path": "assets/environment/premium-2d/knight_backdrop.jpg",
+          "sha256": "264343a7370187588644d085875c0406cf8e81c0d40dc48fbfc42155fc2ee4c0",
+          "bytes": 138060
+        },
+        {
+          "path": "assets/environment/premium-2d/witch_backdrop.jpg",
+          "sha256": "654d55aa4b9baaa2a2a7b17012679ec03aa43e89e6b461057c893884b80184d1",
+          "bytes": 127295
+        }
+      ]
+    },
+    {
+      "cost_usd": 0,
+      "commercial_use": false,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "id": "mysticrun-replit-generated-character-poses",
+      "publisher": "Replit image-editing tool",
+      "license": "LicenseRef-MysticRun-Replit-Generated-NonCommercial",
+      "sources": [
+        "references/01-character-concept.png",
+        "tools/build_premium_2d_assets.py",
+        "assets/characters/action-atlases/manifest.json",
+        "art/premium-2d/source/knight_run_rear_phase_0.png",
+        "art/premium-2d/source/knight_run_rear_phase_1.png",
+        "art/premium-2d/source/gargoyle_run_rear_phase_0.png",
+        "art/premium-2d/source/gargoyle_run_rear_phase_1.png",
+        "art/premium-2d/source/witch_run_rear_phase_0.png",
+        "art/premium-2d/source/witch_run_rear_phase_1.png",
+        "art/premium-2d/source/knight_jump_rear.png",
+        "art/premium-2d/source/knight_slide_rear.png",
+        "art/premium-2d/source/knight_fall_rear.png",
+        "art/premium-2d/source/knight_attack_rear.png",
+        "art/premium-2d/source/knight_block_rear.png",
+        "art/premium-2d/source/knight_damage_rear.png",
+        "art/premium-2d/source/knight_special_rear.png",
+        "art/premium-2d/source/gargoyle_jump_rear.png",
+        "art/premium-2d/source/gargoyle_slide_rear.png",
+        "art/premium-2d/source/witch_jump_rear.png",
+        "art/premium-2d/source/witch_slide_rear.png",
+        "art/premium-2d/source/gargoyle_attack_rear.png",
+        "art/premium-2d/source/gargoyle_damage_rear.png",
+        "art/premium-2d/source/gargoyle_special_rear.png",
+        "art/premium-2d/source/witch_attack_rear.png",
+        "art/premium-2d/source/witch_damage_rear.png",
+        "art/premium-2d/source/witch_special_rear.png",
+        "art/premium-2d/source/knight_land_rear.png",
+        "art/premium-2d/source/knight_dodge_rear.png",
+        "art/premium-2d/source/knight_victory_rear.png",
+        "art/premium-2d/source/knight_defeat_rear.png",
+        "art/premium-2d/source/knight_dodge_right_rear.png",
+        "art/premium-2d/source/gargoyle_land_rear.png",
+        "art/premium-2d/source/gargoyle_dodge_rear.png",
+        "art/premium-2d/source/gargoyle_fall_rear.png",
+        "art/premium-2d/source/gargoyle_block_rear.png",
+        "art/premium-2d/source/gargoyle_victory_rear.png",
+        "art/premium-2d/source/gargoyle_defeat_rear.png",
+        "art/premium-2d/source/gargoyle_dodge_right_rear.png",
+        "art/premium-2d/source/witch_land_rear.png",
+        "art/premium-2d/source/witch_dodge_rear.png",
+        "art/premium-2d/source/witch_fall_rear.png",
+        "art/premium-2d/source/witch_block_rear.png",
+        "art/premium-2d/source/witch_victory_rear.png",
+        "art/premium-2d/source/witch_defeat_rear.png",
+        "art/premium-2d/source/witch_dodge_right_rear.png"
+      ],
+      "edition": "Source-conditioned for noncommercial MysticRun use",
+      "license_evidence": {
+        "path": "assets/licenses/mysticrun-replit-generated-art-noncommercial.txt",
+        "sha256": "38045b886ab0cdab64fc61c775a660bfcbc2f743c79b8a9004214e08d599840e",
+        "bytes": 740
+      },
+      "modifications": [
+        "Created source-conditioned rear run, jump, fall, landing, slide, dodge, attack, block, damage, defeat, victory, and special poses for all three heroes, guided by the owner-provided concept sheet.",
+        "Removed edge-connected cyan studio backgrounds, normalized each pose to its original rear-frame dimensions, and packed the frames into compact grid atlases.",
+        "Use is recorded as noncommercial MysticRun artwork; no commercial-use claim is made."
+      ],
+      "derived_from": [
+        "mysticrun-owner-provided-concept-sprites"
+      ],
+      "files": [
+        {
+          "path": "art/premium-2d/source/gargoyle_attack_rear.png",
+          "sha256": "08340aa277ef78bf7c1eb1d8ea998012232359408f1e8c8e26041e403939daa5",
+          "bytes": 1279216
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_block_rear.png",
+          "sha256": "ebad6108856fb67eaeb927b01aeda4f2f1ed2a2ac9ff2368e78eb84e8320c3c9",
+          "bytes": 1244009
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_damage_rear.png",
+          "sha256": "ccdff479a1ac4c986b6620d3f92058505e69d1298c59ba9a4f8de8a950327068",
+          "bytes": 1188066
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_defeat_rear.png",
+          "sha256": "f965ce996218f8b3d07b251187647bdb11c704c8976c1550aa68140a8d6477a4",
+          "bytes": 1143900
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_dodge_rear.png",
+          "sha256": "5c792241f441f740ff15c4b5f985c6ce113d3f593af392f35dea640777be6dc9",
+          "bytes": 1140516
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_dodge_right_rear.png",
+          "sha256": "68318f3334d9b8618825a0280f9ccb2a86b75c3276f8ac20eeb8b0b90852890c",
+          "bytes": 1181483
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_fall_rear.png",
+          "sha256": "5c935d88b919d37904f22dc0e9f82c15577d2e290cc1386a8954d3287dee46a1",
+          "bytes": 1143265
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_jump_rear.png",
+          "sha256": "a395c248e7166b757e98804038998a7575a7da8c1b90f0eaae8513410d2556ab",
+          "bytes": 1187389
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_land_rear.png",
+          "sha256": "8dd052e46bdab3b534607a27a4b626e20f987e667ef3f0668acf191c84bf77b3",
+          "bytes": 1183495
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_run_rear_phase_0.png",
+          "sha256": "2b02dad1480083ae6464000794bda6213c6f661f54a7d93b5b7902b997f9d4a7",
+          "bytes": 1291827
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_run_rear_phase_1.png",
+          "sha256": "2adae1c4bcf5f07410790a91959f07d33d05dca3a664e5fea3c1c08b2a7ac25e",
+          "bytes": 1215377
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_slide_rear.png",
+          "sha256": "ffc1ee55f1a263544c33cb5abde8d2a90fdc97431a65553ed1d9e477da85ce62",
+          "bytes": 1084843
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_special_rear.png",
+          "sha256": "f1a11f9fcce7ce9b582602116344d4c2a13b89531000e66f21bfff2e0990832e",
+          "bytes": 1256840
+        },
+        {
+          "path": "art/premium-2d/source/gargoyle_victory_rear.png",
+          "sha256": "c723566bedd44c62548467c6286fc29de77a23e594cb4772413d0facdcc25e08",
+          "bytes": 1313135
+        },
+        {
+          "path": "art/premium-2d/source/knight_attack_rear.png",
+          "sha256": "c354f712cdbccc49302aa64a741dc35176acac809c28e34eede90dda6c592b22",
+          "bytes": 1136882
+        },
+        {
+          "path": "art/premium-2d/source/knight_block_rear.png",
+          "sha256": "c81c5c55ab76af1f2fd945f8ed1505a7727828fc1efeb754fe6d063d9eee7cff",
+          "bytes": 1170139
+        },
+        {
+          "path": "art/premium-2d/source/knight_damage_rear.png",
+          "sha256": "0d408800a72f12bdf83a243a4ed9c55fbead340098931ba6ac16ea8a297fff0d",
+          "bytes": 1097858
+        },
+        {
+          "path": "art/premium-2d/source/knight_defeat_rear.png",
+          "sha256": "6526e3af5f4aebe5017f0110754959cad67843cb556b8f105e58ef1db843702b",
+          "bytes": 1144157
+        },
+        {
+          "path": "art/premium-2d/source/knight_dodge_rear.png",
+          "sha256": "0c0d1d4bc840031277729704eb3ab5a95ab8152a0f93bc5feb3e69f3a777d0df",
+          "bytes": 1078242
+        },
+        {
+          "path": "art/premium-2d/source/knight_dodge_right_rear.png",
+          "sha256": "46a29a4be4b20ee95f5f0ba18ad09771125baf66de601e499800b1aa6b102241",
+          "bytes": 1098912
+        },
+        {
+          "path": "art/premium-2d/source/knight_fall_rear.png",
+          "sha256": "39ff697b86100fabb656100b44805c67050dc7865d22efd4c4585ed5a2089012",
+          "bytes": 1115124
+        },
+        {
+          "path": "art/premium-2d/source/knight_jump_rear.png",
+          "sha256": "d7c4c81332fa1b44be7f5adbe7bfcc2d1a095ab2b773ed6eacfb1f1ac7daffdd",
+          "bytes": 1150695
+        },
+        {
+          "path": "art/premium-2d/source/knight_land_rear.png",
+          "sha256": "53ffe71e619e8e33fa1cbb73043e7b217b6526e883059bdb7422db86c90e075f",
+          "bytes": 1108889
+        },
+        {
+          "path": "art/premium-2d/source/knight_run_rear_phase_0.png",
+          "sha256": "f204ec92e94d5fb3dacdc4111e25d7704f056ddd0267847866f07adc075a833f",
+          "bytes": 1094779
+        },
+        {
+          "path": "art/premium-2d/source/knight_run_rear_phase_1.png",
+          "sha256": "b3f4711c844b030b5a8bfcfaa415392a29c3c578a0d9271df0a2b7ddd115e049",
+          "bytes": 1124763
+        },
+        {
+          "path": "art/premium-2d/source/knight_slide_rear.png",
+          "sha256": "e08467439cf7b951d2e11597f6e20fe387b6e07c65c7fa9fc1e5bebfd1370054",
+          "bytes": 1145870
+        },
+        {
+          "path": "art/premium-2d/source/knight_special_rear.png",
+          "sha256": "5a3c330a96839f03666ff8e6c82598d37b998c5c025cacd30fe2b94873885498",
+          "bytes": 1107572
+        },
+        {
+          "path": "art/premium-2d/source/knight_victory_rear.png",
+          "sha256": "557c9ca363639d79a8cad67b0cf2ed11da2c4d2a3996dbc9d13fdd3055db56d2",
+          "bytes": 1056160
+        },
+        {
+          "path": "art/premium-2d/source/witch_attack_rear.png",
+          "sha256": "6241fd32dd8672a7cbc9fa90ca22b6acb08db711611e13dae99c39962e09db82",
+          "bytes": 1107815
+        },
+        {
+          "path": "art/premium-2d/source/witch_block_rear.png",
+          "sha256": "cc9ae4e87cf04419407dfc10fb53176027b5a3964a47d57eadc4552b5bc15ba3",
+          "bytes": 1178249
+        },
+        {
+          "path": "art/premium-2d/source/witch_damage_rear.png",
+          "sha256": "e980927278af7c4061a6bd652a41ab0ac3308f5a2ff003bd762570c575592749",
+          "bytes": 1089571
+        },
+        {
+          "path": "art/premium-2d/source/witch_defeat_rear.png",
+          "sha256": "f4a95a146658eecb1f35fac77f89ce65b484f78433f1c9fe4a1be2e5ab6c58ff",
+          "bytes": 1116532
+        },
+        {
+          "path": "art/premium-2d/source/witch_dodge_rear.png",
+          "sha256": "4ca61d2590a0a678419ec769ea2f9a6633919423321714654524530357453ce1",
+          "bytes": 1075822
+        },
+        {
+          "path": "art/premium-2d/source/witch_dodge_right_rear.png",
+          "sha256": "41ac38563960001d34893cd2ae37bf7cec0d02020c511063857cdd5ad10c427d",
+          "bytes": 1164008
+        },
+        {
+          "path": "art/premium-2d/source/witch_fall_rear.png",
+          "sha256": "28ccc8cd4255c6b350dca28ed897b57396d5b550633843ff80b3be171d7e2213",
+          "bytes": 1137792
+        },
+        {
+          "path": "art/premium-2d/source/witch_jump_rear.png",
+          "sha256": "6c412efda40ced7bf39702fbe940bdf62c6dbb0d5e083df932f4a5ac015c04c8",
+          "bytes": 1119236
+        },
+        {
+          "path": "art/premium-2d/source/witch_land_rear.png",
+          "sha256": "cb75e931ecedbad17e8146353f2f6d860e8cd990b2b7749a65151d0e5220df82",
+          "bytes": 1110807
+        },
+        {
+          "path": "art/premium-2d/source/witch_run_rear_phase_0.png",
+          "sha256": "504daaeb795aa8aa294a93ee8a4e7ddc1a7373c27cefe19890652ce5fccbca92",
+          "bytes": 1142859
+        },
+        {
+          "path": "art/premium-2d/source/witch_run_rear_phase_1.png",
+          "sha256": "1948edbde31bf59411c9847270c7e3b5de4dcb52c3741bf9e2e2bf7c5263ac81",
+          "bytes": 1090547
+        },
+        {
+          "path": "art/premium-2d/source/witch_slide_rear.png",
+          "sha256": "123449ebca685f7561f86796d3ab38c89a078e1624bbe2cd49583abc107f6b66",
+          "bytes": 1146524
+        },
+        {
+          "path": "art/premium-2d/source/witch_special_rear.png",
+          "sha256": "4f8000f0561061a80ea3abf1b794ea4cd31a4d38d24d0ee83475c42f14aee75b",
+          "bytes": 1169297
+        },
+        {
+          "path": "art/premium-2d/source/witch_victory_rear.png",
+          "sha256": "714fd1ce3e2f8fcff5503266420b2be23a4da96e7dffccf4bb86f1160d11b80b",
+          "bytes": 1066054
+        },
+        {
+          "path": "assets/characters/action-atlases/gargoyle_actions.png",
+          "sha256": "60f9115439b0b53d8c212f9b754e9f70149a2cdc12654401f060fc1c7effa310",
+          "bytes": 2223200
+        },
+        {
+          "path": "assets/characters/action-atlases/knight_actions.png",
+          "sha256": "5f5959c5a9c61480205f615f6340040466ad5a2d9c7b51a43240cfef70a1a077",
+          "bytes": 1554228
+        },
+        {
+          "path": "assets/characters/action-atlases/manifest.json",
+          "sha256": "90540379dbaef36d0c21abd041b0b67ce6501f438586af207dac8367edf9bd8d",
+          "bytes": 20706
+        },
+        {
+          "path": "assets/characters/action-atlases/witch_actions.png",
+          "sha256": "16bf2dde92505e2a050c73fb4cdbfd2fd5ee5805345d550be2347c83b1cd1ca9",
+          "bytes": 1665884
         }
       ]
     }

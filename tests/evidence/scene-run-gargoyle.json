@@ -2,7 +2,15 @@
   "active_effects": 0,
   "active_rows": 22,
   "attacks": 16,
-  "captures": [],
+  "captures": [
+    "game-0180-gargoyle",
+    "game-0600-gargoyle",
+    "game-1200-gargoyle",
+    "game-1800-gargoyle",
+    "fracture-course",
+    "game-2400-gargoyle",
+    "game-3000-gargoyle"
+  ],
   "character_locked": true,
   "damage_events": 0,
   "deaths": 0,

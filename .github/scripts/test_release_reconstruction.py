@@ -49,6 +49,48 @@ class ReconstructionTests(unittest.TestCase):
     def test_exact_archive_round_trip(self):
         self.assertEqual(release.apply_record(self.unsigned,self.original_manifest,self.record), self.signed)
 
+
+class BuilderWorkflowTests(unittest.TestCase):
+    def test_accepts_existing_unsigned_compile_workflow(self):
+        manifest = {'git_commit':'1'*40}
+        run = {'conclusion':'success', 'head_sha':'1'*40,
+               'path':'.github/workflows/android-compile.yml'}
+        release.validate_builder_run(run, manifest)
+
+    def test_accepts_permanent_signing_workflow(self):
+        manifest = {'git_commit':'2'*40, 'permanent_signing_identity':True}
+        run = {'conclusion':'success', 'head_sha':'2'*40,
+               'path':'.github/workflows/android-apk.yml'}
+        release.validate_builder_run(run, manifest)
+
+    def test_rejects_directly_signed_workflow_without_permanent_identity(self):
+        manifest = {'git_commit':'3'*40, 'permanent_signing_identity':False}
+        run = {'conclusion':'success', 'head_sha':'3'*40,
+               'path':'.github/workflows/android-apk.yml'}
+        with self.assertRaises(ValueError):
+            release.validate_builder_run(run, manifest)
+
+    def test_rejects_unverified_or_unrelated_build_run(self):
+        manifest = {'git_commit':'4'*40}
+        for run in (
+            {'conclusion':'failure', 'head_sha':'4'*40,
+             'path':'.github/workflows/android-compile.yml'},
+            {'conclusion':'success', 'head_sha':'5'*40,
+             'path':'.github/workflows/android-compile.yml'},
+            {'conclusion':'success', 'head_sha':'4'*40,
+             'path':'.github/workflows/unrelated.yml'},
+        ):
+            with self.subTest(run=run), self.assertRaises(ValueError):
+                release.validate_builder_run(run, manifest)
+
+    def test_signed_workflow_preserves_reconstruction_inputs(self):
+        workflow = (Path(__file__).resolve().parents[1]/'workflows'/'android-apk.yml').read_text()
+        self.assertIn('name: mystic-run-unsigned-android', workflow)
+        self.assertIn('build/Mystic_Run_0.6.2_unsigned.apk', workflow)
+        self.assertIn('build/apk-manifest.json', workflow)
+
+
+class ReconstructionFailureTests(ReconstructionTests):
     def test_changed_compilation_is_rejected(self):
         modified = bytearray(self.unsigned)
         modified[50] ^= 1

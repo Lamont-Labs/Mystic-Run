@@ -1,0 +1,63 @@
+{
+  "schema": 1,
+  "generator": "Replit image-generation tool",
+  "pipeline": "tools/build_premium_2d_assets.py",
+  "commercial_use_claimed": false,
+  "external_reference_images": [],
+  "backgrounds": {
+    "knight": {
+      "source": {
+        "path": "art/premium-2d/source/mysticrun_citadel_dawn.png",
+        "sha256": "696bb3c4d9dbd74e02a3f43fca793a715bb276b4191d9c52512aa071c6a3bc0e",
+        "bytes": 1526433
+      },
+      "output": {
+        "path": "assets/environment/premium-2d/knight_backdrop.jpg",
+        "sha256": "264343a7370187588644d085875c0406cf8e81c0d40dc48fbfc42155fc2ee4c0",
+        "bytes": 138060
+      },
+      "dimensions": [
+        768,
+        1152
+      ],
+      "crop": "centered 2:3 portrait, optimized JPEG quality 88",
+      "prompt": "Hand-painted storybook fantasy panorama of a luminous cloud-top citadel at dawn, ivory towers, lavender-pink clouds, floating islands, turquoise and warm gold accents; no characters, road, text, logo or UI."
+    },
+    "gargoyle": {
+      "source": {
+        "path": "art/premium-2d/source/mysticrun_enchanted_forest.png",
+        "sha256": "971968bf6c0e596d61f6e4f688b582b6d849278f21291412d8d3d190bfa810a1",
+        "bytes": 1988840
+      },
+      "output": {
+        "path": "assets/environment/premium-2d/gargoyle_backdrop.jpg",
+        "sha256": "ff503fff491472e072e7065dc438368c55e7d4f301d0496c67639fe995896dbf",
+        "bytes": 199088
+      },
+      "dimensions": [
+        768,
+        1152
+      ],
+      "crop": "centered 2:3 portrait, optimized JPEG quality 88",
+      "prompt": "Hand-painted storybook fantasy panorama of enchanted silver-green forest cliffs above clouds, violet twilight, glowing mushrooms, tiny turquoise fireflies; no characters, road, text, logo or UI."
+    },
+    "witch": {
+      "source": {
+        "path": "art/premium-2d/source/mysticrun_crystal_canyon.png",
+        "sha256": "c4ba0ac0932e7889db11ed9e2c864527aceb3dd61a24c304f1dda5d34ecce2e9",
+        "bytes": 1489605
+      },
+      "output": {
+        "path": "assets/environment/premium-2d/witch_backdrop.jpg",
+        "sha256": "654d55aa4b9baaa2a2a7b17012679ec03aa43e89e6b461057c893884b80184d1",
+        "bytes": 127295
+      },
+      "dimensions": [
+        768,
+        1152
+      ],
+      "crop": "centered 2:3 portrait, optimized JPEG quality 88",
+      "prompt": "Hand-painted storybook fantasy panorama of a floating crystal canyon at sunset, pale stone, turquoise crystals, pink-lavender sky and distant towers; no characters, road, text, logo or UI."
+    }
+  }
+}
