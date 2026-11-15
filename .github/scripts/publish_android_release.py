@@ -11,11 +11,16 @@ import struct
 import subprocess
 import tempfile
 import zipfile
+import sys
+
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]/'tools'))
+from android_verification import PERMANENT_CERTIFICATE, verify_signature, verify_resources
+from android_policy import inspect_package
 
 REPOSITORY = 'Lamont-Labs/Mystic-Run'
 PACKAGE = 'com.lamontlabs.knightgargoylewitch.dev'
 CERTIFICATE = 'f5ee5d42ec692e402b52c0457be35c24fe1f92229005002155f675040dddb9c9'
-PERMANENT_CERTIFICATE = '6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf'
+PREVIOUS_PERMANENT_CERTIFICATE = '6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf'
 SCHEMA = 'mystic-run-signed-apk-reconstruction/v1'
 
 
@@ -48,9 +53,9 @@ def validate_record(record):
     builder = manifest['builder']
     if record.get('schema') != SCHEMA or builder.get('repository') != REPOSITORY or builder.get('service') != 'github-actions':
         raise ValueError('Wrong release record or compilation origin')
-    if manifest.get('package_id') != PACKAGE or manifest.get('certificate_sha256') not in (CERTIFICATE,PERMANENT_CERTIFICATE):
+    if manifest.get('package_id') != PACKAGE or manifest.get('certificate_sha256') not in (CERTIFICATE,PREVIOUS_PERMANENT_CERTIFICATE,PERMANENT_CERTIFICATE):
         raise ValueError('Wrong Android application or signing identity')
-    if manifest.get('certificate_sha256') == PERMANENT_CERTIFICATE:
+    if manifest.get('certificate_sha256') in (PREVIOUS_PERMANENT_CERTIFICATE,PERMANENT_CERTIFICATE):
         if manifest.get('permanent_signing_identity') is not True or manifest.get('owner_game_update_compatible') is not False or manifest.get('updates_legacy_owner_installation') is not False:
             raise ValueError('Permanent-key releases must explicitly block legacy upgrade compatibility claims')
     if not manifest.get('signature_verified') or manifest.get('requires_owner_signing'):
@@ -157,10 +162,13 @@ def verify_apk(apk, sdk, manifest):
     signature = command([tools/'apksigner', 'verify', '--verbose', '--print-certs', apk])
     fingerprint = re.search(r'certificate SHA-256 digest: ([0-9a-fA-F]+)', signature)
     expected_certificate = manifest.get('certificate_sha256')
-    if expected_certificate not in (CERTIFICATE,PERMANENT_CERTIFICATE) or not fingerprint or fingerprint.group(1).lower() != expected_certificate:
+    if expected_certificate not in (CERTIFICATE,PREVIOUS_PERMANENT_CERTIFICATE,PERMANENT_CERTIFICATE) or not fingerprint or fingerprint.group(1).lower() != expected_certificate:
         raise ValueError('APK signing certificate mismatch')
+    verify_signature(signature, expected_certificate)
+    verify_resources(apk, tools, command)
     command([tools/'zipalign', '-c', '-P', '16', '4', apk])
     metadata = command([tools/'aapt', 'dump', 'badging', apk])
+    inspect_package(metadata)
     version = re.search(r"package: name='([^']+)' versionCode='([^']+)' versionName='([^']+)'", metadata)
     if not version or version.groups() != (PACKAGE, str(manifest['version_code']), manifest['version_name']):
         raise ValueError('APK package or version mismatch')
@@ -193,6 +201,10 @@ def signing_note(manifest):
                 'A phone already using this permanent certificate can accept a higher-version update. '
                 'Signature, package/version, offline permissions, ZIP integrity, APK alignment and native 16 KB alignment were verified. '
                 'Physical phone testing remains pending.')
+    if manifest.get('certificate_sha256') == PREVIOUS_PERMANENT_CERTIFICATE:
+        return ('Historical APK signed with the previous permanent certificate '+PREVIOUS_PERMANENT_CERTIFICATE+'. '
+                'This is not the replacement permanent identity and cannot update replacement-key installations. '
+                'Do not uninstall or modify the existing phone app.')
     if manifest.get('certificate_sha256') == CERTIFICATE:
         return ('The APK preserves the original signing identity. Signature, package/version, ZIP integrity, APK alignment '
                 'and native 16 KB alignment were verified. Physical phone testing remains pending.')

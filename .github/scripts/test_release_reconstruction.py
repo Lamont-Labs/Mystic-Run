@@ -8,8 +8,13 @@ import struct
 import tempfile
 import unittest
 import zipfile
+from unittest.mock import patch
 
 import publish_android_release as release
+
+ANDROID_TOOL_FIXTURES = (
+    Path(__file__).resolve().parents[2]/'tools'/'fixtures'/'android-build-tools-35.0.1'
+)
 
 
 class ReconstructionTests(unittest.TestCase):
@@ -111,6 +116,68 @@ class ReconstructionTests(unittest.TestCase):
     def test_legacy_release_notes_preserve_original_identity(self):
         notes = release.signing_note(self.record['signed_manifest'])
         self.assertIn('preserves the original signing identity',notes)
+
+    def test_replacement_identity_is_accepted_without_claiming_legacy_updates(self):
+        record = self.permanent_record()
+        record['signed_manifest']['certificate_sha256'] = release.PERMANENT_CERTIFICATE
+        self.assertEqual(release.validate_record(record)['certificate_sha256'],
+                         '8ccd240d320a0ac8568581d5c7e005538033681d8b882058d673c80719dfd859')
+        self.assertIn('cannot update', release.signing_note(record['signed_manifest']))
+        record['signed_manifest']['updates_legacy_owner_installation'] = True
+        with self.assertRaises(ValueError):
+            release.validate_record(record)
+
+    def test_delivery_rechecks_actual_signatures_not_manifest_flags(self):
+        manifest = self.permanent_record()['signed_manifest']
+        manifest['certificate_sha256'] = release.PERMANENT_CERTIFICATE
+        report = f'Signer #1 certificate SHA-256 digest: {release.PERMANENT_CERTIFICATE}\n'
+        with patch.object(release, 'command', return_value=report):
+            with self.assertRaisesRegex(ValueError, 'one APK signer'):
+                release.verify_apk(Path('fixture.apk'), Path('sdk'), manifest)
+
+    def test_delivery_accepts_real_apksigner_report_and_requires_v2_v3(self):
+        manifest = self.permanent_record()['signed_manifest']
+        manifest['certificate_sha256'] = release.PERMANENT_CERTIFICATE
+        report = (ANDROID_TOOL_FIXTURES/'good-apksigner-verify.txt').read_text()
+        release.verify_signature(report, release.PERMANENT_CERTIFICATE)
+        for scheme in ('v2', 'v3'):
+            missing = report.replace(
+                f'Verified using {scheme} scheme (APK Signature Scheme {scheme}): true\n', '')
+            with self.subTest(scheme=scheme), patch.object(release, 'command', return_value=missing):
+                with self.assertRaisesRegex(ValueError, f'APK {scheme} signature was not verified'):
+                    release.verify_apk(Path('fixture.apk'), Path('sdk'), manifest)
+
+    def test_delivery_rechecks_resources_before_exposing_downloads(self):
+        manifest = self.permanent_record()['signed_manifest']
+        manifest['certificate_sha256'] = release.PERMANENT_CERTIFICATE
+        report = (
+            'Verified using v2 scheme (APK Signature Scheme v2): true\n'
+            'Verified using v3 scheme (APK Signature Scheme v3): true\n'
+            'Number of signers: 1\n'
+            f'Signer #1 certificate SHA-256 digest: {release.PERMANENT_CERTIFICATE}\n'
+        )
+        with patch.object(release, 'command', side_effect=[report, '']):
+            with self.assertRaisesRegex(ValueError, 'parse was empty'):
+                release.verify_apk(Path('fixture.apk'), Path('sdk'), manifest)
+
+    def test_delivery_rejects_the_real_missing_themed_icon_resource_reference(self):
+        manifest = self.permanent_record()['signed_manifest']
+        manifest['certificate_sha256'] = release.PERMANENT_CERTIFICATE
+        signature = (ANDROID_TOOL_FIXTURES/'good-apksigner-verify.txt').read_text()
+        resources = (ANDROID_TOOL_FIXTURES/'missing-themed-icon-resources.txt').read_text()
+        with tempfile.TemporaryDirectory() as temporary:
+            apk = Path(temporary)/'missing-themed-icon.apk'
+            with zipfile.ZipFile(apk, 'w') as archive:
+                archive.writestr('AndroidManifest.xml', b'binary manifest fixture')
+                archive.writestr('resources.arsc', b'binary resource table fixture')
+                archive.writestr('res/mipmap-anydpi-v26/icon.xml', b'binary icon fixture')
+                # The resource table still references themed_icon.xml, but the
+                # failed build did not package that file.
+            with patch.object(release, 'command', side_effect=[signature, resources]) as command:
+                with self.assertRaisesRegex(
+                        ValueError, r'Resource table references missing packaged files: .*themed_icon\.xml'):
+                    release.verify_apk(apk, Path('sdk'), manifest)
+            self.assertEqual(command.call_count, 2)
 
 
 from test_art_preview_release import ArtPreviewReconstructionTests

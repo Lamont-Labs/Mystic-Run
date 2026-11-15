@@ -1,26 +1,76 @@
-# MysticRun permanent Android signing
+# MysticRun replacement permanent Android signing
 
-The permanent signing identity is held in the existing private backup `MysticRun_Permanent_Signing_Backup.zip`. Do not create a replacement key, commit the backup, print its contents, or change the application ID.
+All future normal APKs must reuse the existing replacement backup. Never generate
+a key, commit signing material, or uninstall/modify the phone game to fix a mismatch.
 
-| Property | Value |
+| Identity | Required value |
 | --- | --- |
-| Application ID | `com.lamontlabs.knightgargoylewitch.dev` |
-| Permanent certificate SHA-256 | `6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf` |
-| Key alias | `androiddebugkey` |
-| Keystore Actions secret | `RELAY_DEVELOPMENT_KEYSTORE_BASE64` |
-| Password Actions secret | `RELAY_DEVELOPMENT_KEY_PASSWORD` |
-| Signed release workflow | `.github/workflows/android-apk.yml` |
+| Package | `com.lamontlabs.knightgargoylewitch.dev` |
+| Alias | `mysticrun` |
+| Certificate SHA-256 | `8ccd240d320a0ac8568581d5c7e005538033681d8b882058d673c80719dfd859` |
 
-The two secret values must come directly from the preserved backup. Set them only as repository Actions secrets through an authenticated GitHub settings session or a CLI session with permission to manage Actions secrets. They must never pass through a Git commit, release asset, workflow input, or log. The connected GitHub repository tools do not provide a secrets-management operation.
+## Secure configuration
 
-The signed workflow runs only on main, fails if the key or password is absent, verifies the public certificate before exporting, checks the game and Android release contracts, builds a higher-version APK, verifies it again, publishes a prerelease, and downloads it again to check the actual published bytes. Disposable runner key files and editor signing settings are removed even after a failure.
+The existing **Mystic Run Android APK** workflow is
+`.github/workflows/android-apk.yml`. It is manual, main-only, and read-only with
+respect to repository contents. Configure a GitHub environment named
+`android-signing`, restrict it to main, and require owner approval before jobs run.
+Using GitHub's secure environment-secret interface, configure:
 
-For an already successful unsigned main compilation, `tools/sign_android.py --permanent-identity` signs with this same preserved key. The public reconstruction publisher can publish those verified APK bytes without putting a private signing key in Git. Public reconstruction records contain existing APK bytes and signature metadata, never the private key or password.
+- `MYSTICRUN_KEYSTORE_BASE64`: the existing replacement keystore, base64 encoded.
+- `MYSTICRUN_STORE_PASSWORD`: its existing store password.
+- `MYSTICRUN_KEY_PASSWORD`: the existing `mysticrun` private-key password.
 
-## Existing phone installation
+Do not supply values in chat, command arguments, source files, or logs. Do not
+reuse older `RELAY_DEVELOPMENT_*` secrets on assumption. Missing credentials,
+wrong alias, or wrong certificate stop the build. This change does not configure
+remote secrets or claim that these environments/approval policies already exist.
+Runner signing files are private and removed even on failure.
 
-The earlier original-game certificate is `f5ee5d42ec692e402b52c0457be35c24fe1f92229005002155f675040dddb9c9`. Builds signed with the permanent certificate cannot update an installation signed with that earlier certificate, even though the application ID is the same. A higher version code alone does not solve a certificate mismatch.
+## Build and verification
 
-Do not uninstall the existing phone app or discard its saves. Its installation is outside this release task. A phone already using the permanent certificate can accept a higher-version permanent-key APK. Physical phone upgrade behavior and game performance must be tested separately; build verification is not a claim that a physical phone was tested.
+The workflow compiles unsigned using `tools/build_android.py --unsigned`, then
+uses `tools/sign_android.py`. Direct normal signed exports are blocked to avoid
+Godot's older debug-key configuration. The separate, explicitly selected Art
+Preview variant is not changed by this task.
 
-Historical legacy-key releases remain valid and are checked against their original certificate. The legacy release documentation remains in `docs/ANDROID_UPDATE_IDENTITY.md`.
+For approved local signing, provide the existing keystore path and both passwords
+through a protected environment/secret manager, then run:
+
+```sh
+python3 tools/sign_android.py \
+  --apk /protected/input.apk --manifest /protected/apk-manifest.json \
+  --sdk /path/to/android-sdk --keystore /protected/existing.keystore \
+  --expected-commit FULL_SOURCE_COMMIT \
+  --output /protected/verified/Mystic_Run_Build.apk
+```
+
+Add `--expected-run-id` for a known GitHub compilation. `--permanent-identity`
+remains an optional compatibility flag; omitting it cannot select an old key.
+No default password or legacy-signing fallback exists.
+
+Before exposing an APK download, verification checks unsigned input digest and
+provenance, exact package/version, the pinned certificate, exactly one signer,
+both v2 and v3 signatures, 16 KB ZIP/native alignment, offline permissions, ZIP
+integrity, unchanged game-file hashes, bundled notices, resource-table file
+references, and parsing of packaged binary XML. Resource parsing uses `aapt2`
+and fails on an empty parse or missing file, including themed-icon XML.
+These checks do not repair resources: a failed icon-resource build must be
+fixed in its separate PR. Only fully verified APKs and evidence are uploaded.
+Output paths must not already exist.
+
+## Publishing and compatibility
+
+Signing never creates a GitHub Release. **Publish installable Android APK**
+(`.github/workflows/publish-android.yml`) now requires a separate manual run on
+main with explicit publication approval and uses the `android-release`
+environment. Configure owner approval there too. It independently rechecks the
+final APK rather than trusting manifest verification flags.
+
+The older original certificate (`f5ee5d42…`) and previous permanent certificate
+(`6cae555c…`) remain recognized only for historical release reconstruction.
+Neither is accepted for new normal signing. A replacement-key APK cannot update
+an installation using either older key. Updates to replacement-key installations
+also require a higher version code; the workflow increments its run-based code,
+but cannot determine the version installed on a phone. Do not uninstall the phone
+app or discard saves. No physical-device test is implied by build verification.
