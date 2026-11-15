@@ -12,7 +12,9 @@
     "run_1",
     "jump",
     "slide",
-    "attack"
+    "attack",
+    "landing",
+    "power"
   ],
   "sprites": {
     "knight_run_0_front": {
@@ -125,6 +127,50 @@
       "pose": "attack",
       "view": "rear"
     },
+    "knight_landing_front": {
+      "path": "assets/characters/concept-sprites/knight_landing_front.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "40dd176a267dc15b13cf3fcb8d23085bc70e7b1a8b54f2273ecdf0931050a797",
+      "bytes": 27404,
+      "pose": "landing",
+      "view": "front"
+    },
+    "knight_landing_rear": {
+      "path": "assets/characters/concept-sprites/knight_landing_rear.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "b8bb55454e0a0e855924ee08dffc5191a640c1559751ffcaceaf449f38b794d8",
+      "bytes": 27213,
+      "pose": "landing",
+      "view": "rear"
+    },
+    "knight_power_front": {
+      "path": "assets/characters/concept-sprites/knight_power_front.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "b3bf11b3ca7d4708f8f55d121b4325346019890241d549e03b295a17386b791a",
+      "bytes": 33253,
+      "pose": "power",
+      "view": "front"
+    },
+    "knight_power_rear": {
+      "path": "assets/characters/concept-sprites/knight_power_rear.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "e4b70964a18ee65d7dccb04f8ad2a3ad0df5a91207231d5ee9c4814d91096047",
+      "bytes": 32950,
+      "pose": "power",
+      "view": "rear"
+    },
     "gargoyle_run_0_front": {
       "path": "assets/characters/concept-sprites/gargoyle_run_0_front.png",
       "dimensions": [
@@ -235,6 +281,50 @@
       "pose": "attack",
       "view": "rear"
     },
+    "gargoyle_landing_front": {
+      "path": "assets/characters/concept-sprites/gargoyle_landing_front.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "b89ee082c832e87fec59f232a97b648d5b3cb497eb7995c8916ac3acd7c562b4",
+      "bytes": 33845,
+      "pose": "landing",
+      "view": "front"
+    },
+    "gargoyle_landing_rear": {
+      "path": "assets/characters/concept-sprites/gargoyle_landing_rear.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "48651781a4a9ce3c686079c59d0ed07c64c6dbb0d2af1ddf900600bf9ca437e4",
+      "bytes": 33088,
+      "pose": "landing",
+      "view": "rear"
+    },
+    "gargoyle_power_front": {
+      "path": "assets/characters/concept-sprites/gargoyle_power_front.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "9272438bbf244f4673e2e9f8be3a210d762f6916485b0752503c61ea7e54a212",
+      "bytes": 45368,
+      "pose": "power",
+      "view": "front"
+    },
+    "gargoyle_power_rear": {
+      "path": "assets/characters/concept-sprites/gargoyle_power_rear.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "f97555a37a08deda293d61f3f3150e142db2d17f77b0017652cda812202ed1a1",
+      "bytes": 44915,
+      "pose": "power",
+      "view": "rear"
+    },
     "witch_run_0_front": {
       "path": "assets/characters/concept-sprites/witch_run_0_front.png",
       "dimensions": [
@@ -343,6 +433,50 @@
       "sha256": "eeb395daca0259e622f5d558739eea9015d7b4e36be702d76494b2b9e649f89b",
       "bytes": 31270,
       "pose": "attack",
+      "view": "rear"
+    },
+    "witch_landing_front": {
+      "path": "assets/characters/concept-sprites/witch_landing_front.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "fe7e6b5b1b5b6be513f17a11331316683994e02172ccdb4f6abec20b1a7298ed",
+      "bytes": 30232,
+      "pose": "landing",
+      "view": "front"
+    },
+    "witch_landing_rear": {
+      "path": "assets/characters/concept-sprites/witch_landing_rear.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "4c928b160c5e30dbb7ecaee0b1b2f634c08a65d33f31e95ae2cdf7a7ae871717",
+      "bytes": 30052,
+      "pose": "landing",
+      "view": "rear"
+    },
+    "witch_power_front": {
+      "path": "assets/characters/concept-sprites/witch_power_front.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "e1550d487020808e5af89073d8446703755dc6b9d102747d51dd7c8f89c152da",
+      "bytes": 40727,
+      "pose": "power",
+      "view": "front"
+    },
+    "witch_power_rear": {
+      "path": "assets/characters/concept-sprites/witch_power_rear.png",
+      "dimensions": [
+        320,
+        384
+      ],
+      "sha256": "7e6b893890c483bff27caed7de8f60abc9622afeb1428da4bc228712fe04fcae",
+      "bytes": 40544,
+      "pose": "power",
       "view": "rear"
     }
   }

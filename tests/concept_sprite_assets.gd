@@ -59,11 +59,31 @@ func _run() -> void:
 		_check(is_equal_approx(actor.concept_sprite.scale.y, 0.72),
 			kind + " lowers its illustrated silhouette while sliding")
 		actor.sliding = false
+
+		actor.airborne = true
+		actor.animate(0.0)
+		actor.airborne = false
+		actor.animate(0.0)
+		actor.animate(0.01)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_landing_front.png"),
+			kind + " shows the landing pose after leaving the air")
+		actor.animate(0.3)
+		actor.animate(0.01)
+		_check(not actor.concept_sprite.texture.resource_path.ends_with(kind + "_landing_front.png"),
+			kind + " returns to its normal pose after the landing window")
+
 		actor.attack()
 		actor.animate(0.05)
 		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_attack_front.png"),
 			kind + " shows a distinct attack pose")
 		actor.attack_time = 0.0
+		actor.power()
+		_check(is_equal_approx(actor.power_time, 0.7),
+			kind + " keeps the existing special-power timing")
+		actor.animate(0.05)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_power_front.png"),
+			kind + " shows a distinct special-power pose")
+		actor.power_time = 0.0
 		actor.facing = PI
 		actor.moving = true
 		actor.animate(0.0)
@@ -85,6 +105,19 @@ func _run() -> void:
 		actor.animate(0.05)
 		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_attack_rear.png"),
 			kind + " has a rear-facing attack pose")
+		actor.attack_time = 0.0
+		actor.airborne = true
+		actor.animate(0.0)
+		actor.airborne = false
+		actor.animate(0.0)
+		actor.animate(0.01)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_landing_rear.png"),
+			kind + " has a rear-facing landing pose")
+		actor.landing_spring = 0.0
+		actor.power()
+		actor.animate(0.05)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_power_rear.png"),
+			kind + " has a rear-facing special-power pose")
 
 		if kind == "knight":
 			_check(actor.skeleton.get_bone_count() == 65,

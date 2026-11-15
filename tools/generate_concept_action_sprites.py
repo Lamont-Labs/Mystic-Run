@@ -17,7 +17,7 @@ DEST = ROOT / "assets/characters/concept-sprites"
 SCALE = 3
 WIDTH, HEIGHT = 320, 384
 Y_OFFSET = 68
-POSES = ("run_0", "run_1", "jump", "slide", "attack")
+POSES = ("run_0", "run_1", "jump", "slide", "attack", "landing", "power")
 LICENSE = ROOT / "assets/licenses/mysticrun-owner-provided-noncommercial.txt"
 REGISTRY = ROOT / "assets/asset_registry.json"
 ASSET_ID = "mysticrun-owner-provided-concept-sprites"
@@ -113,6 +113,18 @@ def skeleton(pose: str) -> dict[str, tuple[float, float]]:
             "el": (96, 171), "wl": (77, 193), "er": (205, 157), "wr": (240, 164),
             "kl": (111, 247), "al": (91, 294), "kr": (208, 239), "ar": (226, 287),
         },
+        "landing": {
+            "head": (158, 126), "sl": (132, 162), "sr": (184, 162),
+            "hl": (143, 211), "hr": (181, 211),
+            "el": (105, 186), "wl": (79, 204), "er": (211, 184), "wr": (239, 202),
+            "kl": (116, 241), "al": (101, 265), "kr": (211, 241), "ar": (229, 265),
+        },
+        "power": {
+            "head": (158, 88), "sl": (132, 132), "sr": (184, 132),
+            "hl": (143, 188), "hr": (181, 190),
+            "el": (107, 111), "wl": (91, 79), "er": (211, 108), "wr": (231, 66),
+            "kl": (111, 229), "al": (94, 276), "kr": (212, 225), "ar": (241, 270),
+        },
     }
     return poses[pose]
 
@@ -200,8 +212,11 @@ def draw_knight(c: Canvas, j: dict[str, tuple[float, float]], pose: str,
             (sw[0]-2, sw[1]-2)]
     c.poly(star, GOLD, PALE_GOLD, 0.8)
     sword_base = j["wr"]
-    if pose == "attack":
-        tip = (sword_base[0]+52, sword_base[1]-4)
+    if pose in ("attack", "power"):
+        if pose == "power":
+            tip = (sword_base[0]+10, sword_base[1]-67)
+        else:
+            tip = (sword_base[0]+52, sword_base[1]-4)
     elif pose.startswith("run"):
         tip = (sword_base[0]+21, sword_base[1]-31)
     elif pose == "jump":
@@ -210,10 +225,19 @@ def draw_knight(c: Canvas, j: dict[str, tuple[float, float]], pose: str,
         tip = (sword_base[0]+31, sword_base[1]-8)
     c.poly([sword_base, (sword_base[0]+5, sword_base[1]-5),
             (tip[0]+2, tip[1]-3), tip], SILVER)
-    if pose == "attack":
+    if pose in ("attack", "power"):
         c.line([(tip[0]-13, tip[1]-13), (tip[0]-3, tip[1]-9)], PALE_GOLD, 2.2, None)
         c.line([(tip[0]-7, tip[1]+8), (tip[0]+4, tip[1]+7)], "#8deaff", 2.2, None)
         c.line([(tip[0]+4, tip[1]-14), (tip[0]+11, tip[1]-8)], PALE_GOLD, 2.2, None)
+    if pose == "landing":
+        for offset in (-1, 1):
+            c.line([(j["al"][0]+offset*13, j["al"][1]+5),
+                    (j["al"][0]+offset*25, j["al"][1]+2)], PALE_GOLD, 2, None)
+            c.line([(j["ar"][0]+offset*13, j["ar"][1]+5),
+                    (j["ar"][0]+offset*25, j["ar"][1]+2)], PALE_GOLD, 2, None)
+    elif pose == "power":
+        c.line([(tip[0]-18, tip[1]+13), (tip[0]-7, tip[1]+5),
+                (tip[0]+5, tip[1]+2), (tip[0]+17, tip[1]+8)], "#8deaff", 3, None)
     c.line([(sword_base[0]-5, sword_base[1]+4),
             (sword_base[0]+9, sword_base[1]-8)], GOLD, 3)
     c.ellipse((h[0]-17, h[1]-22, h[0]+17, h[1]+20), SKIN, INK, 2)
@@ -242,7 +266,8 @@ def draw_gargoyle(c: Canvas, j: dict[str, tuple[float, float]], pose: str,
     wings = {
         "run_0": (54, -29, 268, -31), "run_1": (62, -23, 257, -25),
         "jump": (22, -66, 297, -63), "slide": (80, 2, 249, 5),
-        "attack": (44, -36, 286, -27),
+        "attack": (44, -36, 286, -27), "landing": (68, 4, 252, 4),
+        "power": (14, -69, 304, -67),
     }[pose]
     left_tip = (wings[0], sl[1]+wings[1])
     right_tip = (wings[2], sr[1]+wings[3])
@@ -259,10 +284,18 @@ def draw_gargoyle(c: Canvas, j: dict[str, tuple[float, float]], pose: str,
         for dx in (-5, 1, 7):
             c.poly([(wrist[0]+dx, wrist[1]+2), (wrist[0]+dx+4, wrist[1]+5),
                     (wrist[0]+dx+7, wrist[1]+14)], PALE_GOLD, INK, 1)
-    if pose == "attack":
+    if pose in ("attack", "power"):
         for offset in (-9, 0, 9):
             c.line([(j["wr"][0]+10, j["wr"][1]+offset),
-                    (j["wr"][0]+22, j["wr"][1]+offset-3)], PALE_GOLD, 2, None)
+                    (j["wr"][0]+22, j["wr"][1]+offset-3)],
+                   "#8deaff" if pose == "power" else PALE_GOLD, 2, None)
+    if pose == "landing":
+        for x in (j["al"][0], j["ar"][0]):
+            c.line([(x-19, 278), (x-8, 275)], PALE_GOLD, 2, None)
+            c.line([(x+8, 275), (x+19, 278)], PALE_GOLD, 2, None)
+    elif pose == "power":
+        c.ellipse((h[0]-31, h[1]-29, h[0]+31, h[1]+32), None, "#8deaff", 2)
+        c.ellipse((h[0]-39, h[1]-37, h[0]+39, h[1]+40), None, PALE_GOLD, 1)
     c.poly(torso_shape(j), STONE, "#3d4e54", 3)
     shoulder_mid = mid(sl, sr)
     hip_mid = mid(j["hl"], j["hr"])
@@ -348,6 +381,8 @@ def draw_witch(c: Canvas, j: dict[str, tuple[float, float]], pose: str,
         top = (hand[0]+8, hand[1]-74)
     elif pose == "attack":
         top = (hand[0]+19, hand[1]-49)
+    elif pose == "power":
+        top = (hand[0]+20, hand[1]-96)
     else:
         top = (hand[0]+11, hand[1]-69)
     c.line([hand, top], "#875f3f", 6, "#473650")
@@ -355,10 +390,20 @@ def draw_witch(c: Canvas, j: dict[str, tuple[float, float]], pose: str,
     c.poly([(top[0], top[1]-15), (top[0]+11, top[1]),
             (top[0], top[1]+15), (top[0]-11, top[1])], "#61d6ee", "#fff1c9", 2)
     c.ellipse((top[0]-4, top[1]-4, top[0]+4, top[1]+4), "#d9ffff", "#74c9dc", 1)
-    if pose == "attack":
+    if pose in ("attack", "power"):
+        if pose == "power":
+            c.ellipse((top[0]-29, top[1]-28, top[0]+29, top[1]+28),
+                      None, "#8deaff", 2)
+            c.ellipse((top[0]-38, top[1]-37, top[0]+38, top[1]+37),
+                      None, PALE_GOLD, 1)
         for dx, dy in ((-13, -7), (14, -9), (-9, 13), (13, 12)):
             c.line([(top[0]+dx, top[1]+dy),
-                    (top[0]+dx*1.55, top[1]+dy*1.55)], PALE_GOLD, 2, None)
+                    (top[0]+dx*1.55, top[1]+dy*1.55)],
+                   "#8deaff" if pose == "power" else PALE_GOLD, 2, None)
+    elif pose == "landing":
+        for x in (j["al"][0], j["ar"][0]):
+            c.line([(x-16, 278), (x-6, 275)], PALE_GOLD, 2, None)
+            c.line([(x+7, 275), (x+17, 278)], PALE_GOLD, 2, None)
 
 
 def render(kind: str, pose: str, rear: bool) -> Image.Image:
@@ -384,7 +429,7 @@ def update_registry(sprites: dict[str, dict[str, object]]) -> None:
     ]))
     entry["modifications"] = [
         "Cropped the six front/rear character views from the owner-provided approved sheet and removed only edge-connected pale background.",
-        "Added locally drawn front/rear running, jumping, sliding, and attack pose frames for Knight, Gargoyle, and Witch; generated at no cost from authored drawing primitives, guided by the supplied concept sheet.",
+        "Added locally drawn front/rear running, jumping, sliding, basic attack, landing, and special-power pose frames for Knight, Gargoyle, and Witch; generated at no cost from authored drawing primitives, guided by the supplied concept sheet.",
         "Use is limited to noncommercial distribution as part of MysticRun; commercial use is not authorized.",
         f"Required credit: {CREDIT}",
     ]

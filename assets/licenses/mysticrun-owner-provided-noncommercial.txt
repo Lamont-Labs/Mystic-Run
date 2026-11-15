@@ -9,7 +9,8 @@ Commercial use is not authorized by this record.
 
 The project owner subsequently directed creation of local action-pose artwork
 from the supplied character concepts. This record covers the six source-cropped
-front/rear views and the locally drawn action frames listed in
+front/rear views and the locally drawn running, jumping, sliding, basic attack,
+landing, and special-power frames listed in
 assets/characters/concept-sprites/ACTION_PROVENANCE.json and
 assets/asset_registry.json. The action frames were made with local drawing
 code; no paid image-generation service was used.

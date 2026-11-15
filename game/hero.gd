@@ -128,7 +128,7 @@ func _build_concept_sprite() -> void:
 		"rear":load("res://assets/characters/concept-sprites/"+identity+"_rear.png"),
 	}
 	concept_action_textures={}
-	for pose in ["run_0","run_1","jump","slide","attack"]:
+	for pose in ["run_0","run_1","jump","slide","attack","landing","power"]:
 		concept_action_textures[pose]={
 			"front":load("res://assets/characters/concept-sprites/"+identity+"_"+pose+"_front.png"),
 			"rear":load("res://assets/characters/concept-sprites/"+identity+"_"+pose+"_rear.png"),
@@ -207,9 +207,11 @@ func animate(delta: float) -> void:
 	if is_instance_valid(concept_sprite):
 		var view:String="front" if absf(wrapf(facing,-PI,PI))<PI*.5 else "rear"
 		var pose:String=""
-		if attack_time>0:pose="attack"
+		if power_time>0:pose="power"
+		elif attack_time>0:pose="attack"
 		elif sliding:pose="slide"
 		elif airborne:pose="jump"
+		elif landing_spring>0:pose="landing"
 		elif moving:pose="run_"+str(int(floor(clock*8.0))%2)
 		var next_texture:Texture2D=concept_textures[view] if pose.is_empty() else concept_action_textures[pose][view]
 		if concept_sprite.texture!=next_texture:
