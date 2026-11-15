@@ -4,6 +4,7 @@ import base64
 import hashlib
 import html
 import json
+import re
 from pathlib import Path
 import subprocess
 from PIL import Image, ImageDraw, ImageFont
@@ -97,7 +98,7 @@ def main():
 <title>MysticRun — one layered Knight experiment</title><style>
 body{margin:0;background:#171420;color:#f0e9fa;font:17px/1.6 system-ui}main{max-width:1080px;margin:auto;padding:28px}
 h1,h2{color:#ffdd99}section{background:#252030;padding:24px;border-radius:16px;margin:24px 0}
-video,img{max-width:100%;height:auto}video{display:block;margin:auto;max-height:760px}table{width:100%;border-collapse:collapse}
+video,img{max-width:100%;height:auto}video{display:block;width:100%;margin:auto;max-height:760px}table{width:100%;border-collapse:collapse}
 th,td{text-align:left;padding:12px;border-bottom:1px solid #57445f}code{overflow-wrap:anywhere}
 </style><main><h1>One concept-faithful, jointed 2D Knight</h1>
 <p>Playable rear-view experiment only. Fourteen original painted parts; native Godot Skeleton2D;
@@ -106,7 +107,7 @@ No new generated design and no whole-image action crossfade.</p>
 <section><h2>Actual game: matched movement sequence</h2>
 <p>Same Castle camera and controls. Pad movement/release, rapid reversal, jumps, slides, conflicting
 commands and attack. Fixed-clock captures do not show actual device FPS.</p>
-<video controls preload="metadata" src="VIDEO"></video><img alt="Actual jumping gameplay comparison" src="GAME"></section>
+<video controls preload="metadata" poster="GAME" src="VIDEO"></video><img alt="Actual jumping gameplay comparison" src="GAME"></section>
 <section><h2>Sixteen distinct native-rig run phases</h2><p>These are samples of continuous joint animation,
 not sixteen independently painted frames. The close-up loop is not gameplay footage.</p>
 <video controls loop preload="metadata" src="LOOP"></video><img alt="16 run poses rendered by Godot" src="RUN"></section>
@@ -124,12 +125,17 @@ Limb cuts and cape layering still need artistic review; full action polish, phys
 integration are not approved by this experiment. All normal gameplay, artwork, saves, Android identity and signing
 remain untouched. No APK or release was made.</p><p>Open <code>experiments/knight_rig/playable.tscn</code>
 in Godot 4.7.2 and press F6. R cycles the three rendering paths. Test profile only.</p></section></main></html>"""
-    for token, value in {
+    media = {
         "VIDEO": uri(video, "video/mp4"), "GAME": uri(OUT / "Knight_Gameplay_Comparison.jpg", "image/jpeg"),
         "LOOP": uri(loop, "video/mp4"), "RUN": uri(OUT / "Knight_16_Run_Phases.jpg", "image/jpeg"),
         "ACTIONS": uri(OUT / "Knight_Action_Poses.jpg", "image/jpeg"), "ROWS": "".join(rows)
-    }.items():
-        content = content.replace(token, value)
+    }
+    # One substitution pass: short words such as RUN also occur in base64.
+    # Repeated global replace would corrupt previously embedded video bytes.
+    content = re.sub(r"\b(?:VIDEO|GAME|LOOP|RUN|ACTIONS|ROWS)\b",
+                     lambda match: media[match.group()], content)
+    embedded = re.findall(r'src="data:video/mp4;base64,([^"]+)"', content)
+    assert [base64.b64decode(value) for value in embedded] == [video.read_bytes(), loop.read_bytes()]
     (OUT / "Knight_Rig_Review.html").write_text(content)
     print("Packaged matched native-game video, actual joint renders, source hashes and raw measurements")
 
