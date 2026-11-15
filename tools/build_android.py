@@ -98,7 +98,7 @@ def main():
     if args.version_code<=0 or not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+',args.version_name):
         raise SystemExit('Invalid development version')
     tools=args.sdk/'build-tools/35.0.1'
-    for name in ['apksigner','zipalign','aapt']:
+    for name in ['apksigner','zipalign','aapt','aapt2']:
         if not(tools/name).is_file():
             raise SystemExit(f'Missing SDK tool: {name}')
     adb=args.sdk/'platform-tools/adb'
@@ -152,7 +152,7 @@ def main():
         # Godot 4.7.2 omits themed_icon.xml but keeps its resource-table entry.
         # Repair before signing, then restore ZIP/16 KB alignment.
         template=Path.home()/'.local/share/godot/export_templates/4.7.2.stable/android_debug.apk'
-        icon_resources=repair_themed_icon(output,template,tools/'aapt')
+        icon_resources=repair_themed_icon(output,template,tools/'aapt2')
         if icon_resources['restored']:
             aligned=output.with_suffix('.aligned.apk')
             try:
@@ -162,7 +162,7 @@ def main():
                 aligned.unlink(missing_ok=True)
     else:
         with zipfile.ZipFile(output) as archive:
-            missing=resource_files(inspect_table(tools/'aapt',output))-set(archive.namelist())
+            missing=resource_files(inspect_table(tools/'aapt2',output))-set(archive.namelist())
         if missing:
             raise RuntimeError('Android resources are missing; compile with --unsigned for pre-signing icon repair')
         icon_resources={'restored':[],'all_resource_files_present':True}

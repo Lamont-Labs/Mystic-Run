@@ -48,6 +48,11 @@ class IconResourceTests(unittest.TestCase):
         with self.assertRaisesRegex(ValueError, "checksum-pinned"):
             icons.repair_themed_icon(self.apk, self.template, "aapt")
 
+    def test_rejects_unrecognized_resource_table_format(self):
+        self.inspect.return_value = "legacy aapt output without aapt2 file markers"
+        with self.assertRaisesRegex(ValueError, "No file references parsed"):
+            icons.repair_themed_icon(self.apk, self.template, "aapt")
+
     def test_rejects_mismatched_compiled_resource_ids(self):
         self.inspect.side_effect = [self.table, self.table.replace("0x7f0a0000", "0x7f0a0099")]
         with self.assertRaisesRegex(ValueError, "resource IDs"):

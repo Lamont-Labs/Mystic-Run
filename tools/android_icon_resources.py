@@ -19,7 +19,10 @@ ICON_NAMES = ("icon_background", "icon_foreground", "icon_monochrome", "themed_i
 
 
 def resource_files(table):
-    return set(re.findall(r"\(file\)\s+(res/[^\s]+)", table))
+    files = set(re.findall(r"\(file\)\s+(res/[^\s]+)", table))
+    if not files:
+        raise ValueError("No file references parsed; require aapt2 resource-table output")
+    return files
 
 
 def inspect_table(aapt, apk):
