@@ -6,3 +6,7 @@ packages = ["blender", "freetype", "lcms2", "libglvnd", "libimagequant", "libjpe
 
 [agent]
 expertMode = true
+
+[postMerge]
+path = "scripts/post-merge.sh"
+timeoutMs = 120000
