@@ -10,6 +10,7 @@ __pycache__/
 *.pyc
 /generated-artifacts/
 /.pythonlibs/
+.venv/
 .signing/
 art/**/*.blend
 art/**/*.blend1
