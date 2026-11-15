@@ -10,6 +10,7 @@ const Geo = preload("res://game/geometry.gd")
 const Courses=preload("res://core/course_catalog.gd")
 const Director=preload("res://game/encounter_director.gd")
 const GestureInput=preload("res://game/gesture_input.gd")
+const RunnerSteering=preload("res://game/runner_steering.gd")
 const LANES := [-2.6, 0.0, 2.6]
 const Tilt=preload("res://core/tilt_steering.gd")
 const CourseProfile=preload("res://core/course_profile.gd")
@@ -36,6 +37,8 @@ var lane: int = 1
 var rows: Array[Dictionary] = []
 var effects: Array[Dictionary] = []
 var gestures=GestureInput.new()
+var steering=RunnerSteering.new()
+var steering_target:float=0.0
 var touches: Dictionary=gestures.touches
 var rng := RandomNumberGenerator.new()
 var fx_rng := RandomNumberGenerator.new()
@@ -68,8 +71,6 @@ var resume_mode: String="game"
 var jump_buffer: float=0.0
 var slide_buffer: float=0.0
 var coyote_left: float=0.0
-var lane_from: float=0.0
-var lane_elapsed: float=.18
 var strike_buffer: float=0.0
 var defeated: int=0
 var run_recorded: bool=false
@@ -384,7 +385,7 @@ func _start_run() -> void:
 	tilt.reset_calibration();tilt_warned=false;last_section=""
 	rng.seed=run_seed;fx_rng.seed=run_seed ^ 90871
 	director.configure(course_id,run_seed)
-	lane=1;lane_from=0;lane_elapsed=.18
+	lane=1;steering_target=0;steering.reset()
 	motor.position=Vector3.ZERO;motor.velocity=Vector3.ZERO;motor.set_collision_mask_value(1,true)
 	falling=false;fall_left=0;strike_buffer=0;jump_buffer=0;slide_buffer=0;coyote_left=0
 	next_row=64;next_gate=180;row_index=0;distance=0;shards=0;defeated=0
@@ -459,28 +460,32 @@ func _physics_process(delta: float) -> void:
 		_training_action("jump")
 	if slide_buffer>0 and motor.is_on_floor():
 		sliding_left=.72;slide_buffer=0;qa_slide_count+=1;_training_action("slide")
-	lane_elapsed=minf(.18,lane_elapsed+delta)
-	var lane_t:float=clampf(lane_elapsed/.18,0.0,1.0)
-	var t:float=lane_t*lane_t*lane_t*(lane_t*(lane_t*6.0-15.0)+10.0)
-	var desired_x:=lerpf(lane_from,float(LANES[lane]),t)
+	var desired_x:float=float(LANES[lane])
 	if profile.settings.control_mode=="tilt" and not qa:
 		var tilt_x:float=tilt.update(_motion_sample(),delta)
 		if tilt.available:
-			desired_x=lerpf(motor.position.x,tilt_x,1.0-exp(-delta*17.0))
+			desired_x=tilt_x
 			lane=clampi(roundi(tilt_x/2.6)+1,0,2)
-			lane_from=motor.position.x;lane_elapsed=0.18
+			steering_target=tilt_x;manual_steering=false
 			if tilt_x< -1.6:_training_action("left")
 			elif tilt_x> -0.6 and tilt_x<0.6:_training_action("right")
 		elif OS.get_name()=="Android" and tilt.missing_seconds>1.0 and not tilt_warned:
 			tilt_warned=true;ui.message("NO MOTION SENSOR · USE THE STEERING PAD",3.0)
 			if course_id=="training":_training_prompt()
 	if not qa and (profile.settings.control_mode!="tilt" or not tilt.available):
-		if ui.thumb_pad.active:manual_steering=true
-		if manual_steering:
-			desired_x=clampf(motor.position.x+ui.thumb_pad.axis*8.5*delta,-Tilt.LIMIT,Tilt.LIMIT)
-			lane=clampi(roundi(desired_x/2.6)+1,0,2);lane_from=desired_x;lane_elapsed=.18
-	if desired_x< -1.6:_training_action("left")
-	elif absf(desired_x)<.6:_training_action("right")
+		if ui.thumb_pad.active:
+			if not manual_steering:steering_target=motor.position.x
+			manual_steering=true
+			steering_target=clampf(steering_target+ui.thumb_pad.axis*8.5*delta,-Tilt.LIMIT,Tilt.LIMIT)
+			desired_x=steering_target
+			lane=clampi(roundi(steering_target/2.6)+1,0,2)
+			if desired_x< -1.6:_training_action("left")
+			elif absf(desired_x)<.6:_training_action("right")
+		elif manual_steering:
+			manual_steering=false
+			lane=clampi(roundi(steering_target/2.6)+1,0,2)
+			desired_x=float(LANES[lane])
+	desired_x=steering.advance(motor.position.x,desired_x,delta,Tilt.LIMIT)
 	motor.velocity.x=(desired_x-motor.position.x)/delta
 	motor.velocity.z=0
 	motor.move_and_slide()
@@ -507,7 +512,7 @@ func _physics_process(delta: float) -> void:
 			ui.district_name=str(state.title);ui.district_left=4.0
 	var active: Node3D=heroes[selected]
 	active.motion.locomotion_rate=clampf(run_speed/16.0,.55,1.65)
-	active.moving=true;active.airborne=motor.position.y-ground_y>.10 or falling;active.airborne_velocity=motor.velocity.y;active.sliding=sliding_left>0;active.lean=motor.velocity.x*.035
+	active.moving=true;active.airborne=not motor.is_on_floor() or falling;active.airborne_velocity=motor.velocity.y;active.sliding=sliding_left>0 and not active.airborne;active.lean=motor.velocity.x*.035
 	active.animate(delta)
 	active.rotation.x=lerp_angle(active.rotation.x,atan(CourseProfile.grade_at(distance))*.7,1-exp(-delta*9)) if course_id!="training" else 0.0
 	hero_key.position=Vector3(motor.position.x+2.6,ground_y+3.5,3.0)
@@ -818,11 +823,13 @@ func _blink_destination() -> int:
 func _jump() -> void:
 	if ui.mode!="game" or core.phase in ["handoff","failed","completed"]:return
 	if _try_secret_entry():return
+	slide_buffer=0;sliding_left=0
 	jump_buffer=.18
 
 
 func _slide() -> void:
 	if ui.mode!="game" or core.phase in ["handoff","failed","completed"]:return
+	jump_buffer=0
 	slide_buffer=.20
 	if not motor.is_on_floor():motor.velocity.y=minf(motor.velocity.y,-14.0)
 	else:
@@ -1074,6 +1081,14 @@ func _save_profile(clear_backup:bool=false) -> bool:
 	return true
 
 
+func _input(event:InputEvent) -> void:
+	var id:int=-99
+	if event is InputEventScreenTouch and (not event.pressed or event.canceled):id=event.index
+	elif event is InputEventMouseButton and event.button_index==MOUSE_BUTTON_LEFT and not event.pressed:id=-1
+	if gestures.touches.has(id):
+		gestures.finish_pointer.call_deferred(id,int(gestures.touches[id].sequence))
+
+
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.pressed and not event.echo:
 		if event.keycode==KEY_ESCAPE:
@@ -1109,7 +1124,7 @@ func _move_lane(direction: int) -> void:
 	manual_steering=false
 	var next_lane:=clampi(lane+direction,0,2)
 	if next_lane==lane:return
-	lane_from=motor.position.x;lane_elapsed=0;lane=next_lane
+	lane=next_lane
 	_training_action("left" if direction<0 else "right")
 
 
