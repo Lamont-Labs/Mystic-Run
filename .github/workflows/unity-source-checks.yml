@@ -1,0 +1,23 @@
+name: Unity portable source checks — not engine validation
+on:
+  push:
+    paths:
+      - 'experiments/unity-runner/**'
+      - 'tests/unity-intent/**'
+      - '.github/workflows/unity-source-checks.yml'
+  pull_request:
+    paths:
+      - 'experiments/unity-runner/**'
+      - 'tests/unity-intent/**'
+      - '.github/workflows/unity-source-checks.yml'
+permissions:
+  contents: read
+jobs:
+  portable-intent:
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+      - uses: actions/setup-dotnet@67a3573c9a986a3f9c594539f4ab511d57bb3ce9
+        with:
+          dotnet-version: '8.0.x'
+      - run: dotnet run --project tests/unity-intent/UnityIntentChecks.csproj --configuration Release

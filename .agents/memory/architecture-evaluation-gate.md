@@ -26,3 +26,27 @@ architecture comparison.
 
 **How to apply:** Keep this work experimental and present actual gameplay for
 review before expanding its scope or integrating it into a phone release.
+
+The owner subsequently said: "Find a better game engine. This isnt working."
+Do not treat the earlier single-Knight approval as authorization for further
+Godot rig iterations. Preserve the experiment while evaluating replacements.
+No full replacement-engine migration has been approved.
+
+**Why:** The owner rejected continuing the current direction and requested an
+engine alternative.
+
+**How to apply:** Separate engine research from migration authorization. Verify
+licensing and unattended Android build feasibility before committing to a port;
+retain the permanent Android identity and explicitly handle save compatibility.
+
+The owner approved preparing a **separate Unity prototype**, with licensing and
+no-paid-services build feasibility checked first. This is not approval to
+replace the Godot project, purchase Unity services, publish an experimental APK,
+or discard the existing artwork and saves.
+
+**Why:** The owner selected "Prepare a Unity prototype" after receiving the
+licensing and activation caveats.
+
+**How to apply:** Keep the Unity evaluation isolated. If no activated editor is
+available, preserve prepared source and report that blocker; do not represent
+portable C# tests as Unity compilation, rendered gameplay or an Android build.

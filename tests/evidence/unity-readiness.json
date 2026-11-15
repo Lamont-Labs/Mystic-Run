@@ -1,0 +1,21 @@
+{
+  "editor_version_pinned": "6000.3.28f1",
+  "editor_revision": "8f082d2fe476",
+  "editor_on_path": false,
+  "unity_hub_on_path": false,
+  "integration_search": "No Unity integration returned by catalog search",
+  "status": "blocked_editor_unavailable",
+  "unity_import_compilation_tested": false,
+  "unity_rendering_tested": false,
+  "unity_physics_tested": false,
+  "android_build_tested": false,
+  "personal_activation": "Official documentation requires Unity Hub; CLI activation does not apply to Personal",
+  "owner_action": "Make an authorized, activated Unity 6000.3 editor/build runner available; do not send passwords in chat",
+  "license_contents_accessed": false,
+  "signing_credentials_accessed": false,
+  "sources": [
+    "https://unity.com/releases/editor/whats-new/6000.3.28f1",
+    "https://docs.unity.com/en-us/engine/6000.3/manual/get-started/install-and-upgrade/licenses-and-activation/license-activation-methods"
+  ],
+  "note": "Missing local binaries is not a claim that Unity cannot run on any other machine. No paid service or license was purchased."
+}

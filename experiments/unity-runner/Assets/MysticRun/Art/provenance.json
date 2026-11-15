@@ -1,0 +1,16 @@
+{
+  "rights": "Noncommercial game use only; original artwork remains untouched",
+  "purpose": "Static evaluation reference, not a completed animated Knight",
+  "files": [
+    {
+      "source": "assets/characters/concept-sprites/knight_rear.png",
+      "copy": "experiments/unity-runner/Assets/MysticRun/Art/knight_rear.png",
+      "sha256": "11d02d535a213241be61ee4cdccdcbaa2420d51a6db883a49b5a99806b5f8457"
+    },
+    {
+      "source": "assets/environment/living-world/castle_stone.jpg",
+      "copy": "experiments/unity-runner/Assets/MysticRun/Art/castle_stone.jpg",
+      "sha256": "05c73fc86739b18f728175f71409b314e3e2a1ed506b8f592992022b81bf2f70"
+    }
+  ]
+}
