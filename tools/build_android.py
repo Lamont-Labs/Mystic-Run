@@ -12,6 +12,7 @@ import subprocess
 import zipfile
 from android_policy import inspect_package
 from asset_foundry import verify as verify_assets
+from android_icon_resources import repair_themed_icon, resource_files, inspect_table
 
 OWNER_CERTIFICATE='6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf'
 ART_PREVIEW_CERTIFICATE='cced8d8dca20fd35d169f546802953375c76fad3559cdbcbe896271c61f26f5e'
@@ -147,6 +148,24 @@ def main():
         raise RuntimeError('Android export failed; inspect android-export.log')
     if re.search(r'^(?:SCRIPT )?ERROR:',exported.stdout+'\n'+exported.stderr,re.M):
         raise RuntimeError('Android export reported an engine error; inspect android-export.log')
+    if args.unsigned:
+        # Godot 4.7.2 omits themed_icon.xml but keeps its resource-table entry.
+        # Repair before signing, then restore ZIP/16 KB alignment.
+        template=Path.home()/'.local/share/godot/export_templates/4.7.2.stable/android_debug.apk'
+        icon_resources=repair_themed_icon(output,template,tools/'aapt')
+        if icon_resources['restored']:
+            aligned=output.with_suffix('.aligned.apk')
+            try:
+                run([tools/'zipalign','-f','-P','16','4',output,aligned],timeout=60)
+                aligned.replace(output)
+            finally:
+                aligned.unlink(missing_ok=True)
+    else:
+        with zipfile.ZipFile(output) as archive:
+            missing=resource_files(inspect_table(tools/'aapt',output))-set(archive.namelist())
+        if missing:
+            raise RuntimeError('Android resources are missing; compile with --unsigned for pre-signing icon repair')
+        icon_resources={'restored':[],'all_resource_files_present':True}
     certificate_sha=None
     if args.unsigned:
         verification=subprocess.run([str(tools/'apksigner'),'verify',str(output)],capture_output=True,text=True,timeout=30)
@@ -179,6 +198,7 @@ def main():
             raise RuntimeError('APK signing certificate does not match the preserved development keystore')
     source_paths=run(['git','ls-files'],cwd=root).splitlines() if(root/'.git').exists() else []
     manifest={
+        'android_icon_resources':icon_resources,
         'asset_inventory':asset_inventory,
         **android_policy,
         'apk':output.name,'bytes':output.stat().st_size,'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
