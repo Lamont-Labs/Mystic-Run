@@ -1,0 +1,10 @@
+MysticRun Replit-generated artwork record
+
+These distant background illustrations were generated for the MysticRun project
+with Replit's image-generation tool. The source PNGs are preserved under
+art/premium-2d/source/. The game uses cropped, optimized JPEG derivatives.
+
+This project records the present use as noncommercial MysticRun artwork. This
+record is provenance for these generated files, not a general license or a claim
+of commercial-use rights. No external reference images or third-party source
+artwork were used to generate these backgrounds.

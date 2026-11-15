@@ -34,38 +34,40 @@ func _run() -> void:
 		_check(actor.concept_sprite.visible, kind + " concept sprite is visible")
 		_check(not actor.authored_mesh.is_visible_in_tree(),
 			kind + " 3D render stays hidden without removing its rig")
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_atlas.resource_path.ends_with(kind + "_atlas.png"),
+			kind + " loads its compact approved-concept atlas")
+		_check(actor.concept_view == "front",
 			kind + " starts on the front concept view")
 		_check_floor_alignment(actor, kind, "front view")
 
 		actor.facing = PI
 		actor.animate(0.0)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_rear.png"),
+		_check(actor.concept_view == "rear",
 			kind + " switches to the rear concept view in gameplay orientation")
 		_check_floor_alignment(actor, kind, "rear view")
 		actor.facing = 0.0
 		actor.animate(0.0)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_view == "front",
 			kind + " returns to the front concept view")
 
 		actor.moving = true
 		actor.animate(0.13)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_view == "front",
 			kind + " keeps the original concept front while running")
 		_check_floor_alignment(actor, kind, "running")
 		actor.animate(0.14)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_view == "front",
 			kind + " keeps the original concept front during the run cycle")
 		actor.moving = false
 		actor.airborne = true
 		actor.animate(0.0)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_view == "front",
 			kind + " keeps the original concept front while airborne")
 		_check_floor_alignment(actor, kind, "airborne")
 		actor.airborne = false
 		actor.sliding = true
 		actor.animate(0.0)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_view == "front",
 			kind + " keeps the original concept front while sliding")
 		_check(is_equal_approx(actor.concept_sprite.scale.x, actor.concept_sprite.scale.y),
 			kind + " preserves concept-art proportions while sliding")
@@ -77,12 +79,12 @@ func _run() -> void:
 		actor.airborne = false
 		actor.animate(0.0)
 		actor.animate(0.01)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_view == "front",
 			kind + " keeps the original concept front after landing")
 
 		actor.attack()
 		actor.animate(0.05)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_view == "front",
 			kind + " keeps the original concept front while attacking")
 		_check_floor_alignment(actor, kind, "attacking")
 		actor.attack_time = 0.0
@@ -90,31 +92,31 @@ func _run() -> void:
 		_check(is_equal_approx(actor.power_time, 0.7),
 			kind + " keeps the existing special-power timing")
 		actor.animate(0.05)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
+		_check(actor.concept_view == "front",
 			kind + " keeps the original concept front during special power")
 		actor.power_time = 0.0
 		actor.facing = PI
 		actor.moving = true
 		actor.animate(0.0)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_rear.png"),
+		_check(actor.concept_view == "rear",
 			kind + " keeps the original concept rear while running")
 		_check_floor_alignment(actor, kind, "rear running")
 		actor.moving = false
 		actor.airborne = true
 		actor.animate(0.0)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_rear.png"),
+		_check(actor.concept_view == "rear",
 			kind + " keeps the original concept rear while airborne")
 		_check_floor_alignment(actor, kind, "rear airborne")
 		actor.airborne = false
 		actor.sliding = true
 		actor.animate(0.0)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_rear.png"),
+		_check(actor.concept_view == "rear",
 			kind + " keeps the original concept rear while sliding")
 		_check_floor_alignment(actor, kind, "rear sliding")
 		actor.sliding = false
 		actor.attack()
 		actor.animate(0.05)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_rear.png"),
+		_check(actor.concept_view == "rear",
 			kind + " keeps the original concept rear while attacking")
 		_check_floor_alignment(actor, kind, "rear attacking")
 		actor.attack_time = 0.0
@@ -123,12 +125,12 @@ func _run() -> void:
 		actor.airborne = false
 		actor.animate(0.0)
 		actor.animate(0.01)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_rear.png"),
+		_check(actor.concept_view == "rear",
 			kind + " keeps the original concept rear after landing")
 		actor.landing_spring = 0.0
 		actor.power()
 		actor.animate(0.05)
-		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_rear.png"),
+		_check(actor.concept_view == "rear",
 			kind + " keeps the original concept rear during special power")
 		_check_floor_alignment(actor, kind, "rear special power")
 

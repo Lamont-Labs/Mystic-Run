@@ -8,8 +8,8 @@
   "outward_horn_samples": 22,
   "scope": "Actual imported mesh, exterior curve normals, skin, wing deformation, facial state and desktop pose checks; not physical-device performance or final art approval",
   "triangles": 22722,
-  "wing_slide_top": 1.03155052661896,
-  "wing_width_glide": 2.65914392471313,
-  "wing_width_run": 1.40155565738678,
-  "wing_width_slide": 0.556785464286804
+  "wing_slide_top": 1.03146541118622,
+  "wing_width_glide": 2.27495050430298,
+  "wing_width_run": 1.21582472324371,
+  "wing_width_slide": 0.556462228298187
 }

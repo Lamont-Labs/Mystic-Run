@@ -40,6 +40,21 @@ class ExportConfigurationTests(unittest.TestCase):
             self.assertIn('config/version="0.6.2"',(self.root/'project.godot').read_text())
         self.assert_restored()
 
+    def test_android_presets_exclude_private_sources_and_unapproved_pose_art(self):
+        config=configparser.ConfigParser(interpolation=None)
+        config.read_string(self.originals['export_presets.cfg'].decode())
+        for section in ('preset.0','preset.1'):
+            exclusions=config[section]['exclude_filter']
+            for path in (
+                'attached_assets/*',
+                'references/*',
+                'art/*',
+                'assets/characters/concept-sprites/*_front.png',
+                'assets/characters/concept-sprites/*_rear.png',
+            ):
+                with self.subTest(section=section,path=path):
+                    self.assertIn(path,exclusions)
+
     def test_export_failure_restores_source_before_a_later_owner_export(self):
         with self.assertRaisesRegex(RuntimeError,'simulated export failure'):
             with export_configuration(self.root,1017,'0.6.2',

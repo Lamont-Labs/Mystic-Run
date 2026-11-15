@@ -38,6 +38,11 @@ LICENSE_RIGHTS = {
         "modification": True,
         "game_distribution": True,
     },
+    "LicenseRef-MysticRun-Replit-Generated-NonCommercial": {
+        "commercial_use": False,
+        "modification": True,
+        "game_distribution": True,
+    },
 }
 OWNER_PROVIDED_LICENSE = "LicenseRef-MysticRun-Owner-Provided-NonCommercial"
 OWNER_PROVIDED_PUBLISHER = "MysticRun owner-provided concept art"

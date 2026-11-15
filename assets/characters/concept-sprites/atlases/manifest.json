@@ -1,0 +1,152 @@
+{
+  "schema": 1,
+  "generator": "tools/build_premium_2d_assets.py",
+  "source_authority": "references/01-character-concept.png",
+  "source_sha256": "07e7541d8d5a91d1733186930d5d4ed759400021c8af3391f068ade217f01e71",
+  "characters": {
+    "knight": {
+      "atlas": {
+        "path": "assets/characters/concept-sprites/atlases/knight_atlas.png",
+        "sha256": "051723aba56787dc2a600074c3f0cfcf9788a4863b7b22760355924abbfdf2f4",
+        "bytes": 420142
+      },
+      "atlas_dimensions": [
+        723,
+        526
+      ],
+      "gutter_px": 4,
+      "frames": {
+        "front": {
+          "region": [
+            0,
+            0,
+            413,
+            526
+          ],
+          "source": {
+            "path": "assets/characters/concept-sprites/knight_front.png",
+            "sha256": "ef4cf8b977f2ca622ba8aeabe2e443f18a28d478e7481e6282f2b3cce1ec6f0a",
+            "bytes": 375118
+          }
+        },
+        "rear": {
+          "region": [
+            417,
+            0,
+            306,
+            361
+          ],
+          "source": {
+            "path": "assets/characters/concept-sprites/knight_rear.png",
+            "sha256": "11d02d535a213241be61ee4cdccdcbaa2420d51a6db883a49b5a99806b5f8457",
+            "bytes": 172899
+          }
+        }
+      },
+      "animation_contract": {
+        "approved_pose_frames": [
+          "front",
+          "rear"
+        ],
+        "action_pose_frames": [],
+        "note": "Do not substitute generated action drawings. Until approved source-conditioned poses exist, gameplay keeps the exact approved cutout and uses restrained engine transforms."
+      }
+    },
+    "gargoyle": {
+      "atlas": {
+        "path": "assets/characters/concept-sprites/atlases/gargoyle_atlas.png",
+        "sha256": "6113d6deb00b491d581453837a25f4cf85bd1f27131119f7ea402a704eb8f7bc",
+        "bytes": 508659
+      },
+      "atlas_dimensions": [
+        876,
+        450
+      ],
+      "gutter_px": 4,
+      "frames": {
+        "front": {
+          "region": [
+            0,
+            0,
+            501,
+            450
+          ],
+          "source": {
+            "path": "assets/characters/concept-sprites/gargoyle_front.png",
+            "sha256": "c951ffb00ec55770a387ace46aa3a5db1877b812c074b33a19bb273f15466aa1",
+            "bytes": 399496
+          }
+        },
+        "rear": {
+          "region": [
+            505,
+            0,
+            371,
+            341
+          ],
+          "source": {
+            "path": "assets/characters/concept-sprites/gargoyle_rear.png",
+            "sha256": "ed7110818292c90f880dc1edaca8b78316a82fb824c47e88e53b6e3f17ccf81b",
+            "bytes": 211887
+          }
+        }
+      },
+      "animation_contract": {
+        "approved_pose_frames": [
+          "front",
+          "rear"
+        ],
+        "action_pose_frames": [],
+        "note": "Do not substitute generated action drawings. Until approved source-conditioned poses exist, gameplay keeps the exact approved cutout and uses restrained engine transforms."
+      }
+    },
+    "witch": {
+      "atlas": {
+        "path": "assets/characters/concept-sprites/atlases/witch_atlas.png",
+        "sha256": "d7eb5d14f425769fd6f5540368da9ddaba180c443923ca2b592f2ea0f3ddfee3",
+        "bytes": 443608
+      },
+      "atlas_dimensions": [
+        756,
+        539
+      ],
+      "gutter_px": 4,
+      "frames": {
+        "front": {
+          "region": [
+            0,
+            0,
+            454,
+            539
+          ],
+          "source": {
+            "path": "assets/characters/concept-sprites/witch_front.png",
+            "sha256": "8f6b881e36bfec868b0274f5c1e47226b3d9c8798a039a49fbbbda317f9b8f0c",
+            "bytes": 410463
+          }
+        },
+        "rear": {
+          "region": [
+            458,
+            0,
+            298,
+            365
+          ],
+          "source": {
+            "path": "assets/characters/concept-sprites/witch_rear.png",
+            "sha256": "87d90ecbfbfa7d7e51e8c164824a33cbc1a71b7a97fefa2be33c544fcbcaa792",
+            "bytes": 177914
+          }
+        }
+      },
+      "animation_contract": {
+        "approved_pose_frames": [
+          "front",
+          "rear"
+        ],
+        "action_pose_frames": [],
+        "note": "Do not substitute generated action drawings. Until approved source-conditioned poses exist, gameplay keeps the exact approved cutout and uses restrained engine transforms."
+      }
+    }
+  }
+}

@@ -5,6 +5,20 @@ const Motion = preload("res://game/rig_motion.gd")
 const OUTLINE = preload("res://assets/shaders/ink_outline.gdshader")
 const AUTHORED_SHADER = preload("res://assets/shaders/authored_character.gdshader")
 const FINISH_DETAIL = preload("res://assets/characters/finish-detail.png")
+const CONCEPT_ATLAS_REGIONS := {
+	"knight": {
+		"front": [0, 0, 413, 526],
+		"rear": [417, 0, 306, 361],
+	},
+	"gargoyle": {
+		"front": [0, 0, 501, 450],
+		"rear": [505, 0, 371, 341],
+	},
+	"witch": {
+		"front": [0, 0, 454, 539],
+		"rear": [458, 0, 298, 365],
+	},
+}
 var identity: String = "knight"
 var body: Node3D
 var skeleton: Skeleton3D
@@ -30,6 +44,8 @@ var landing_spring:float=0.0
 var cape_fabric:ShaderMaterial
 var authored_mesh:MeshInstance3D
 var concept_sprite:Sprite3D
+var concept_atlas:Texture2D
+var concept_view:String="front"
 var concept_textures:Dictionary={}
 var concept_sprite_bottoms:Dictionary={}
 var concept_sprite_height:float=2.15
@@ -123,10 +139,16 @@ func _build() -> void:
 func _build_concept_sprite() -> void:
 	var heights:Dictionary={"knight":2.15,"gargoyle":2.48,"witch":2.22}
 	concept_sprite_height=float(heights[identity])
-	concept_textures={
-		"front":load("res://assets/characters/concept-sprites/"+identity+"_front.png"),
-		"rear":load("res://assets/characters/concept-sprites/"+identity+"_rear.png"),
-	}
+	concept_atlas=load("res://assets/characters/concept-sprites/atlases/"+identity+"_atlas.png")
+	concept_textures.clear()
+	for view in ["front","rear"]:
+		var region_data:Array=CONCEPT_ATLAS_REGIONS[identity][view]
+		var frame:=AtlasTexture.new()
+		frame.atlas=concept_atlas
+		frame.region=Rect2i(region_data[0],region_data[1],region_data[2],region_data[3])
+		frame.filter_clip=true
+		concept_textures[view]=frame
+	concept_view="front"
 	concept_sprite_bottoms.clear()
 	concept_sprite=Sprite3D.new()
 	concept_sprite.name="ConceptReferenceSprite"
@@ -142,7 +164,7 @@ func _build_concept_sprite() -> void:
 
 func _align_concept_sprite_to_floor() -> void:
 	var texture:Texture2D=concept_sprite.texture
-	var path:String=texture.resource_path
+	var path:String=concept_view+":"+concept_atlas.resource_path
 	if not concept_sprite_bottoms.has(path):
 		var image:Image=texture.get_image()
 		var used:Rect2i=image.get_used_rect()
@@ -213,6 +235,7 @@ func animate(delta: float) -> void:
 		var view:String="front" if absf(wrapf(facing,-PI,PI))<PI*.5 else "rear"
 		# Keep every action on the actual concept-sheet cutout. The locally drawn
 		# action studies were not faithful enough to use as final character art.
+		concept_view=view
 		var next_texture:Texture2D=concept_textures[view]
 		if concept_sprite.texture!=next_texture:
 			concept_sprite.texture=next_texture
