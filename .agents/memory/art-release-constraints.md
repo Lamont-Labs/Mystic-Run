@@ -19,3 +19,16 @@ and elimination of repetitive release operations.
 **How to apply:** Treat a verified protected-main merge as release approval;
 keep credentials isolated and compatibility claims conditional on the installed
 package, certificate, and version. Never modify the phone installation.
+
+The owner confirmed successfully installing and launching v0.6.2 Build 2009 on
+their Samsung Android phone, with the updated artwork visible and working. This
+is the canonical installation baseline; all subsequent builds must update it or
+its successors directly, without uninstalling or resetting the game.
+
+**Why:** The owner explicitly confirmed installation and required this baseline
+to supersede earlier uncertainty about their installed identity.
+
+**How to apply:** Follow the locked identity and release rules in `AGENTS.md`.
+Do not keep asking for the old APK or report that the baseline is unconfirmed.
+Distinguish verified update eligibility from an actual test of each future APK
+on the physical phone.

@@ -2,7 +2,10 @@ import copy
 import unittest
 from pathlib import Path
 
-from android_release_automation import REPO, approved_source, next_version, published_codes
+from android_release_automation import (
+    REPO, approved_source, next_version, published_codes, verify_baseline_update,
+)
+from android_verification import PACKAGE, PERMANENT_CERTIFICATE
 
 
 class AutomaticReleaseTests(unittest.TestCase):
@@ -42,11 +45,32 @@ class AutomaticReleaseTests(unittest.TestCase):
             approved_source(self.branch, [], self.sha)
 
     def test_version_increases_beyond_releases_and_records(self):
-        self.assertEqual(next_version(8, [1029], []), 2008)
+        self.assertEqual(next_version(8, [1029], []), 2010)
+        self.assertEqual(next_version(1, [], []), 2010)
         self.assertEqual(next_version(8, [9000], []), 9001)
         self.assertEqual(next_version(8, [9000], [{"signed_manifest": {"version_code": 9500}}]), 9501)
         with self.assertRaises(ValueError):
             next_version(8, [2100000000], [])
+
+    def test_only_increasing_same_identity_updates_are_eligible(self):
+        manifest = {"package_id": PACKAGE, "certificate_sha256": PERMANENT_CERTIFICATE,
+                    "version_code": 2010}
+        verify_baseline_update(manifest)
+        for field, value in (
+            ("package_id", "different.package"), ("certificate_sha256", "0" * 64),
+            ("version_code", 2009), ("version_code", 2008), ("version_code", True),
+            ("version_code", "2010"), ("version_code", 2100000001),
+        ):
+            with self.subTest(field=field, value=value):
+                with self.assertRaises(ValueError):
+                    verify_baseline_update({**manifest, field: value})
+
+    def test_explicit_maintenance_marker_skips_apks_not_gameplay_checks(self):
+        root = Path(__file__).resolve().parents[1]
+        for name in ("android-apk.yml", "android-compile.yml"):
+            self.assertIn("[skip android release]", (root / ".github/workflows" / name).read_text())
+        self.assertNotIn("[skip android release]",
+                         (root / ".github/workflows/core-checks.yml").read_text())
 
     def test_all_published_tags_including_previews_are_counted(self):
         pages = [[{"tag_name": "v0.6.1-build1032"}],
