@@ -1,4 +1,4 @@
-MysticRun character concept art — noncommercial game-use authorization
+MysticRun character concept art and action-pose frames — noncommercial game-use authorization
 
 Source: references/01-character-concept.png, supplied by the MysticRun project
 owner.
@@ -7,6 +7,16 @@ Authorization recorded 2026-11-14: use and modify this concept artwork for
 distribution as part of the MysticRun game on a noncommercial basis only.
 Commercial use is not authorized by this record.
 
-The in-game Credits screen identifies the character artwork as owner-provided
-concept art and states the noncommercial-use limit. This record applies only
-to the supplied concept sheet and its six front/rear gameplay crops.
+The project owner subsequently directed creation of local action-pose artwork
+from the supplied character concepts. This record covers the six source-cropped
+front/rear views and the locally drawn action frames listed in
+assets/characters/concept-sprites/ACTION_PROVENANCE.json and
+assets/asset_registry.json. The action frames were made with local drawing
+code; no paid image-generation service was used.
+
+Rights are limited to modification and distribution as part of MysticRun for
+noncommercial game use. Commercial use and standalone redistribution are not
+authorized. Required in-game credit:
+
+Character illustrations: MysticRun owner-provided concept art and locally
+generated action-pose artwork; noncommercial game use only.

@@ -39,10 +39,52 @@ func _run() -> void:
 		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_front.png"),
 			kind + " returns to the front concept view")
 
+		actor.moving = true
+		actor.animate(0.13)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_run_1_front.png"),
+			kind + " shows the first running pose through gameplay animation")
+		actor.animate(0.14)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_run_0_front.png"),
+			kind + " alternates the running pose through gameplay animation")
+		actor.moving = false
+		actor.airborne = true
+		actor.animate(0.0)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_jump_front.png"),
+			kind + " shows a distinct jump pose while airborne")
+		actor.airborne = false
 		actor.sliding = true
 		actor.animate(0.0)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_slide_front.png"),
+			kind + " shows a distinct slide pose")
 		_check(is_equal_approx(actor.concept_sprite.scale.y, 0.72),
 			kind + " lowers its illustrated silhouette while sliding")
+		actor.sliding = false
+		actor.attack()
+		actor.animate(0.05)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_attack_front.png"),
+			kind + " shows a distinct attack pose")
+		actor.attack_time = 0.0
+		actor.facing = PI
+		actor.moving = true
+		actor.animate(0.0)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_run_0_rear.png")
+			or actor.concept_sprite.texture.resource_path.ends_with(kind + "_run_1_rear.png"),
+			kind + " keeps the rear-facing action artwork in gameplay orientation")
+		actor.moving = false
+		actor.airborne = true
+		actor.animate(0.0)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_jump_rear.png"),
+			kind + " has a rear-facing jump pose")
+		actor.airborne = false
+		actor.sliding = true
+		actor.animate(0.0)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_slide_rear.png"),
+			kind + " has a rear-facing slide pose")
+		actor.sliding = false
+		actor.attack()
+		actor.animate(0.05)
+		_check(actor.concept_sprite.texture.resource_path.ends_with(kind + "_attack_rear.png"),
+			kind + " has a rear-facing attack pose")
 
 		if kind == "knight":
 			_check(actor.skeleton.get_bone_count() == 65,

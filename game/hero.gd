@@ -31,6 +31,7 @@ var cape_fabric:ShaderMaterial
 var authored_mesh:MeshInstance3D
 var concept_sprite:Sprite3D
 var concept_textures:Dictionary={}
+var concept_action_textures:Dictionary={}
 var concept_sprite_height:float=2.15
 var blink_clock:float=0.0
 var face_shapes:Dictionary={}
@@ -126,6 +127,12 @@ func _build_concept_sprite() -> void:
 		"front":load("res://assets/characters/concept-sprites/"+identity+"_front.png"),
 		"rear":load("res://assets/characters/concept-sprites/"+identity+"_rear.png"),
 	}
+	concept_action_textures={}
+	for pose in ["run_0","run_1","jump","slide","attack"]:
+		concept_action_textures[pose]={
+			"front":load("res://assets/characters/concept-sprites/"+identity+"_"+pose+"_front.png"),
+			"rear":load("res://assets/characters/concept-sprites/"+identity+"_"+pose+"_rear.png"),
+		}
 	concept_sprite=Sprite3D.new()
 	concept_sprite.name="ApprovedConceptSprite"
 	concept_sprite.texture=concept_textures.front
@@ -199,10 +206,17 @@ func animate(delta: float) -> void:
 	clock+=delta
 	if is_instance_valid(concept_sprite):
 		var view:String="front" if absf(wrapf(facing,-PI,PI))<PI*.5 else "rear"
-		if concept_sprite.texture!=concept_textures[view]:
-			concept_sprite.texture=concept_textures[view]
+		var pose:String=""
+		if attack_time>0:pose="attack"
+		elif sliding:pose="slide"
+		elif airborne:pose="jump"
+		elif moving:pose="run_"+str(int(floor(clock*8.0))%2)
+		var next_texture:Texture2D=concept_textures[view] if pose.is_empty() else concept_action_textures[pose][view]
+		if concept_sprite.texture!=next_texture:
+			concept_sprite.texture=next_texture
 			concept_sprite.pixel_size=concept_sprite_height/float(concept_sprite.texture.get_height())
-		concept_sprite.scale=Vector3(1.0,.72 if sliding else 1.0,1.0)
+		var action_width_scale:float=1.32 if identity=="gargoyle" and not pose.is_empty() else 1.0
+		concept_sprite.scale=Vector3(action_width_scale,.72 if sliding else 1.0,1.0)
 		concept_sprite.position.y=concept_sprite_height*(.5 if not sliding else .35)
 		concept_sprite.rotation.z=sin(attack_time/.4*PI)*swipe_direction*.055 if attack_time>0 else 0.0
 	if is_instance_valid(authored_mesh):
