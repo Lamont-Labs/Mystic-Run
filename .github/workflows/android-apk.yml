@@ -68,6 +68,15 @@ jobs:
           MYSTICRUN_KEY_PASSWORD: ${{ secrets.MYSTICRUN_KEY_PASSWORD }}
         run: |
           python3 tools/sign_android.py --apk build/Mystic_Run_0.6.2_unsigned.apk --manifest build/apk-manifest.json --sdk "${ANDROID_SDK_ROOT}" --keystore "${RUNNER_TEMP}/mysticrun.keystore" --expected-commit "${GITHUB_SHA}" --expected-run-id "${GITHUB_RUN_ID}" --output "${RUNNER_TEMP}/verified-apk/Mystic_Run_0.6.2_Build$((2000 + GITHUB_RUN_NUMBER)).apk"
+      - name: Preserve unsigned input for verified release reconstruction
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: mystic-run-unsigned-android
+          path: |
+            build/Mystic_Run_0.6.2_unsigned.apk
+            build/apk-manifest.json
+          retention-days: 30
+          if-no-files-found: error
       - name: Preserve verified APK and evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:

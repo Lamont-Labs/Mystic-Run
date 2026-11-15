@@ -74,6 +74,15 @@ def validate_record(record):
     return manifest
 
 
+def validate_builder_run(run, manifest):
+    workflow = run.get('path')
+    allowed = ('.github/workflows/android-compile.yml', '.github/workflows/android-apk.yml')
+    if run.get('conclusion') != 'success' or run.get('head_sha') != manifest['git_commit'] or workflow not in allowed:
+        raise ValueError('Original GitHub compilation was not verified as successful')
+    if workflow == '.github/workflows/android-apk.yml' and manifest.get('permanent_signing_identity') is not True:
+        raise ValueError('Directly signed workflow releases require the permanent signing identity')
+
+
 def apply_record(unsigned, unsigned_manifest_bytes, record):
     manifest = validate_record(record)
     if sha256(unsigned) != manifest['unsigned_apk_sha256'] or sha256(unsigned_manifest_bytes) != record['unsigned_manifest_sha256']:
@@ -266,8 +275,7 @@ def publish(records_directory, output_directory, sdk):
         raise RuntimeError('Could not inspect the release: '+existing.stderr[-1000:])
     run_id = str(manifest['builder']['run_id'])
     run = json.loads(command(['gh', 'api', f'repos/{REPOSITORY}/actions/runs/{run_id}']))
-    if run['conclusion'] != 'success' or run['head_sha'] != manifest['git_commit'] or run['path'] != '.github/workflows/android-compile.yml':
-        raise ValueError('Original GitHub compilation was not verified as successful')
+    validate_builder_run(run, manifest)
     with tempfile.TemporaryDirectory(prefix='mystic-release-') as temporary:
         directory = Path(temporary)
         command(['gh', 'run', 'download', run_id, '--repo', REPOSITORY, '--name', 'mystic-run-unsigned-android', '--dir', directory/'input'])
