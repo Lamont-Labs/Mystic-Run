@@ -1,0 +1,4 @@
+size { x: 600 y: 60 }
+text: "Build feasibility check - not MysticRun gameplay"
+font: "/builtins/fonts/default.font"
+material: "/builtins/fonts/label-df.material"
