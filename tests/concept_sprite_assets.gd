@@ -125,8 +125,8 @@ func _run() -> void:
 		_check(actor.concept_action_textures.values().has(first_run_frame),
 			kind + " uses a generated run-cycle frame when running away")
 		actor.animate(.5)
-		_check(actor.concept_sprite.texture != first_run_frame,
-			kind + " run animation switches to its alternate stride")
+		_check(actor.motion_art.gait>0 and actor.motion_art.stride_weight>.9,
+			kind + " continuous cutout joints animate instead of swapping two static strides")
 		_check_floor_alignment(actor, kind, "rear run-cycle frame")
 		actor.moving = false
 		actor.animate(0.0)

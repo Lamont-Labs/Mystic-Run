@@ -1,0 +1,61 @@
+{
+  "generator": "Replit image generation",
+  "commercial_use_claimed": false,
+  "raw_source_archive": "generated-artifacts/gameplay-overhaul/source",
+  "outputs": [
+    {
+      "source_sha256": "716a94d0189c326e82b6f3015004f6741abd4a2d8272b91855680d45cbbb3cd3",
+      "path": "assets/environment/living-world/castle_vista.jpg",
+      "sha256": "c6735d0d4cf906e63a2a76f526e6f99a1d3473d2980e5ba40a03a03ae9774fc1",
+      "bytes": 336700
+    },
+    {
+      "source_sha256": "f3066c0ea0ec7e697ad5fda9191cf9994642d8f044681c771bec5e2fe47e2b03",
+      "path": "assets/environment/living-world/castle_stone.jpg",
+      "sha256": "05c73fc86739b18f728175f71409b314e3e2a1ed506b8f592992022b81bf2f70",
+      "bytes": 129538
+    },
+    {
+      "source_sha256": "e4ae39383415507f8e314aa9a41212267e5730babf40aa8bf1833b71213ebe04",
+      "path": "assets/environment/living-world/castle_landmark.png",
+      "sha256": "cc421613519c33b907ff4e30407f177a6b1797ad723d772077d0a7d757a24585",
+      "bytes": 357480
+    },
+    {
+      "source_sha256": "6df48b1c052cbbca34ec95549de49c9e648e59a6289e7a3902ac66f34c760e40",
+      "path": "assets/environment/living-world/wilds_vista.jpg",
+      "sha256": "e68058a57c3e28bdb639b63cbbf1338d07b9d85507cd168cc330e6c99a2e7bbf",
+      "bytes": 356311
+    },
+    {
+      "source_sha256": "ae213d30ee65223350fbba7fea183923fb6e73155353c76dd413efcc8cecbcea",
+      "path": "assets/environment/living-world/wilds_stone.jpg",
+      "sha256": "188d60be39692565d54b77dd7aff1e8bff854c393d5d01b3cdcf4509cb2ee23e",
+      "bytes": 109935
+    },
+    {
+      "source_sha256": "7f2a3b42202a2858a883e47056ad4d91adda086398e0391c38b02a978237f410",
+      "path": "assets/environment/living-world/wilds_landmark.png",
+      "sha256": "b3735b7850b7fa9a0ebed68e568d9484c915e19aa8add77d76cd50109e90aeb6",
+      "bytes": 683294
+    },
+    {
+      "source_sha256": "8522f85bd8af563c0dd95faea233be2363d02acf947540030ff1f17319354106",
+      "path": "assets/environment/living-world/ember_vista.jpg",
+      "sha256": "39e6643a0008f4d5cd232c5181bc1161a084d55d5bea92f946897e509bc897f6",
+      "bytes": 267983
+    },
+    {
+      "source_sha256": "dcf1cd876b7cd32c2a58408d63fd65a8f8aeff066381c1c97d5c16b961457c0a",
+      "path": "assets/environment/living-world/ember_stone.jpg",
+      "sha256": "c139235f86649fec8e86acc42989eee391084ebb65775ba10248e4ba138e608c",
+      "bytes": 115702
+    },
+    {
+      "source_sha256": "93fa310532fc36cc6bf8d091dadfec11e58d369ff5819f5e3b1c055908622cca",
+      "path": "assets/environment/living-world/ember_landmark.png",
+      "sha256": "9f22aa5a6cd63af1f1bec2033fe769bb4aeba0d46370876ae0361327c1006325",
+      "bytes": 504486
+    }
+  ]
+}

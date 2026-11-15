@@ -25,6 +25,8 @@ var motor: CharacterBody3D
 var collider: CollisionShape3D
 var camera: Camera3D
 var key_light: DirectionalLight3D
+var atmosphere:Environment
+var last_biome_chapter:int=-1
 var hero_key: OmniLight3D
 var hero_rim: OmniLight3D
 var ui: Control
@@ -194,6 +196,7 @@ func _ready() -> void:
 
 func _setup_environment() -> void:
 	var environment := Environment.new()
+	atmosphere=environment
 	environment.background_mode = Environment.BG_SKY
 	var sky := Sky.new()
 	var sky_material := ProceduralSkyMaterial.new()
@@ -408,6 +411,10 @@ func _start_run() -> void:
 	ui.guide_title="";ui.guide_detail="";ui.combat_ready=false;ui.combat_warning=false
 	ui.intro_active=guided_intro;ui.district_name="";ui.district_left=0
 	world.visible=true;motor.visible=true
+	world.biome_progression=course_id=="endless"
+	atmosphere.fog_light_color=Color("b8eaff")
+	atmosphere.ambient_light_color=Color("fff1e8")
+	last_biome_chapter=-1
 	_select_character(selected)
 	_spawn_ahead();world.flat_course=course_id=="training";world.update(0,0);_update_rows(0)
 	if course_id=="training" or guided_intro:_training_prompt()
@@ -444,7 +451,7 @@ func _physics_process(delta: float) -> void:
 	sliding_left=maxf(0,sliding_left-delta);power_left=maxf(0,power_left-delta);attack_age+=delta
 	jump_buffer=maxf(0,jump_buffer-delta);slide_buffer=maxf(0,slide_buffer-delta)
 	coyote_left=.10 if motor.is_on_floor() else maxf(0,coyote_left-delta)
-	var gravity:=27.0
+	var gravity:=27.0 if motor.velocity.y>0 else 31.0
 	if not motor.is_on_floor():motor.velocity.y-=gravity*delta
 	elif motor.velocity.y<0:motor.velocity.y=-.5
 	if jump_buffer>0 and coyote_left>0 and not falling:
@@ -453,7 +460,8 @@ func _physics_process(delta: float) -> void:
 	if slide_buffer>0 and motor.is_on_floor():
 		sliding_left=.72;slide_buffer=0;qa_slide_count+=1;_training_action("slide")
 	lane_elapsed=minf(.18,lane_elapsed+delta)
-	var t:=smoothstep(0,.18,lane_elapsed)
+	var lane_t:float=clampf(lane_elapsed/.18,0.0,1.0)
+	var t:float=lane_t*lane_t*lane_t*(lane_t*(lane_t*6.0-15.0)+10.0)
 	var desired_x:=lerpf(lane_from,float(LANES[lane]),t)
 	if profile.settings.control_mode=="tilt" and not qa:
 		var tilt_x:float=tilt.update(_motion_sample(),delta)
@@ -489,6 +497,14 @@ func _physics_process(delta: float) -> void:
 	world.set_gaps(rows,distance)
 	world.flat_course=course_id=="training"
 	world.update(distance,delta)
+	if world.biome_progression:
+		var state:Dictionary=world.biome_state
+		var fogs:Array[Color]=[Color("d9c5b5"),Color("90beb0"),Color("ba897f")]
+		atmosphere.fog_light_color=fogs[int(state.index)].lerp(fogs[int(state.next)],float(state.blend))
+		atmosphere.ambient_light_color=Color("fff1e8").lerp(fogs[int(state.index)],.25)
+		if last_biome_chapter!=int(state.chapter):
+			last_biome_chapter=int(state.chapter)
+			ui.district_name=str(state.title);ui.district_left=4.0
 	var active: Node3D=heroes[selected]
 	active.motion.locomotion_rate=clampf(run_speed/16.0,.55,1.65)
 	active.moving=true;active.airborne=motor.position.y-ground_y>.10 or falling;active.airborne_velocity=motor.velocity.y;active.sliding=sliding_left>0;active.lean=motor.velocity.x*.035
@@ -514,7 +530,7 @@ func _physics_process(delta: float) -> void:
 		foot_clock=0;_sound("step",.95+fx_rng.randf()*.08)
 	var snapshot: Dictionary=core.snapshot()
 	snapshot["course_length"]=Courses.get_course(course_id).length
-	snapshot["district"]=CourseProfile.section_at(distance) if course_id!="training" else "GUIDED PRACTICE"
+	snapshot["district"]=str(world.biome_state.title) if world.biome_progression else CourseProfile.section_at(distance) if course_id!="training" else "GUIDED PRACTICE"
 	snapshot["speed_mps"]=run_speed;snapshot["elevation_m"]=ground_y
 	snapshot["tilt_position"]=tilt.filtered
 	snapshot["steering"]="TILT" if profile.settings.control_mode=="tilt" and tilt.available else "THUMB"
@@ -561,7 +577,7 @@ func _spawn_ahead() -> void:
 
 
 func _add_row(kind: String, target_lane: int, marker: float) -> void:
-	var node:Node3D=world.secret_portal(selected,Progress.ability_unlocked(progression,selected)) if kind=="secret_gate" else world.prop(kind)
+	var node:Node3D=world.secret_portal(selected,Progress.ability_unlocked(progression,selected)) if kind=="secret_gate" else world.prop(kind,marker)
 	add_child(node)
 	var token:int=core.register_collectible(150 if kind=="artifact" else 25) if kind in ["shard","artifact"] else -1
 	rows.append({"kind":kind,"lane":target_lane,"at":marker,"node":node,"resolved":false,"id":token,"epoch":-1})
@@ -802,7 +818,7 @@ func _blink_destination() -> int:
 func _jump() -> void:
 	if ui.mode!="game" or core.phase in ["handoff","failed","completed"]:return
 	if _try_secret_entry():return
-	jump_buffer=.12
+	jump_buffer=.18
 
 
 func _slide() -> void:
