@@ -25,6 +25,10 @@ jobs:
         with:
           distribution: temurin
           java-version: '25'
+      - name: Install headless engine audio-library dependency on the Ubuntu runner
+        run: |
+          sudo apt-get update -qq
+          sudo apt-get install -y --no-install-recommends libopenal1
       - name: Compile Android resources and execute a Linux headless smoke test
         run: python3 tools/verify_defold_build.py
       - name: Retain logs and evidence, not keys or an APK

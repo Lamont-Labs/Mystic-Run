@@ -57,6 +57,7 @@ def main():
         "bob_version": BOB_VERSION,
         "bob_sha256": BOB_SHA256,
         "scope": "Android-targeted resource compilation and Linux headless runtime only",
+        "android_resource_compilation_passed": False,
         "android_apk_built": False,
         "android_runtime_tested": False,
         "android_update_compatibility_tested": False,
@@ -108,6 +109,7 @@ def main():
             evidence["android_outputs"][relative] = {
                 "bytes": path.stat().st_size, "sha256": digest(path),
             }
+        evidence["android_resource_compilation_passed"] = True
         _, evidence["linux_compile_seconds"] = run(base + [
             "--platform", "x86_64-linux", "--output", "build/linux",
             "--variant", "headless", "--archive",
