@@ -2,7 +2,15 @@
   "active_effects": 0,
   "active_rows": 22,
   "attacks": 16,
-  "captures": [],
+  "captures": [
+    "game-0180-knight",
+    "game-0600-knight",
+    "game-1200-knight",
+    "game-1800-knight",
+    "fracture-course",
+    "game-2400-knight",
+    "game-3000-knight"
+  ],
   "character_locked": true,
   "damage_events": 0,
   "deaths": 0,

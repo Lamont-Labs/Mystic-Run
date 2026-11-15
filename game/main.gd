@@ -394,6 +394,7 @@ func _start_run() -> void:
 	gestures.reset()
 	for hero in heroes.values():
 		hero.sliding=false;hero.airborne=false;hero.moving=false;hero.lean=0
+		hero.airborne_velocity=0.0;hero.blocking=false;hero.defeated=false;hero.landing_spring=0.0
 		hero.facing=PI;hero.body.rotation.y=PI
 		hero.motion.attack_clock=99;hero.motion.power_clock=99;hero.attack_time=0;hero.power_time=0
 		hero.animate(.2)
@@ -490,7 +491,7 @@ func _physics_process(delta: float) -> void:
 	world.update(distance,delta)
 	var active: Node3D=heroes[selected]
 	active.motion.locomotion_rate=clampf(run_speed/16.0,.55,1.65)
-	active.moving=true;active.airborne=motor.position.y-ground_y>.10 or falling;active.sliding=sliding_left>0;active.lean=motor.velocity.x*.035
+	active.moving=true;active.airborne=motor.position.y-ground_y>.10 or falling;active.airborne_velocity=motor.velocity.y;active.sliding=sliding_left>0;active.lean=motor.velocity.x*.035
 	active.animate(delta)
 	active.rotation.x=lerp_angle(active.rotation.x,atan(CourseProfile.grade_at(distance))*.7,1-exp(-delta*9)) if course_id!="training" else 0.0
 	hero_key.position=Vector3(motor.position.x+2.6,ground_y+3.5,3.0)
@@ -926,6 +927,11 @@ func _end_run() -> void:
 	profile.selected_character=selected
 	gestures.reset()
 	ui.guide_title="";ui.guide_detail="";anchor.visible=false
+	if heroes.has(selected):
+		if run_outcome=="clear":
+			heroes[selected].celebrate()
+		elif run_outcome not in ["practice","abandoned"]:
+			heroes[selected].defeat()
 	var progress_result:Dictionary={"xp":0,"new_badges":[],"ability_unlocked":false}
 	if course_id!="training":
 		if not qa:

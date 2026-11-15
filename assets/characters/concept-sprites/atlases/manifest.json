@@ -49,7 +49,7 @@
           "rear"
         ],
         "action_pose_frames": [],
-        "note": "Do not substitute generated action drawings. Until approved source-conditioned poses exist, gameplay keeps the exact approved cutout and uses restrained engine transforms."
+        "note": "This atlas contains only the exact approved front/rear views. Generated action frames are kept in a separate action atlas and tracked with their own provenance."
       }
     },
     "gargoyle": {
@@ -97,7 +97,7 @@
           "rear"
         ],
         "action_pose_frames": [],
-        "note": "Do not substitute generated action drawings. Until approved source-conditioned poses exist, gameplay keeps the exact approved cutout and uses restrained engine transforms."
+        "note": "This atlas contains only the exact approved front/rear views. Generated action frames are kept in a separate action atlas and tracked with their own provenance."
       }
     },
     "witch": {
@@ -145,7 +145,7 @@
           "rear"
         ],
         "action_pose_frames": [],
-        "note": "Do not substitute generated action drawings. Until approved source-conditioned poses exist, gameplay keeps the exact approved cutout and uses restrained engine transforms."
+        "note": "This atlas contains only the exact approved front/rear views. Generated action frames are kept in a separate action atlas and tracked with their own provenance."
       }
     }
   }

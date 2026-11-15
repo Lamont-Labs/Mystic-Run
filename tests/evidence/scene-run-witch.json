@@ -2,7 +2,15 @@
   "active_effects": 0,
   "active_rows": 22,
   "attacks": 16,
-  "captures": [],
+  "captures": [
+    "game-0180-witch",
+    "game-0600-witch",
+    "game-1200-witch",
+    "game-1800-witch",
+    "fracture-course",
+    "game-2400-witch",
+    "game-3000-witch"
+  ],
   "character_locked": true,
   "damage_events": 0,
   "deaths": 0,

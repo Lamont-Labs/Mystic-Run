@@ -19,6 +19,56 @@ const CONCEPT_ATLAS_REGIONS := {
 		"rear": [458, 0, 298, 365],
 	},
 }
+const CONCEPT_ACTION_ATLAS_REGIONS := {
+	"knight": {
+		"run_rear_0": [0, 0, 306, 361],
+		"run_rear_1": [310, 0, 306, 361],
+		"jump_rear": [620, 0, 306, 361],
+		"slide_rear": [930, 0, 306, 361],
+		"fall_rear": [0, 365, 306, 361],
+		"attack_rear": [310, 365, 306, 361],
+		"block_rear": [620, 365, 306, 361],
+		"damage_rear": [930, 365, 306, 361],
+		"special_rear": [0, 730, 306, 361],
+		"land_rear": [310, 730, 306, 361],
+		"dodge_rear": [620, 730, 306, 361],
+		"victory_rear": [930, 730, 306, 361],
+		"defeat_rear": [0, 1095, 306, 361],
+		"dodge_right_rear": [310, 1095, 306, 361],
+	},
+	"gargoyle": {
+		"run_rear_0": [0, 0, 371, 341],
+		"run_rear_1": [375, 0, 371, 341],
+		"jump_rear": [750, 0, 371, 341],
+		"slide_rear": [1125, 0, 371, 341],
+		"attack_rear": [0, 345, 371, 341],
+		"damage_rear": [375, 345, 371, 341],
+		"special_rear": [750, 345, 371, 341],
+		"land_rear": [1125, 345, 371, 341],
+		"dodge_rear": [0, 690, 371, 341],
+		"fall_rear": [375, 690, 371, 341],
+		"block_rear": [750, 690, 371, 341],
+		"victory_rear": [1125, 690, 371, 341],
+		"defeat_rear": [0, 1035, 371, 341],
+		"dodge_right_rear": [375, 1035, 371, 341],
+	},
+	"witch": {
+		"run_rear_0": [0, 0, 298, 365],
+		"run_rear_1": [302, 0, 298, 365],
+		"jump_rear": [604, 0, 298, 365],
+		"slide_rear": [906, 0, 298, 365],
+		"attack_rear": [0, 369, 298, 365],
+		"damage_rear": [302, 369, 298, 365],
+		"special_rear": [604, 369, 298, 365],
+		"land_rear": [906, 369, 298, 365],
+		"dodge_rear": [0, 738, 298, 365],
+		"fall_rear": [302, 738, 298, 365],
+		"block_rear": [604, 738, 298, 365],
+		"victory_rear": [906, 738, 298, 365],
+		"defeat_rear": [0, 1107, 298, 365],
+		"dodge_right_rear": [302, 1107, 298, 365],
+	},
+}
 var identity: String = "knight"
 var body: Node3D
 var skeleton: Skeleton3D
@@ -45,8 +95,10 @@ var cape_fabric:ShaderMaterial
 var authored_mesh:MeshInstance3D
 var concept_sprite:Sprite3D
 var concept_atlas:Texture2D
+var concept_action_atlas:Texture2D
 var concept_view:String="front"
 var concept_textures:Dictionary={}
+var concept_action_textures:Dictionary={}
 var concept_sprite_bottoms:Dictionary={}
 var concept_sprite_height:float=2.15
 var blink_clock:float=0.0
@@ -55,6 +107,9 @@ var face_weights:Dictionary={"Smile":0.0,"Focus":0.0,"Surprised":0.0,"Hurt":0.0}
 var expression_override:String="auto"
 var facial_state:String="neutral"
 var hurt_left:float=0.0
+var airborne_velocity:float=0.0
+var blocking:bool=false
+var defeated:bool=false
 var wing_controls:Array[Dictionary]=[]
 var creature_tuck:float=0.0
 var braid_controls:Array[Dictionary]=[]
@@ -141,6 +196,7 @@ func _build_concept_sprite() -> void:
 	concept_sprite_height=float(heights[identity])
 	concept_atlas=load("res://assets/characters/concept-sprites/atlases/"+identity+"_atlas.png")
 	concept_textures.clear()
+	concept_action_textures.clear()
 	for view in ["front","rear"]:
 		var region_data:Array=CONCEPT_ATLAS_REGIONS[identity][view]
 		var frame:=AtlasTexture.new()
@@ -148,6 +204,17 @@ func _build_concept_sprite() -> void:
 		frame.region=Rect2i(region_data[0],region_data[1],region_data[2],region_data[3])
 		frame.filter_clip=true
 		concept_textures[view]=frame
+	concept_action_atlas=null
+	var action_path:="res://assets/characters/action-atlases/"+identity+"_actions.png"
+	if CONCEPT_ACTION_ATLAS_REGIONS.has(identity) and ResourceLoader.exists(action_path):
+		concept_action_atlas=load(action_path)
+		for action_name in CONCEPT_ACTION_ATLAS_REGIONS[identity]:
+			var region_data:Array=CONCEPT_ACTION_ATLAS_REGIONS[identity][action_name]
+			var action_frame:=AtlasTexture.new()
+			action_frame.atlas=concept_action_atlas
+			action_frame.region=Rect2i(region_data[0],region_data[1],region_data[2],region_data[3])
+			action_frame.filter_clip=true
+			concept_action_textures[action_name]=action_frame
 	concept_view="front"
 	concept_sprite_bottoms.clear()
 	concept_sprite=Sprite3D.new()
@@ -164,13 +231,56 @@ func _build_concept_sprite() -> void:
 
 func _align_concept_sprite_to_floor() -> void:
 	var texture:Texture2D=concept_sprite.texture
-	var path:String=concept_view+":"+concept_atlas.resource_path
+	var texture_key:String=texture.resource_path
+	if texture is AtlasTexture:
+		var atlas_frame:=texture as AtlasTexture
+		texture_key=atlas_frame.atlas.resource_path+":"+str(atlas_frame.region)
+	var path:String=concept_view+":"+texture_key
 	if not concept_sprite_bottoms.has(path):
 		var image:Image=texture.get_image()
 		var used:Rect2i=image.get_used_rect()
 		concept_sprite_bottoms[path]=float(used.end.y)/float(image.get_height())
 	var bottom_fraction:float=float(concept_sprite_bottoms[path])
 	concept_sprite.position.y=concept_sprite_height*(bottom_fraction-.5)*concept_sprite.scale.y
+
+func _concept_texture_for(view:String) -> Texture2D:
+	if view!="rear" or reduced_motion or get_meta("sentinel",false):
+		return concept_textures[view]
+	if defeated:
+		return concept_action_textures.get("defeat_rear",concept_textures[view])
+	if celebration_left>0.0:
+		return concept_action_textures.get("victory_rear",concept_textures[view])
+	if hurt_left>0.0:
+		return concept_action_textures.get("damage_rear",concept_textures[view])
+	if blocking:
+		return concept_action_textures.get("block_rear",concept_textures[view])
+	if attack_time>0.0:
+		return concept_action_textures.get("attack_rear",concept_textures[view])
+	if power_time>0.0:
+		return concept_action_textures.get("special_rear",concept_textures[view])
+	if sliding:
+		return concept_action_textures.get("slide_rear",concept_textures[view])
+	if airborne:
+		var air_pose:String="jump_rear" if airborne_velocity>=0.0 else "fall_rear"
+		return concept_action_textures.get(air_pose,concept_textures[view])
+	if landing_spring>0.0 and concept_action_textures.has("land_rear"):
+		return concept_action_textures["land_rear"]
+	if lean < -0.16:
+		return concept_action_textures.get("dodge_rear",concept_textures[view])
+	if lean > 0.16:
+		return concept_action_textures.get("dodge_right_rear",concept_textures[view])
+	var can_run_cycle:bool=(
+		moving
+		and celebration_left<=0.0
+		and traversal_left<=0.0
+		and not concept_action_textures.is_empty()
+	)
+	if can_run_cycle:
+		var rate:float=clampf(motion.locomotion_rate,0.6,1.65) if motion!=null else 1.0
+		var phase:int=int(floor(clock*6.0*rate))%2
+		var key:String="run_rear_%d"%phase
+		return concept_action_textures.get(key,concept_textures[view])
+	return concept_textures[view]
 
 func sentinel() -> void:
 	facing=0;body.rotation.y=0
@@ -233,10 +343,8 @@ func animate(delta: float) -> void:
 	clock+=delta
 	if is_instance_valid(concept_sprite):
 		var view:String="front" if absf(wrapf(facing,-PI,PI))<PI*.5 else "rear"
-		# Keep every action on the actual concept-sheet cutout. The locally drawn
-		# action studies were not faithful enough to use as final character art.
 		concept_view=view
-		var next_texture:Texture2D=concept_textures[view]
+		var next_texture:Texture2D=_concept_texture_for(view)
 		if concept_sprite.texture!=next_texture:
 			concept_sprite.texture=next_texture
 			concept_sprite.pixel_size=concept_sprite_height/float(concept_sprite.texture.get_height())
@@ -405,5 +513,6 @@ func _animate_face(delta:float) -> void:
 	_face_value("PlumeSway",0.0 if reduced_motion else sin(clock*5.5)*.55)
 
 
-func celebrate() -> void:celebration_left=.75
+func celebrate() -> void:defeated=false;celebration_left=.75
 func traverse() -> void:traversal_left=.7;celebrate()
+func defeat() -> void:defeated=true;celebration_left=0.0
