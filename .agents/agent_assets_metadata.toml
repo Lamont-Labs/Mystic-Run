@@ -28,3 +28,73 @@ mtime_ms = 1794622692466
 storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/6d5acafa-6e62-456c-979d-9c3a62a34e59/efe620d9-59da-4888-971f-c73220f20cdf"
 storage_version_token = "1794622702997525"
 content_type = "application/octet-stream"
+
+[[outputs]]
+id = "4IW1qp5QkHaI24inIN6AA"
+uri = "file://generated-artifacts/architecture-validation/delivery/movement-before-after.mp4"
+type = "video"
+title = "Actual gameplay — baseline versus Castle prototype"
+description = "Matched native input sequence: thumb release, rapid lane reversal, jump, slide, conflicting commands and attack. Fixed-clock replay, not a phone-performance video."
+logical_id = "5425c6d6-ffc1-410e-aed5-a2c1a3b1b5d5"
+content_hash = "sha256:cc5792b2a29ff2defe835fcaaf65bd85eba4edcf07c45b4e15ff7d7f5ba0b0db"
+size = 6887626
+mtime_ms = 1794779667055
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/5425c6d6-ffc1-410e-aed5-a2c1a3b1b5d5/fade7453-4bcd-49f4-84f7-30a5b2677f55"
+storage_version_token = "1794780112492918"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "6akewpThUn47pzWBVms1v"
+uri = "file://generated-artifacts/architecture-validation/delivery/cutout-versus-skeletal.mp4"
+type = "video"
+title = "Actual gameplay — cutout versus skeletal animation"
+description = "Same prototype movement sequence and camera; legacy 3D model normalized to comparable rest-display height. Neither appearance is claimed as final artistic approval."
+logical_id = "d1867e30-c27e-4490-9ec3-6c1f67841fde"
+content_hash = "sha256:9f2640d4c642db923d93b8ce1297820bd3eef83eb94d244711285a1d56592450"
+size = 7139138
+mtime_ms = 1794779675527
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/d1867e30-c27e-4490-9ec3-6c1f67841fde/0adaca95-73e2-408b-baba-71aa5346b9ef"
+storage_version_token = "1794780113533290"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "Hb9Rnt-VOZxdk2oVtmjm6"
+uri = "file://generated-artifacts/architecture-validation/delivery/castle-before-after.jpg"
+type = "image"
+title = "Castle Heights — actual game comparison"
+description = "Character, running surface, obstacle and background captured together. Existing approved assets only; one bounded Castle candidate."
+logical_id = "68c64ef5-cfd5-42ae-a6d1-f2999acdf87c"
+content_hash = "sha256:4552257121c4b87b854503d35cbc596804765048332591b9b92b4b60e18240e5"
+size = 254030
+mtime_ms = 1794779675606
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/68c64ef5-cfd5-42ae-a6d1-f2999acdf87c/27d56288-3e68-41bc-bb4f-36004aeb1334"
+storage_version_token = "1794780114005209"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "hD2i1CkswXKimEVD2gskw"
+uri = "file://generated-artifacts/architecture-validation/delivery/gargoyle-framing.jpg"
+type = "image"
+title = "Gargoyle — matched forward-visibility comparison"
+description = "Same 1.59 character-height setting. The prototype camera provides more visible path without another large character shrink."
+logical_id = "7bd1896f-e477-4cf6-93c6-7d11d6871bd9"
+content_hash = "sha256:277ae1ae4f4e3c1d7212dca4c24966d3a0157e0d4f83a8bc4b549f71133bed13"
+size = 251299
+mtime_ms = 1794779676183
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/7bd1896f-e477-4cf6-93c6-7d11d6871bd9/c0533b4b-877a-4a4f-b4e0-2a9dc6abcb0a"
+storage_version_token = "1794780114485951"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "uCUYXKmJ_zRSsHAf1iSeo"
+uri = "file://generated-artifacts/architecture-validation/delivery/MysticRun_Architecture_Review.html"
+type = "html"
+title = "MysticRun architecture validation — complete review"
+description = "Self-contained downloadable report with embedded comparison videos, screenshots, measured timing table, limitations and the architecture recommendation. No external assets required."
+logical_id = "24719fab-eb82-4eda-8a9d-8a37307a8b85"
+content_hash = "sha256:dc08d3fd5236c163f90d2f5bdd42ce5bedb32498ef57c76342cf1f09d7049072"
+size = 19718833
+mtime_ms = 1794779676303
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/24719fab-eb82-4eda-8a9d-8a37307a8b85/8349e0a9-ae0d-4691-ae1c-1ec5ec74705c"
+storage_version_token = "1794780115189192"
+content_type = "text/html"
