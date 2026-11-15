@@ -31,7 +31,7 @@ var cape_fabric:ShaderMaterial
 var authored_mesh:MeshInstance3D
 var concept_sprite:Sprite3D
 var concept_textures:Dictionary={}
-var concept_action_textures:Dictionary={}
+var concept_sprite_bottoms:Dictionary={}
 var concept_sprite_height:float=2.15
 var blink_clock:float=0.0
 var face_shapes:Dictionary={}
@@ -127,14 +127,9 @@ func _build_concept_sprite() -> void:
 		"front":load("res://assets/characters/concept-sprites/"+identity+"_front.png"),
 		"rear":load("res://assets/characters/concept-sprites/"+identity+"_rear.png"),
 	}
-	concept_action_textures={}
-	for pose in ["run_0","run_1","jump","slide","attack","landing","power"]:
-		concept_action_textures[pose]={
-			"front":load("res://assets/characters/concept-sprites/"+identity+"_"+pose+"_front.png"),
-			"rear":load("res://assets/characters/concept-sprites/"+identity+"_"+pose+"_rear.png"),
-		}
+	concept_sprite_bottoms.clear()
 	concept_sprite=Sprite3D.new()
-	concept_sprite.name="ApprovedConceptSprite"
+	concept_sprite.name="ConceptReferenceSprite"
 	concept_sprite.texture=concept_textures.front
 	concept_sprite.billboard=BaseMaterial3D.BILLBOARD_ENABLED
 	concept_sprite.shaded=false
@@ -142,8 +137,18 @@ func _build_concept_sprite() -> void:
 	concept_sprite.alpha_cut=SpriteBase3D.ALPHA_CUT_DISABLED
 	concept_sprite.texture_filter=BaseMaterial3D.TEXTURE_FILTER_LINEAR
 	concept_sprite.pixel_size=concept_sprite_height/float(concept_sprite.texture.get_height())
-	concept_sprite.position.y=concept_sprite_height*.5
 	body.add_child(concept_sprite)
+	_align_concept_sprite_to_floor()
+
+func _align_concept_sprite_to_floor() -> void:
+	var texture:Texture2D=concept_sprite.texture
+	var path:String=texture.resource_path
+	if not concept_sprite_bottoms.has(path):
+		var image:Image=texture.get_image()
+		var used:Rect2i=image.get_used_rect()
+		concept_sprite_bottoms[path]=float(used.end.y)/float(image.get_height())
+	var bottom_fraction:float=float(concept_sprite_bottoms[path])
+	concept_sprite.position.y=concept_sprite_height*(bottom_fraction-.5)*concept_sprite.scale.y
 
 func sentinel() -> void:
 	facing=0;body.rotation.y=0
@@ -206,20 +211,17 @@ func animate(delta: float) -> void:
 	clock+=delta
 	if is_instance_valid(concept_sprite):
 		var view:String="front" if absf(wrapf(facing,-PI,PI))<PI*.5 else "rear"
-		var pose:String=""
-		if power_time>0:pose="power"
-		elif attack_time>0:pose="attack"
-		elif sliding:pose="slide"
-		elif airborne:pose="jump"
-		elif landing_spring>0:pose="landing"
-		elif moving:pose="run_"+str(int(floor(clock*8.0))%2)
-		var next_texture:Texture2D=concept_textures[view] if pose.is_empty() else concept_action_textures[pose][view]
+		# Keep every action on the actual concept-sheet cutout. The locally drawn
+		# action studies were not faithful enough to use as final character art.
+		var next_texture:Texture2D=concept_textures[view]
 		if concept_sprite.texture!=next_texture:
 			concept_sprite.texture=next_texture
 			concept_sprite.pixel_size=concept_sprite_height/float(concept_sprite.texture.get_height())
-		var action_width_scale:float=1.32 if identity=="gargoyle" and not pose.is_empty() else 1.0
-		concept_sprite.scale=Vector3(action_width_scale,.72 if sliding else 1.0,1.0)
-		concept_sprite.position.y=concept_sprite_height*(.5 if not sliding else .35)
+		var sprite_scale:float=.96 if sliding else 1.0
+		if power_time>0.0:
+			sprite_scale+=.012*sin(clock*18.0)
+		concept_sprite.scale=Vector3.ONE*sprite_scale
+		_align_concept_sprite_to_floor()
 		concept_sprite.rotation.z=sin(attack_time/.4*PI)*swipe_direction*.055 if attack_time>0 else 0.0
 	if is_instance_valid(authored_mesh):
 		_animate_face(delta)

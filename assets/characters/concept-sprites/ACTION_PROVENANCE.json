@@ -3,6 +3,8 @@
   "source_sha256": "07e7541d8d5a91d1733186930d5d4ed759400021c8af3391f068ade217f01e71",
   "method": "locally authored Pillow vector-like drawings guided by the supplied character sheet",
   "generator": "tools/generate_concept_action_sprites.py",
+  "runtime_usage": "archived_experiments_not_used_for_gameplay_rendering",
+  "fidelity_note": "The action drawings did not match the supplied concept closely enough; gameplay uses the exact front/rear concept-sheet crops instead.",
   "external_services": [],
   "cost_usd": 0,
   "commercial_use": false,
