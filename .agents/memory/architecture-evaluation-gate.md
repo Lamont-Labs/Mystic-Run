@@ -50,3 +50,15 @@ licensing and activation caveats.
 **How to apply:** Keep the Unity evaluation isolated. If no activated editor is
 available, preserve prepared source and report that blocker; do not represent
 portable C# tests as Unity compilation, rendered gameplay or an Android build.
+
+The owner approved an isolated Defold Android build-feasibility test, not a game
+port, replacement of the existing projects, or a signed experimental APK.
+
+**Why:** The owner selected "Verify Defold builds first" after receiving the
+editor-free build proposal and its no-signing/no-publishing scope.
+
+**How to apply:** Keep compilation feasibility separate from rendered gameplay,
+Android execution and update compatibility. Defold's Android `bundle` command
+automatically generates a debug keystore when none is supplied; do not invoke it
+in unsigned probes. Android resource compilation and non-Android headless builds
+avoid that path. Any later APK must use the existing trusted signing pipeline.
