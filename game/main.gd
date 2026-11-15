@@ -489,6 +489,8 @@ func _physics_process(delta: float) -> void:
 	motor.velocity.x=(desired_x-motor.position.x)/delta
 	motor.velocity.z=0
 	motor.move_and_slide()
+	if not falling and motor.velocity.y<=0 and motor.position.y-ground_y<.08:
+		motor.apply_floor_snap()
 	qa_peak_height=maxf(qa_peak_height,motor.position.y-ground_y)
 	var capsule: CapsuleShape3D=collider.shape
 	capsule.height=.9 if sliding_left>0 else 1.8;collider.position.y=capsule.height*.5
