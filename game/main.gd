@@ -444,7 +444,7 @@ func _physics_process(delta: float) -> void:
 	sliding_left=maxf(0,sliding_left-delta);power_left=maxf(0,power_left-delta);attack_age+=delta
 	jump_buffer=maxf(0,jump_buffer-delta);slide_buffer=maxf(0,slide_buffer-delta)
 	coyote_left=.10 if motor.is_on_floor() else maxf(0,coyote_left-delta)
-	var gravity:=27.0
+	var gravity:=27.0 if motor.velocity.y>0 else 31.0
 	if not motor.is_on_floor():motor.velocity.y-=gravity*delta
 	elif motor.velocity.y<0:motor.velocity.y=-.5
 	if jump_buffer>0 and coyote_left>0 and not falling:
@@ -453,7 +453,8 @@ func _physics_process(delta: float) -> void:
 	if slide_buffer>0 and motor.is_on_floor():
 		sliding_left=.72;slide_buffer=0;qa_slide_count+=1;_training_action("slide")
 	lane_elapsed=minf(.18,lane_elapsed+delta)
-	var t:=smoothstep(0,.18,lane_elapsed)
+	var lane_t:float=clampf(lane_elapsed/.18,0.0,1.0)
+	var t:float=lane_t*lane_t*lane_t*(lane_t*(lane_t*6.0-15.0)+10.0)
 	var desired_x:=lerpf(lane_from,float(LANES[lane]),t)
 	if profile.settings.control_mode=="tilt" and not qa:
 		var tilt_x:float=tilt.update(_motion_sample(),delta)
@@ -802,7 +803,7 @@ func _blink_destination() -> int:
 func _jump() -> void:
 	if ui.mode!="game" or core.phase in ["handoff","failed","completed"]:return
 	if _try_secret_entry():return
-	jump_buffer=.12
+	jump_buffer=.18
 
 
 func _slide() -> void:

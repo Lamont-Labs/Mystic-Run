@@ -2,6 +2,7 @@ extends Node3D
 
 const Geo = preload("res://game/geometry.gd")
 const Motion = preload("res://game/rig_motion.gd")
+const CutoutMotion=preload("res://game/cutout_motion.gd")
 const OUTLINE = preload("res://assets/shaders/ink_outline.gdshader")
 const AUTHORED_SHADER = preload("res://assets/shaders/authored_character.gdshader")
 const FINISH_DETAIL = preload("res://assets/characters/finish-detail.png")
@@ -94,6 +95,7 @@ var landing_spring:float=0.0
 var cape_fabric:ShaderMaterial
 var authored_mesh:MeshInstance3D
 var concept_sprite:Sprite3D
+var motion_art:MeshInstance3D
 var concept_atlas:Texture2D
 var concept_action_atlas:Texture2D
 var concept_view:String="front"
@@ -192,7 +194,7 @@ func _build() -> void:
 	skeleton.force_update_all_bone_transforms()
 
 func _build_concept_sprite() -> void:
-	var heights:Dictionary={"knight":2.15,"gargoyle":2.48,"witch":2.22}
+	var heights:Dictionary={"knight":2.15,"gargoyle":1.59,"witch":2.22}
 	concept_sprite_height=float(heights[identity])
 	concept_atlas=load("res://assets/characters/concept-sprites/atlases/"+identity+"_atlas.png")
 	concept_textures.clear()
@@ -228,6 +230,10 @@ func _build_concept_sprite() -> void:
 	concept_sprite.pixel_size=concept_sprite_height/float(concept_sprite.texture.get_height())
 	body.add_child(concept_sprite)
 	_align_concept_sprite_to_floor()
+	concept_sprite.layers=0
+	motion_art=CutoutMotion.new()
+	body.add_child(motion_art)
+	motion_art.configure(identity)
 
 func _align_concept_sprite_to_floor() -> void:
 	var texture:Texture2D=concept_sprite.texture
@@ -276,10 +282,7 @@ func _concept_texture_for(view:String) -> Texture2D:
 		and not concept_action_textures.is_empty()
 	)
 	if can_run_cycle:
-		var rate:float=clampf(motion.locomotion_rate,0.6,1.65) if motion!=null else 1.0
-		var phase:int=int(floor(clock*6.0*rate))%2
-		var key:String="run_rear_%d"%phase
-		return concept_action_textures.get(key,concept_textures[view])
+		return concept_action_textures.get("run_rear_0",concept_textures[view])
 	return concept_textures[view]
 
 func sentinel() -> void:
@@ -354,6 +357,7 @@ func animate(delta: float) -> void:
 		concept_sprite.scale=Vector3.ONE*sprite_scale
 		_align_concept_sprite_to_floor()
 		concept_sprite.rotation.z=sin(attack_time/.4*PI)*swipe_direction*.055 if attack_time>0 else 0.0
+		motion_art.advance(delta,self)
 	if is_instance_valid(authored_mesh):
 		_animate_face(delta)
 	hurt_left=maxf(0.0,hurt_left-delta)
@@ -374,7 +378,7 @@ func animate(delta: float) -> void:
 	if was_airborne and not airborne:landing_spring=.24
 	was_airborne=airborne;landing_spring=maxf(0,landing_spring-delta)
 	var spring:float=0 if reduced_motion else sin(landing_spring/.24*PI)*.11
-	var bounce:float=0 if reduced_motion or not moving or airborne or sliding else absf(stride)*.075
+	var bounce:float=0 if reduced_motion or not moving or airborne or sliding else (1.0-cos(clock*TAU*4.3*motion.locomotion_rate))*.012
 	var squash:float=0 if reduced_motion or not moving or airborne or sliding else cos(clock*26*motion.locomotion_rate)*.025
 	body.position.y=bounce+(0.0 if reduced_motion else sin(clock*2)*.014)+absf(cheer)*.16
 	body.scale=Vector3(base_scale*1.12*(1+special*.10+spring-squash*.5),base_scale*.98*(1-special*.08-spring+squash),base_scale*1.12*(1+special*.10+spring-squash*.5))
