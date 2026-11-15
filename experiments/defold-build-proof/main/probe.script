@@ -1,0 +1,11 @@
+-- Smoke test only. This is not a runner or an animation-quality test.
+function init(self)
+    assert(hash("knight") == hash("knight"), "hash API failed")
+    assert(vmath.length(vmath.vector3(3, 4, 0)) == 5, "vector API failed")
+    local info = sys.get_sys_info()
+    assert(type(info.system_name) == "string", "system information unavailable")
+    print("DEFOLD_BUILD_PROOF_RUNTIME_OK", info.system_name)
+    timer.delay(0.2, false, function()
+        sys.exit(0)
+    end)
+end

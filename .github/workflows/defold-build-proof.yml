@@ -1,0 +1,39 @@
+name: Defold Android compilation proof - no signing
+on:
+  push:
+    branches: ['experiment/defold-build-proof']
+    paths:
+      - 'experiments/defold-build-proof/**'
+      - 'tools/verify_defold_build.py'
+      - '.github/workflows/defold-build-proof.yml'
+  pull_request:
+    paths:
+      - 'experiments/defold-build-proof/**'
+      - 'tools/verify_defold_build.py'
+      - '.github/workflows/defold-build-proof.yml'
+permissions:
+  contents: read
+jobs:
+  compile-and-smoke:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 12
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
+        with:
+          persist-credentials: false
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961
+        with:
+          distribution: temurin
+          java-version: '25'
+      - name: Compile Android resources and execute a Linux headless smoke test
+        run: python3 tools/verify_defold_build.py
+      - name: Retain logs and evidence, not keys or an APK
+        if: always()
+        uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
+        with:
+          name: defold-compilation-evidence
+          retention-days: 14
+          if-no-files-found: error
+          path: |
+            generated-artifacts/defold-build-proof/evidence.json
+            generated-artifacts/defold-build-proof/*.log
