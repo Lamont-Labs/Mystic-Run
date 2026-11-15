@@ -56,7 +56,9 @@ func advance(delta:float,actor:Node3D) -> void:
 		blend=0.0 if current!=null and not actor.reduced_motion else 1.0
 		current=texture
 	blend=minf(1.0,blend+delta/0.10)
-	var running:bool=actor.moving and not actor.airborne and not actor.sliding and actor.hurt_left<=0 and actor.attack_time<=0 and actor.power_time<=0 and not actor.defeated and actor.celebration_left<=0
+	# Forward travel never stops for a strike/cast or a nonfatal hit. Keep
+	# the lower-body gait active underneath those additive action poses.
+	var running:bool=actor.moving and not actor.airborne and not actor.sliding and not actor.defeated and actor.celebration_left<=0
 	var target:float=1.0 if running and actor.concept_view=="rear" and not actor.reduced_motion else 0.0
 	stride_weight=lerpf(stride_weight,target,1-exp(-delta*18.0))
 	gait+=delta*TAU*2.15*clampf(actor.motion.locomotion_rate,.6,1.65)

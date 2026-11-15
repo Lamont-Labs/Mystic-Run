@@ -23,7 +23,7 @@ func swipe(direction:Vector2) -> void:
 func place(metres:float,target_lane:int) -> void:
 	game.distance=metres;game.core.distance_mm=roundi(metres*1000);game.ground_y=CourseProfile.height_at(metres)
 	game.floor_body.position.y=game.ground_y;game.floor_body.force_update_transform();game.motor.position=Vector3(game.LANES[target_lane],game.ground_y,0);game.motor.velocity=Vector3.ZERO
-	game.lane=target_lane;game.lane_from=game.motor.position.x;game.lane_elapsed=.18
+	game.lane=target_lane;game.steering_target=game.motor.position.x;game.steering.reset();game.manual_steering=false
 func start(hero:String,level:String) -> void:
 	game._select_character(hero);game.course_id=level;game.profile.practice_complete=true;game._start_run();game.countdown_left=.001
 	game.set_physics_process(true);await frames(4);game.set_physics_process(false)
@@ -61,9 +61,10 @@ func run() -> void:
 	await touch(pad_at,true,3);check(game.ui.thumb_pad.active and game.ui.thumb_pad.axis<0 and game.gestures.touches.is_empty(),"The steering pad owns its pointer without leaking an attack gesture")
 	for i in range(18):game._physics_process(1.0/60)
 	check(game.motor.position.x< -1.5,"A held thumb pad moves the physical runner")
-	await touch(pad_at,false,3);var stopped:float=game.motor.position.x
-	for i in range(5):game._physics_process(1.0/60)
-	check(not game.ui.thumb_pad.active and absf(game.motor.position.x-stopped)<.01,"Releasing the pad stops lateral movement without a stale command")
+	var release_lane:int=game.lane
+	await touch(pad_at,false,3)
+	for i in range(32):game._physics_process(1.0/60)
+	check(not game.ui.thumb_pad.active and not game.manual_steering and absf(game.motor.position.x-game.LANES[release_lane])<.04,"Releasing the pad relinquishes ownership and settles into its intended lane")
 	await touch(pad_at,true,3);game._intent("pause");check(not game.ui.thumb_pad.active and game.ui.thumb_pad.axis==0,"Pause releases a held steering pointer")
 	game._intent("resume");game.set_physics_process(false)
 	for level in Secrets.LEVELS:

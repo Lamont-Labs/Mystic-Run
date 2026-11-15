@@ -5,6 +5,7 @@ var active:bool=false
 var pointer:int=-99
 var font:Font
 var accent:=Color("70f1dc")
+const DEADZONE:float=.14
 func _ready() -> void:mouse_filter=Control.MOUSE_FILTER_IGNORE
 func reset() -> void:axis=0;active=false;pointer=-99;queue_redraw()
 func _notification(what:int) -> void:
@@ -21,7 +22,10 @@ func _input(event:InputEvent) -> void:
 	if start and not active and Rect2(Vector2.ZERO,size).has_point(local):active=true;pointer=id
 	if not active or pointer!=id:return
 	if finish:reset()
-	else:axis=clampf((local.x-size.x*.5)/(size.x*.36),-1,1);queue_redraw()
+	else:
+		var raw:float=clampf((local.x-size.x*.5)/(size.x*.36),-1,1)
+		axis=signf(raw)*maxf(0.0,(absf(raw)-DEADZONE)/(1.0-DEADZONE))
+		queue_redraw()
 	get_viewport().set_input_as_handled()
 func _draw() -> void:
 	var centre:=size*Vector2(.5,.42);var style:=StyleBoxFlat.new();style.bg_color=Color("534080",.90);style.border_color=Color(accent,.7);style.set_border_width_all(2);style.set_corner_radius_all(26)
