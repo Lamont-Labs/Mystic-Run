@@ -26,3 +26,15 @@ architecture comparison.
 
 **How to apply:** Keep this work experimental and present actual gameplay for
 review before expanding its scope or integrating it into a phone release.
+
+The owner subsequently said: "Find a better game engine. This isnt working."
+Do not treat the earlier single-Knight approval as authorization for further
+Godot rig iterations. Preserve the experiment while evaluating replacements.
+No replacement engine or migration has yet been approved.
+
+**Why:** The owner rejected continuing the current direction and requested an
+engine alternative.
+
+**How to apply:** Separate engine research from migration authorization. Verify
+licensing and unattended Android build feasibility before committing to a port;
+retain the permanent Android identity and explicitly handle save compatibility.

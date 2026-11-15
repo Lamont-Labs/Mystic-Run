@@ -98,3 +98,73 @@ mtime_ms = 1794779676303
 storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/24719fab-eb82-4eda-8a9d-8a37307a8b85/8349e0a9-ae0d-4691-ae1c-1ec5ec74705c"
 storage_version_token = "1794780115189192"
 content_type = "text/html"
+
+[[outputs]]
+id = "b6nzlX63b_7KSjuZuzhhe"
+uri = "file://generated-artifacts/knight-rig/delivery/Knight_Run_Closeup.mp4"
+type = "video"
+title = "New Knight — jointed run close-up"
+description = "Sixteen native Godot rig phases repeated as a close-up loop. Original painted parts, not new hand-drawn frames. This clip is a rig preview, not gameplay."
+logical_id = "cb4cb91c-edb8-4ef7-991f-92738e939d44"
+content_hash = "sha256:5d4f393902c5c569bf0061493da61a2140e5ac49084f35853bf1b0b3ac410470"
+size = 125281
+mtime_ms = 1794782187210
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/cb4cb91c-edb8-4ef7-991f-92738e939d44/54f354ab-8ccd-49ac-a769-66ba879a21ab"
+storage_version_token = "1794782234753136"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "VKz_xLWMwd15S-vgMrvdU"
+uri = "file://generated-artifacts/knight-rig/delivery/Knight_Actual_Gameplay_Comparison.mp4"
+type = "video"
+title = "Actual gameplay — previous cutout versus jointed Knight"
+description = "Matched Castle test with the real controls, physics, jumps, slides and attack. Left: previous renderer. Right: new rear-view rig. Fixed-clock replay, not phone FPS."
+logical_id = "9a44b13b-5f11-480c-bc99-5104c3d42935"
+content_hash = "sha256:d78b21147c1772149e32a4de6d8d1a9d9ab825a83c19be4972e9bccae0a27f79"
+size = 7085791
+mtime_ms = 1794782186494
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/9a44b13b-5f11-480c-bc99-5104c3d42935/f7ebf252-97b1-4ed5-acf3-3fe86fb4c70e"
+storage_version_token = "1794782235465974"
+content_type = "video/mp4"
+
+[[outputs]]
+id = "3-nsD1TFTPzRW8tAKnGWC"
+uri = "file://generated-artifacts/knight-rig/delivery/Knight_16_Run_Phases.jpg"
+type = "image"
+title = "Sixteen distinct Knight run phases"
+description = "Captured from the actual native 2D skeleton. Helmet, cape, shield, arm, sword and legs animate independently."
+logical_id = "f4106084-97f8-494e-bc46-99e2f5fc55db"
+content_hash = "sha256:b98890b67fba35de6fc1e783d4404dc51c14f8add14aebcb35bb69564851d878"
+size = 280748
+mtime_ms = 1794782186678
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/f4106084-97f8-494e-bc46-99e2f5fc55db/3afc9024-d810-4a09-8d22-55e8c341ff05"
+storage_version_token = "1794782235952702"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "wdbfVUYSfJhPe2cCAGTRc"
+uri = "file://generated-artifacts/knight-rig/delivery/Knight_Action_Poses.jpg"
+type = "image"
+title = "Knight action targets — isolated pose previews"
+description = "Native renders of idle, jump, fall, land, slide, attack, damage, power, victory and defeat targets. These are pose previews, not ten completed animation clips."
+logical_id = "f4815146-e680-42be-bd00-f80e1fd3aa36"
+content_hash = "sha256:4b39b11e2d14c4149a6440f6c83bcf2d0b05b5e5d2d7d9baf13de1de6cc3a743"
+size = 167960
+mtime_ms = 1794782187299
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/f4815146-e680-42be-bd00-f80e1fd3aa36/f9719272-884b-4997-aa79-6067e54bd100"
+storage_version_token = "1794782236448123"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "cC4iAubedIRgpyEMvizyI"
+uri = "file://generated-artifacts/knight-rig/delivery/Knight_Rig_Review.html"
+type = "html"
+title = "Complete Knight rig review"
+description = "Self-contained comparison footage, pose sheets, measured timings and limitations. One rear-view experiment; not an Android release."
+logical_id = "dc8c0bd3-dca9-4c87-92bf-b450025825f3"
+content_hash = "sha256:2c721f57d33347cef513cc29ca9e3b4862ba928fe704ac87ab82e4388c4d2a99"
+size = 10890271
+mtime_ms = 1794782187538
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/dc8c0bd3-dca9-4c87-92bf-b450025825f3/f413e668-ca31-4fb7-82e3-987600e2d27b"
+storage_version_token = "1794782237060914"
+content_type = "text/html"
