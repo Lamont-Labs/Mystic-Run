@@ -6,3 +6,7 @@ packages = ["blender", "freetype", "lcms2", "libglvnd", "libimagequant", "libjpe
 
 [agent]
 expertMode = true
+
+[[ports]]
+localPort = 5000
+externalPort = 5000
