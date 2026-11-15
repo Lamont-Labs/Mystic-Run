@@ -93,6 +93,14 @@ func run() -> void:
 	check(hero.motion_art.stride_weight>.9,"Nonfatal damage does not stop forward locomotion animation")
 	game._jump();await frames(2)
 	check(hero.airborne==not game.motor.is_on_floor(),"Airborne pose follows the authoritative floor state")
+	await frames(50)
+	game._slide()
+	var phantom_air_ticks:int=0
+	for tick in range(120):
+		await frames(1)
+		if hero.airborne and game.motor.position.y-game.ground_y<.03 and absf(game.motor.velocity.y)<.5:
+			phantom_air_ticks+=1
+	check(phantom_air_ticks==0,"Ground and crouch recovery never flicker into a near-zero-height airborne pose")
 	var report:Dictionary={"checks":checks,"failed":failures.size(),"failures":failures,"scope":"Actual Godot scene, native touch events, opposing jump/slide commands, pad deadzone/release and lane handover; not a phone test"}
 	FileAccess.open("res://tests/evidence/movement-controls.json",FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("MOVEMENT_CONTROLS_QA ",JSON.stringify(report))

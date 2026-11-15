@@ -1,5 +1,5 @@
 {
-  "checks": 237,
+  "checks": 238,
   "failed": 0,
   "failures": [],
   "scope": "Actual Godot scene, native touch events, opposing jump/slide commands, pad deadzone/release and lane handover; not a phone test"
