@@ -9,8 +9,11 @@ from pathlib import Path
 import re
 import subprocess
 
+from android_verification import PACKAGE, PERMANENT_CERTIFICATE
+
 REPO = "Lamont-Labs/Mystic-Run"
 ROOT = Path(__file__).resolve().parents[1]
+INSTALLED_BASELINE_VERSION_CODE = 2009
 
 
 def gh(*args):
@@ -40,10 +43,21 @@ def next_version(run_number, published_codes, records):
     known = list(published_codes) + [
         record["signed_manifest"]["version_code"] for record in records
     ]
-    value = max(2000 + int(run_number), max(known, default=0) + 1)
+    value = max(2000 + int(run_number), INSTALLED_BASELINE_VERSION_CODE + 1, max(known, default=0) + 1)
     if not 0 < value <= 2100000000:
         raise ValueError("Android version-code limit exceeded")
     return value
+
+
+def verify_baseline_update(manifest):
+    """Check update eligibility against the owner-confirmed installed baseline."""
+    if manifest.get("package_id") != PACKAGE:
+        raise ValueError("Package differs from the installed Build 2009 baseline")
+    if manifest.get("certificate_sha256") != PERMANENT_CERTIFICATE:
+        raise ValueError("Certificate differs from the installed Build 2009 baseline")
+    code = manifest.get("version_code")
+    if type(code) is not int or not INSTALLED_BASELINE_VERSION_CODE < code <= 2100000000:
+        raise ValueError("Version must increase beyond the installed Build 2009 baseline")
 
 
 def releases():
@@ -89,6 +103,7 @@ def publish(directory, sdk):
     if len(manifests) != 1:
         raise ValueError("Expected exactly one signed APK manifest")
     manifest = json.loads(manifests[0].read_text())
+    verify_baseline_update(manifest)
     sha = os.environ["GITHUB_SHA"]
     if manifest["git_commit"] != sha or str(manifest["builder"]["run_id"]) != os.environ["GITHUB_RUN_ID"]:
         raise ValueError("Signed APK provenance differs from this release run")
@@ -110,7 +125,7 @@ def publish(directory, sdk):
         raise ValueError("APK bytes differ from signing evidence")
     checks.write_verification(apk, sdk, manifest)
     code = manifest["version_code"]
-    if code <= max(published_codes(releases()), default=0):
+    if code <= max(published_codes(releases()), default=INSTALLED_BASELINE_VERSION_CODE):
         raise ValueError("Release version code must increase beyond every published build")
     tag = f"v{manifest['version_name']}-build{code}"
     notes = directory / "RELEASE-NOTES.txt"
@@ -118,6 +133,9 @@ def publish(directory, sdk):
         "Verified MysticRun Android development build (arm64).\n\n"
         f"Source: {sha}\nBuild: https://github.com/{REPO}/actions/runs/{os.environ['GITHUB_RUN_ID']}\n\n"
         + checks.signing_note(manifest)
+        + "\n\nPackage, signing certificate, and version were checked for update eligibility "
+          "from the owner-confirmed Build 2009 baseline. No uninstall or data reset is required. "
+          "Later installed builds must also have a lower version code than this release."
         + "\n\nConcept-derived character artwork: noncommercial game use only.\n"
         "No phone installation or physical-device performance test was performed.\n"
     )

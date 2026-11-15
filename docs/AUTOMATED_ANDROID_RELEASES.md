@@ -29,7 +29,9 @@ the trust boundary; repository administrators must protect their accounts.
 
 The release workflow is serialized without cancelling in-progress releases.
 Version codes exceed the workflow baseline, every known published build tag, and
-committed release records. Publication checks monotonicity again, failing closed
+committed release records, with a permanent floor strictly above installed Build
+2009 even if release records are missing. Publication checks the installed
+baseline's package, certificate and version again, and checks monotonicity, failing closed
 if another publisher has already used a newer code. Failed reruns do not replace
 an existing release. Retry the workflow to allocate a fresh code.
 
@@ -58,7 +60,17 @@ Permanent replacement certificate SHA-256:
 
 An APK can update an installation only when the package and signing identity match
 and its version code is higher. This certificate cannot update the older
-legacy-key installation. The phone's installed certificate/version has not been
-observed, so compatibility with that particular installation is not confirmed.
+legacy-key installation. The owner confirmed successfully installing and launching
+`v0.6.2-build2009` on their Samsung phone with the updated artwork working. That
+installation is now canonical; future builds must update it or its successors
+without uninstalling or resetting data. The publisher checks static Android update
+eligibility; each future physical-device installation is not automatically tested.
 No workflow uninstalls, installs, clears data, or otherwise touches a phone.
 Noncommercial concept-art rights continue to apply.
+
+## Explicit maintenance without an APK
+
+For a directive-only or release-safeguard change where the owner explicitly
+requests no APK, include `[skip android release]` in the main merge commit.
+Gameplay checks still run. Both unsigned compilation and automatic signed
+releases skip that commit. Ordinary verified game merges still release normally.
