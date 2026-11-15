@@ -71,6 +71,9 @@ const CONCEPT_ACTION_ATLAS_REGIONS := {
 	},
 }
 var identity: String = "knight"
+## Architecture-lab switches. Defaults preserve the shipped presentation.
+var evaluate_rig:bool=true
+var evaluate_cutout:bool=true
 var body: Node3D
 var skeleton: Skeleton3D
 var motion: RefCounted
@@ -344,7 +347,7 @@ func _build_cape(width: float, top: float, bottom: float, z: float) -> void:
 
 func animate(delta: float) -> void:
 	clock+=delta
-	if is_instance_valid(concept_sprite):
+	if evaluate_cutout and is_instance_valid(concept_sprite):
 		var view:String="front" if absf(wrapf(facing,-PI,PI))<PI*.5 else "rear"
 		concept_view=view
 		var next_texture:Texture2D=_concept_texture_for(view)
@@ -358,17 +361,17 @@ func animate(delta: float) -> void:
 		_align_concept_sprite_to_floor()
 		concept_sprite.rotation.z=sin(attack_time/.4*PI)*swipe_direction*.055 if attack_time>0 else 0.0
 		motion_art.advance(delta,self)
-	if is_instance_valid(authored_mesh):
+	if evaluate_rig and is_instance_valid(authored_mesh):
 		_animate_face(delta)
 	hurt_left=maxf(0.0,hurt_left-delta)
 	attack_time=maxf(0,attack_time-delta)
 	celebration_left=maxf(0,celebration_left-delta);traversal_left=maxf(0,traversal_left-delta)
 	power_time=maxf(0,power_time-delta)
-	motion.advance(delta,moving,airborne,sliding,identity)
-	if identity in ["gargoyle","witch"]:_animate_creature_tuck(delta)
-	if identity=="witch":_animate_witch_controls(delta)
-	if not wing_controls.is_empty():_animate_wings(delta)
-	if get_meta("sentinel",false):
+	if evaluate_rig:motion.advance(delta,moving,airborne,sliding,identity)
+	if evaluate_rig and identity in ["gargoyle","witch"]:_animate_creature_tuck(delta)
+	if evaluate_rig and identity=="witch":_animate_witch_controls(delta)
+	if evaluate_rig and not wing_controls.is_empty():_animate_wings(delta)
+	if evaluate_rig and get_meta("sentinel",false):
 		var arm:int=skeleton.find_bone("upperarm_r")
 		skeleton.set_bone_pose_rotation(arm,skeleton.get_bone_pose_rotation(arm)*Quaternion(Vector3.RIGHT,-.9*threat_intensity))
 		body.rotation.x=-.08*threat_intensity

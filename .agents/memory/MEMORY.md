@@ -1,2 +1,3 @@
 - [Knight comparison baselines](knight-comparison-baselines.md) — compare both the stored GLB and rebuilt untouched source; do not attribute inherited generator changes to a new art pass.
 - [Art and release constraints](art-release-constraints.md) — noncommercial concept rights; preserve the permanent signing identity and automate verified releases.
+- [Architecture evaluation gate](architecture-evaluation-gate.md) — hold broad rebuilding until the owner evaluates a bounded playable prototype; keep verified fixes separate from experiments.
