@@ -8,6 +8,7 @@ uniform float transition = 1.0;
 uniform float phase = 0.0;
 uniform float locomotion = 0.0;
 uniform float action_energy = 0.0;
+uniform vec3 action_joints = vec3(0.0);
 uniform float character_kind = 0.0;
 uniform vec4 tint : source_color = vec4(1.0);
 
@@ -31,6 +32,10 @@ void vertex() {
 	p.y+=max(0.0,-stride)*0.035*legs*locomotion;
 	float arms=smoothstep(0.18,0.34,abs(rest.x))*(1.0-smoothstep(0.23,0.40,rest.y));
 	p=mix(p,rotate_joint(p,vec2(side*0.19,0.19),-stride*0.14),arms*locomotion);
+	// Attack follow-through, airborne tuck and damage recoil have their own curves.
+	p=mix(p,rotate_joint(p,vec2(side*0.19,0.19),action_joints.x*side*.20),arms);
+	p=mix(p,rotate_joint(p,hip,side*action_joints.y*.08),legs*narrow);
+	p.x+=sin(rest.y*3.0)*action_joints.z*.012;
 	// Secondary motion remains continuous between generated action poses.
 	float cloth=(1.0-smoothstep(-0.24,0.18,rest.y))*(1.0-legs*0.75);
 	p.x+=sin(phase-2.5*rest.y)*cloth*0.012*(locomotion+action_energy);
@@ -39,6 +44,7 @@ void vertex() {
 		p.x+=side*sin(phase*0.5-0.8)*0.025*wings*locomotion;
 		p.y+=cos(phase*0.5)*0.012*wings*locomotion;
 	}
+	p.y=max(p.y,-.5);
 	VERTEX.xy=p;
 	// Billboard while retaining character scale, without a rotating paper edge.
 	mat4 billboard=mat4(INV_VIEW_MATRIX[0],INV_VIEW_MATRIX[1],INV_VIEW_MATRIX[2],MODEL_MATRIX[3]);

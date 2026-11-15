@@ -8,6 +8,16 @@ const PIECE_NAMES := ["CATHEDRAL ARCADE","OPEN CROWN BRIDGE","RIBBED VAULT","REL
 const PAINT = preload("res://assets/shaders/comic_world.gdshader")
 const CourseProfile=preload("res://core/course_profile.gd")
 const AssetDistricts=preload("res://game/asset_districts.gd")
+const Biomes=preload("res://core/biome_progression.gd")
+const LivingScenery=preload("res://game/living_scenery.gd")
+const VISTAS=[
+preload("res://assets/environment/living-world/castle_vista.jpg"),
+preload("res://assets/environment/living-world/wilds_vista.jpg"),
+preload("res://assets/environment/living-world/ember_vista.jpg")]
+const STONES=[
+preload("res://assets/environment/living-world/castle_stone.jpg"),
+preload("res://assets/environment/living-world/wilds_stone.jpg"),
+preload("res://assets/environment/living-world/ember_stone.jpg")]
 const PREMIUM_BACKDROPS := {
 	"knight": preload("res://assets/environment/premium-2d/knight_backdrop.jpg"),
 	"gargoyle": preload("res://assets/environment/premium-2d/gargoyle_backdrop.jpg"),
@@ -33,6 +43,12 @@ var sky_props:Array[Node3D]=[]
 var sky_birds:Array[Node3D]=[]
 var horizon_plate:MeshInstance3D
 var horizon_material:StandardMaterial3D
+var biome_progression:bool=false
+var biome_state:Dictionary=Biomes.sample(0.0)
+var living:Node3D
+var living_plate:MeshInstance3D
+var vista_material:ShaderMaterial
+var living_was_active:bool=false
 
 
 func _paint(hex: String, metal: float=0.0, glow: float=0.0) -> ShaderMaterial:
@@ -73,6 +89,28 @@ func configure() -> void:
 	_build_city_layers()
 	_build_lanterns()
 	_build_sky_props()
+	_build_living_world()
+
+func _build_living_world() -> void:
+	living=LivingScenery.new()
+	add_child(living)
+	living.configure()
+	living_plate=MeshInstance3D.new()
+	var quad:=QuadMesh.new()
+	quad.size=Vector2(400,440)
+	living_plate.mesh=quad
+	vista_material=ShaderMaterial.new()
+	vista_material.shader=preload("res://assets/shaders/biome_panorama.gdshader")
+	vista_material.set_shader_parameter("current_vista",VISTAS[0])
+	vista_material.set_shader_parameter("next_vista",VISTAS[1])
+	living_plate.material_override=vista_material
+	living_plate.position=Vector3(0,12,-231)
+	add_child(living_plate)
+	living_plate.visible=false
+	for key in ["road","road_alt"]:
+		materials[key].set_shader_parameter("castle_stone",STONES[0])
+		materials[key].set_shader_parameter("wilds_stone",STONES[1])
+		materials[key].set_shader_parameter("ember_stone",STONES[2])
 
 
 func _build_city_layers() -> void:
@@ -136,16 +174,19 @@ func _chunk_mesh(kind: String, variant:int=0) -> MeshInstance3D:
 			# Rounded castle vaults remain open enough to read the sky and hazards.
 			b.box(Vector3(side*6.9,4.1,-12),Vector3(.32,5.3,.5),materials.pale,Vector3(0,0,-side*.40))
 		elif kind=="gargoyle" and variant!=1:
-			b.cylinder(Vector3(side*6.6,-3.5,-12),1.9,7.5,materials.dark,.28,Vector3.ZERO,7)
-			b.cylinder(Vector3(side*6.6,2.6,-12),.45,5.2,materials.pale,.75,Vector3.ZERO,12)
-			b.ring(Vector3(side*6.6,5.4,-12),.95,.035,accent)
-			b.cylinder(Vector3(side*6.6,6.6,-12),.65,2.4,materials.dark,0,Vector3.ZERO,6)
-			b.cylinder(Vector3(side*10.2,1.0,-6),1.1,5.0,materials.stone,.35,Vector3(0,0,side*.16),7)
+			b.armor(Vector3(side*6.6,.45,-12),Vector3(1.2,.9,2.2),materials.stone,.72)
+			for root in range(3):
+				b.cylinder(Vector3(side*(6.1+root*.5),.3,-11+root*.7),.22,2,materials.dark,.65,Vector3(0,0,side*.8),8)
+			for mushroom in range(3):
+				b.cylinder(Vector3(side*5.7,.45,-5-mushroom*5),.06,.7,materials.grass)
+				b.sphere(Vector3(side*5.7,.84,-5-mushroom*5),Vector3(.65,.22,.65),materials.teal,10)
 		elif kind=="witch" and variant!=1:
-			b.cylinder(Vector3(side*6.6,2.5,-12),.72,4.4,materials.stone,.2,Vector3(0,0,side*.22),6)
-			b.ring(Vector3(side*6.6,4.2,-12),1.1,.045,accent,Vector3(.8,0,side*.30))
-			b.ring(Vector3(side*6.6,4.2,-12),1.4,.02,materials.gold,Vector3(.8,0,side*.30))
-			b.cylinder(Vector3(side*6.6,.6,-12),.75,1.4,materials.gold,.20,Vector3(PI,0,0),6)
+			b.cylinder(Vector3(side*6.6,2.5,-12),.85,5.5,materials.dark,.65,Vector3(0,0,side*.14),8)
+			for band in range(4):
+				b.cylinder(Vector3(side*6.6,.7+band*1.15,-12),.92,.13,materials.stone,1,Vector3.ZERO,8)
+			for crystal in range(3):
+				b.cylinder(Vector3(side*(5.5+crystal*.4),1+crystal*.3,-6-crystal*3),.22,2+crystal*.4,materials.red,0,Vector3(0,0,side*.25),5)
+			b.box(Vector3(side*7,-1.7,-12),Vector3(3,.12,24),materials.red)
 	if kind=="knight" and variant==0:
 		_arch(b,-12,5.9,6.8,materials.pale,.22)
 		_arch(b,-11.7,5.9,6.7,materials.gold,.055)
@@ -202,6 +243,7 @@ func set_theme(kind: String) -> void:
 
 func update(distance: float, delta: float) -> void:
 	elapsed += delta
+	_update_biomes(distance)
 	course_bend=sin(distance/145.0)*2.2
 	for mat in materials.values():
 		mat.set_shader_parameter("bend",course_bend)
@@ -217,7 +259,8 @@ func update(distance: float, delta: float) -> void:
 			chunks[index].set_meta("variant",variant)
 			chunks[index].set_meta("piece_name",PIECE_NAMES[variant])
 		var secret_key:String=secret_level+"/"+secret_theme
-		var intended:Mesh=secret_meshes[secret_key] if secret_meshes.has(secret_key) else themes[current_theme][variant]
+		var piece_theme:String=Biomes.sample(maxf(0,distance-chunks[index].position.z)).key if biome_progression else current_theme
+		var intended:Mesh=secret_meshes[secret_key] if secret_meshes.has(secret_key) else themes[piece_theme][variant]
 		if chunks[index].mesh!=intended:chunks[index].mesh=intended
 	for i in range(lanterns.size()):
 		lanterns[i].position.z=14-fposmod(i*19.0-distance*.8,160.0)
@@ -234,6 +277,8 @@ func update(distance: float, delta: float) -> void:
 		bird.position=Vector3(sin(t*.12+i*1.7)*24,18+(i%3)*3+sin(t*1.2+i)*.3,-55-i*17)
 		bird.rotation.z=sin(t*5.0+i)*.15
 	districts.update_scenery(distance,delta,flat_course,reduced_motion,not secret_theme.is_empty())
+	living.advance(distance,elapsed,flat_course,reduced_motion,biome_progression and secret_theme.is_empty())
+	districts.visible=not biome_progression
 	if is_instance_valid(machine):
 		machine.rotation.z = sin(elapsed * 0.08) * 0.12
 		machine.rotation.y = elapsed * 0.02
@@ -241,6 +286,42 @@ func update(distance: float, delta: float) -> void:
 		for index in range(dust.multimesh.instance_count):
 			var at := Vector3(sin(index * 21.7) * 8.0, 0.5 + fposmod(index * 1.79 + elapsed * 0.10, 6.5), 12.0 - fposmod(index * 7.23 - distance * 0.7, 110.0))
 			dust.multimesh.set_instance_transform(index, Transform3D(Basis(), at))
+
+func _update_biomes(distance:float) -> void:
+	var active:bool=biome_progression and secret_theme.is_empty()
+	living_plate.visible=active
+	horizon_plate.visible=not active
+	machine.visible=not active
+	for prop_node in sky_props:prop_node.visible=not active
+	for lantern in lanterns:lantern.visible=not active
+	for bird in sky_birds:bird.visible=not active
+	biome_state=Biomes.sample(distance)
+	for key in ["road","road_alt"]:
+		materials[key].set_shader_parameter("detailed_pavement",active)
+		materials[key].set_shader_parameter("biome_index",float(biome_state.index))
+		materials[key].set_shader_parameter("next_biome",float(biome_state.next))
+		materials[key].set_shader_parameter("biome_blend",biome_state.blend)
+	if not active:
+		if living_was_active:
+			for key in {"stone":"b4a0dc","dark":"6466b2","roof":"ff7e8b","metal":"65b9d2"}:
+				materials[key].set_shader_parameter("paint",Color({"stone":"b4a0dc","dark":"6466b2","roof":"ff7e8b","metal":"65b9d2"}[key]))
+		living_was_active=false
+		return
+	living_was_active=true
+	vista_material.set_shader_parameter("current_vista",VISTAS[int(biome_state.index)])
+	vista_material.set_shader_parameter("next_vista",VISTAS[int(biome_state.next)])
+	vista_material.set_shader_parameter("blend",biome_state.blend)
+	vista_material.set_shader_parameter("drift",sin(distance/310.0)*.012)
+	var palette:Array=[
+		{"stone":"b4a5a1","dark":"655e78","roof":"b66a73","metal":"9c9fac"},
+		{"stone":"719280","dark":"3c5951","roof":"578e72","metal":"6faca0"},
+		{"stone":"777080","dark":"474150","roof":"c47753","metal":"a48a79"}]
+	for key in palette[0]:
+		var color:Color=Color(palette[int(biome_state.index)][key]).lerp(Color(palette[int(biome_state.next)][key]),float(biome_state.blend))
+		materials[key].set_shader_parameter("paint",color)
+	if is_instance_valid(dust):
+		var color:Color=Color(["ffe2a6","9cf8c9","ffac76"][int(biome_state.index)])
+		dust.multimesh.mesh.material.set_shader_parameter("paint",color)
 
 
 func _build_horizon() -> void:
@@ -310,7 +391,7 @@ func update_labels(node: Node3D) -> void:
 			child.position.x=float(child.get_meta("lane_x"))+course_bend*bend_at*bend_at
 
 
-func prop(kind: String) -> Node3D:
+func prop(kind: String,station:float=-1.0) -> Node3D:
 	if kind=="enemy":
 		var enemy=preload("res://game/hero.gd").new()
 		enemy.configure("knight")
@@ -325,15 +406,30 @@ func prop(kind: String) -> Node3D:
 			b.ring(Vector3(0, 1.5, 0), 0.70, 0.06, materials["gold"], Vector3(0.25, 0, 0.1))
 			b.cylinder(Vector3(0, 1.0, 0), 0.22, 0.35, materials["red"], 0.0)
 		"barrier":
-			b.armor(Vector3(0, 0.55, 0), Vector3(2.05, 1.10, 0.65), materials["roof"],.86)
+			b.armor(Vector3(0, 0.55, 0), Vector3(2.05, 1.10, 0.65), materials["stone"],.86)
 			b.box(Vector3(0, 1.13, 0), Vector3(2.1, 0.07, 0.7), materials["red"])
 			for side in [-1.0, 1.0]:
-				b.cylinder(Vector3(side * 0.65, 1.36, 0), 0.12, 0.5, materials["metal"], 0.0)
+				b.armor(Vector3(side*.86,.55,.03),Vector3(.22,1.05,.72),materials.dark,.8)
+				for band in range(3):
+					b.box(Vector3(side*.86,.2+band*.32,.4),Vector3(.25,.06,.05),materials.gold)
+			var skin:int=int(Biomes.sample(station).index) if biome_progression and station>=0 else int(biome_state.index) if biome_progression else 0
+			if skin==1:
+				for vine in range(4):
+					b.cylinder(Vector3(-.7+vine*.45,.57,.4),.08,.9,materials.grass,1,Vector3(0,0,.4 if vine%2 else -.4),8)
+					b.sphere(Vector3(-.7+vine*.45,.8,.42),Vector3(.23,.12,.09),materials.teal,8)
+			elif skin==2:
+				for crystal in range(4):
+					b.cylinder(Vector3(-.7+crystal*.45,.56,.4),.12,.75,materials.red,0,Vector3(.2,0,.15),5)
+			else:
+				b.ring(Vector3(0,.57,.4),.3,.045,materials.gold,Vector3(PI/2,0,0))
+				_star(b,Vector3(0,.57,.44),.22,materials.amber)
 		"beam":
 			for side in [-1.0, 1.0]:
 				b.box(Vector3(side * 1.08, 1.1, 0), Vector3(0.18, 2.2, 0.4), materials["metal"])
 			b.box(Vector3(0, 1.48, 0), Vector3(2.3, 0.35, 0.55), materials["dark"])
 			b.box(Vector3(0, 1.28, 0.28), Vector3(2.0, 0.05, 0.04), materials["red"])
+			for rune in range(5):
+				b.armor(Vector3((rune-2)*.36,1.48,.3),Vector3(.10,.16,.035),materials.gold,.6)
 		"gap":
 			# The world shader opens the actual road surface. These are the rims.
 			for side in [-1.0,1.0]:

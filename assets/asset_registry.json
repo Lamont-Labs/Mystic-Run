@@ -5,7 +5,8 @@
     "assets/characters",
     "assets/environment/kaykit",
     "assets/environment/premium-2d",
-    "assets/characters/action-atlases"
+    "assets/characters/action-atlases",
+    "assets/environment/living-world"
   ],
   "assets": [
     {
@@ -988,6 +989,83 @@
           "path": "assets/characters/action-atlases/witch_actions.png",
           "sha256": "16bf2dde92505e2a050c73fb4cdbfd2fd5ee5805345d550be2347c83b1cd1ca9",
           "bytes": 1665884
+        }
+      ]
+    },
+    {
+      "id": "mysticrun-living-world",
+      "cost_usd": 0,
+      "commercial_use": false,
+      "modification": true,
+      "game_distribution": true,
+      "attribution_required": false,
+      "publisher": "Replit image-generation tool",
+      "license": "LicenseRef-MysticRun-Replit-Generated-NonCommercial",
+      "edition": "Original generated environments and stone materials for MysticRun",
+      "sources": [
+        "tools/build_living_world_art.py",
+        "assets/environment/living-world/PROVENANCE.json"
+      ],
+      "license_evidence": {
+        "path": "assets/licenses/mysticrun-replit-generated-art-noncommercial.txt",
+        "sha256": "38045b886ab0cdab64fc61c775a660bfcbc2f743c79b8a9004214e08d599840e",
+        "bytes": 740
+      },
+      "modifications": [
+        "Generated three original environment paintings, three transparent landmark paintings, and three detailed running-surface materials.",
+        "Optimized mobile runtime JPEGs; raw PNGs retained in the workspace generated-artifacts archive."
+      ],
+      "derived_from": [],
+      "files": [
+        {
+          "path": "assets/environment/living-world/PROVENANCE.json",
+          "sha256": "09ade041c5e095ac8c3cf9870b52351d9b7db04722cc1fa43cac3f60bd6b2726",
+          "bytes": 2658
+        },
+        {
+          "path": "assets/environment/living-world/castle_landmark.png",
+          "sha256": "cc421613519c33b907ff4e30407f177a6b1797ad723d772077d0a7d757a24585",
+          "bytes": 357480
+        },
+        {
+          "path": "assets/environment/living-world/castle_stone.jpg",
+          "sha256": "05c73fc86739b18f728175f71409b314e3e2a1ed506b8f592992022b81bf2f70",
+          "bytes": 129538
+        },
+        {
+          "path": "assets/environment/living-world/castle_vista.jpg",
+          "sha256": "c6735d0d4cf906e63a2a76f526e6f99a1d3473d2980e5ba40a03a03ae9774fc1",
+          "bytes": 336700
+        },
+        {
+          "path": "assets/environment/living-world/ember_landmark.png",
+          "sha256": "9f22aa5a6cd63af1f1bec2033fe769bb4aeba0d46370876ae0361327c1006325",
+          "bytes": 504486
+        },
+        {
+          "path": "assets/environment/living-world/ember_stone.jpg",
+          "sha256": "c139235f86649fec8e86acc42989eee391084ebb65775ba10248e4ba138e608c",
+          "bytes": 115702
+        },
+        {
+          "path": "assets/environment/living-world/ember_vista.jpg",
+          "sha256": "39e6643a0008f4d5cd232c5181bc1161a084d55d5bea92f946897e509bc897f6",
+          "bytes": 267983
+        },
+        {
+          "path": "assets/environment/living-world/wilds_landmark.png",
+          "sha256": "b3735b7850b7fa9a0ebed68e568d9484c915e19aa8add77d76cd50109e90aeb6",
+          "bytes": 683294
+        },
+        {
+          "path": "assets/environment/living-world/wilds_stone.jpg",
+          "sha256": "188d60be39692565d54b77dd7aff1e8bff854c393d5d01b3cdcf4509cb2ee23e",
+          "bytes": 109935
+        },
+        {
+          "path": "assets/environment/living-world/wilds_vista.jpg",
+          "sha256": "e68058a57c3e28bdb639b63cbbf1338d07b9d85507cd168cc330e6c99a2e7bbf",
+          "bytes": 356311
         }
       ]
     }

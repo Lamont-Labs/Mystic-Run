@@ -7,6 +7,13 @@ uniform float bend = 0.0;
 uniform float course_distance = 0.0;
 uniform bool flat_course = false;
 uniform bool pavement = false;
+uniform sampler2D castle_stone : source_color, repeat_enable, filter_linear_mipmap;
+uniform sampler2D wilds_stone : source_color, repeat_enable, filter_linear_mipmap;
+uniform sampler2D ember_stone : source_color, repeat_enable, filter_linear_mipmap;
+uniform bool detailed_pavement = false;
+uniform float biome_index = 0.0;
+uniform float next_biome = 1.0;
+uniform float biome_blend = 0.0;
 uniform vec4 gaps[12];
 uniform int gap_count=0;
 varying vec3 stone_position;
@@ -50,6 +57,19 @@ void fragment(){
   float seam=1.0-smoothstep(0.006,0.020,min(edges.x,edges.y));
   float tile=hash(vec3(cell,1.0));
   color*=mix(0.96,1.04,tile)*(1.0-seam*0.18);
+  if(detailed_pavement){
+   vec2 stone_uv=stone_position.xz/5.6;
+   vec3 castle=texture(castle_stone,stone_uv).rgb;
+   vec3 wilds=texture(wilds_stone,stone_uv).rgb;
+   vec3 ember=texture(ember_stone,stone_uv).rgb;
+   vec3 current=biome_index<.5?castle:(biome_index<1.5?wilds:ember);
+   vec3 next=next_biome<.5?castle:(next_biome<1.5?wilds:ember);
+   color=mix(current,next,biome_blend);
+   // Subtle carved edge inlay, never a false obstacle in the running lanes.
+   float border=smoothstep(3.7,3.8,abs(stone_position.x));
+   float rune=step(.72,fract(stone_position.z*.35));
+   color=mix(color,vec3(.68,.48,.25),border*.18*rune);
+  }
  }
  // Compatibility rendering has a narrow output range. Reserve the brightest
  // values for collectibles, windows and action cues instead of broad walls.

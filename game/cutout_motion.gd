@@ -63,6 +63,10 @@ func advance(delta:float,actor:Node3D) -> void:
 	paint.set_shader_parameter("phase",gait)
 	paint.set_shader_parameter("locomotion",stride_weight)
 	paint.set_shader_parameter("action_energy",0.0 if actor.reduced_motion else .35)
+	var strike:float=sin(clampf(actor.attack_time/.4,0,1)*PI)*actor.swipe_direction
+	var tuck:float=clampf(actor.airborne_velocity/9.0,-1,1) if actor.airborne else 0.0
+	var recoil:float=sin(actor.hurt_left*25.0)*clampf(actor.hurt_left*3.0,0,1)
+	paint.set_shader_parameter("action_joints",Vector3.ZERO if actor.reduced_motion else Vector3(strike,tuck,recoil))
 	paint.set_shader_parameter("transition",smoothstep(0.0,1.0,blend))
 	paint.set_shader_parameter("tint",actor.concept_sprite.modulate)
 	position=actor.concept_sprite.position
