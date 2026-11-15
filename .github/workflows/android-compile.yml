@@ -39,7 +39,9 @@ jobs:
       - name: Check gameplay core
         run: python3 tools/verify_core.py --godot "$(cat "${RUNNER_TEMP}/godot-path")"
       - name: Check Android manifest policy guards
-        run: python3 -m unittest discover -s tools -p test_android_policy.py
+        run: |
+          python3 -m unittest discover -s tools -p test_android_policy.py
+          python3 -m unittest discover -s tools -p test_android_icon_resources.py
       - name: Compile and inspect unsigned APK
         run: |
           python3 tools/build_android.py --unsigned --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --version-code "$((1000 + GITHUB_RUN_NUMBER))" --version-name 0.6.1
