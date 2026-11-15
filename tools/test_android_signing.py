@@ -293,16 +293,18 @@ class SigningTests(unittest.TestCase):
             with self.assertRaisesRegex(SystemExit, 'compiled with --unsigned'):
                 build_android.main()
 
-    def test_workflow_uploads_only_after_signing_and_never_publishes(self):
+    def test_workflow_uploads_after_signing_and_isolates_publication(self):
         root = Path(__file__).resolve().parents[1]
         workflow = (root/'.github/workflows/android-apk.yml').read_text()
         self.assertNotIn('  push:', workflow)
-        self.assertNotIn('contents: write', workflow)
+        signer = workflow.split('  publish:', 1)[0]
+        self.assertNotIn('contents: write', signer)
+        self.assertNotIn('secrets.', workflow.split('  publish:', 1)[1])
         self.assertNotIn('gh release', workflow)
         self.assertNotIn('androiddebugkey', workflow)
         self.assertNotIn('RELAY_DEVELOPMENT_', workflow)
         self.assertIn('environment: android-signing', workflow)
-        self.assertIn(PERMANENT_CERTIFICATE, workflow)
+        self.assertIn(PERMANENT_CERTIFICATE, (root/'tools/android_verification.py').read_text())
         self.assertIn('--expected-run-id "${GITHUB_RUN_ID}"', workflow)
         self.assertLess(workflow.index('tools/sign_android.py'), workflow.index('actions/upload-artifact@'))
         self.assertIn('path: ${{ runner.temp }}/verified-apk/*', workflow)
