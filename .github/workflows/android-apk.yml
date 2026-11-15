@@ -2,16 +2,12 @@ name: Mystic Run Android APK
 
 on:
   workflow_dispatch:
-  push:
-    branches: [main]
-    paths:
-      - '.github/workflows/android-apk.yml'
 
 permissions:
   contents: read
 
 concurrency:
-  group: mystic-run-permanent-android-release
+  group: mystic-run-permanent-android-signing
   cancel-in-progress: false
 
 jobs:
@@ -19,32 +15,33 @@ jobs:
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-24.04
     timeout-minutes: 25
-    permissions:
-      contents: write
+    environment: android-signing
     steps:
       - name: Checkout game
         uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803
-      - name: Require owner signing identity
+      - name: Require replacement signing credentials
         env:
-          RELAY_KEYSTORE_BASE64: ${{ secrets.RELAY_DEVELOPMENT_KEYSTORE_BASE64 }}
+          MYSTICRUN_KEYSTORE_BASE64: ${{ secrets.MYSTICRUN_KEYSTORE_BASE64 }}
+          MYSTICRUN_STORE_PASSWORD: ${{ secrets.MYSTICRUN_STORE_PASSWORD }}
+          MYSTICRUN_KEY_PASSWORD: ${{ secrets.MYSTICRUN_KEY_PASSWORD }}
         run: |
+          umask 077
           python3 - <<'PY'
-          import os,base64
+          import base64, os
           from pathlib import Path
-          encoded=os.environ.get('RELAY_KEYSTORE_BASE64','')
-          if not encoded:
-              raise SystemExit('Configure RELAY_DEVELOPMENT_KEYSTORE_BASE64 with the existing owner development key before exporting updates.')
-          target=Path(os.environ['RUNNER_TEMP'])/'owner-development.keystore'
-          target.write_bytes(base64.b64decode(encoded,validate=True))
-          target.chmod(0o600)
+          required = ('MYSTICRUN_KEYSTORE_BASE64', 'MYSTICRUN_STORE_PASSWORD', 'MYSTICRUN_KEY_PASSWORD')
+          if any(not os.environ.get(name) for name in required):
+              raise SystemExit('Configure all replacement signing secrets in the protected android-signing environment. Never generate a key.')
+          target = Path(os.environ['RUNNER_TEMP'])/'mysticrun.keystore'
+          with target.open('xb') as stream:
+              stream.write(base64.b64decode(os.environ['MYSTICRUN_KEYSTORE_BASE64'], validate=True))
           PY
-      - name: Verify permanent development signing certificate
+      - name: Verify replacement public certificate
         env:
-          RELAY_KEY_PASSWORD: ${{ secrets.RELAY_DEVELOPMENT_KEY_PASSWORD }}
+          MYSTICRUN_STORE_PASSWORD: ${{ secrets.MYSTICRUN_STORE_PASSWORD }}
         run: |
-          test -n "$RELAY_KEY_PASSWORD" || { echo 'Permanent signing password secret missing'; exit 1; }
-          keytool -exportcert -alias androiddebugkey -keystore "${RUNNER_TEMP}/owner-development.keystore" -storepass:env RELAY_KEY_PASSWORD > "${RUNNER_TEMP}/signing-cert.der"
-          echo '6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf  '"${RUNNER_TEMP}/signing-cert.der" | sha256sum -c -
+          keytool -exportcert -alias mysticrun -keystore "${RUNNER_TEMP}/mysticrun.keystore" -storepass:env MYSTICRUN_STORE_PASSWORD > "${RUNNER_TEMP}/signing-cert.der"
+          echo '8ccd240d320a0ac8568581d5c7e005538033681d8b882058d673c80719dfd859  '"${RUNNER_TEMP}/signing-cert.der" | sha256sum -c -
       - name: Install pinned editor and Android templates
         run: |
           python3 tools/bootstrap_godot.py --cache "${RUNNER_TEMP}/godot" > "${RUNNER_TEMP}/godot-path"
@@ -61,58 +58,28 @@ jobs:
       - name: Check Android release contracts
         run: |
           python3 -m unittest discover -s tools -p 'test_android*.py'
-          python3 -m unittest discover -s .github/scripts -p test_release_reconstruction.py
-      - name: Build and verify APK
-        env:
-          RELAY_KEY_PASSWORD: ${{ secrets.RELAY_DEVELOPMENT_KEY_PASSWORD }}
+          python3 -m unittest discover -s .github/scripts -p 'test_release_reconstruction.py'
+      - name: Compile unsigned APK
         run: |
-          python3 tools/build_android.py --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --keystore "${RUNNER_TEMP}/owner-development.keystore" --version-code "$((2000 + GITHUB_RUN_NUMBER))" --version-name 0.6.2
-      - name: Preserve APK and evidence
+          python3 tools/build_android.py --unsigned --godot "$(cat "${RUNNER_TEMP}/godot-path")" --sdk "${ANDROID_SDK_ROOT}" --version-code "$((2000 + GITHUB_RUN_NUMBER))" --version-name 0.6.2
+      - name: Sign and verify replacement-key APK
+        env:
+          MYSTICRUN_STORE_PASSWORD: ${{ secrets.MYSTICRUN_STORE_PASSWORD }}
+          MYSTICRUN_KEY_PASSWORD: ${{ secrets.MYSTICRUN_KEY_PASSWORD }}
+        run: |
+          python3 tools/sign_android.py --apk build/Mystic_Run_0.6.2_unsigned.apk --manifest build/apk-manifest.json --sdk "${ANDROID_SDK_ROOT}" --keystore "${RUNNER_TEMP}/mysticrun.keystore" --expected-commit "${GITHUB_SHA}" --expected-run-id "${GITHUB_RUN_ID}" --output "${RUNNER_TEMP}/verified-apk/Mystic_Run_0.6.2_Build$((2000 + GITHUB_RUN_NUMBER)).apk"
+      - name: Preserve verified APK and evidence
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: mystic-run-android-apk
-          path: |
-            build/*.apk
-            build/apk-manifest.json
-            build/apk-signature.txt
-            build/apk-package.txt
-            docs/verification_actual.json
+          path: ${{ runner.temp }}/verified-apk/*
           retention-days: 30
           if-no-files-found: error
-      - name: Verify and publish permanent-key APK
-        env:
-          GH_TOKEN: ${{ github.token }}
+      - name: Explain installation compatibility
         run: |
-          PYTHONPATH=.github/scripts python3 - <<'PY'
-          import json,os,subprocess,tempfile
-          from pathlib import Path
-          import publish_android_release as release
-          manifest=json.loads(Path('build/apk-manifest.json').read_text())
-          if manifest.get('git_commit')!=os.environ['GITHUB_SHA'] or manifest.get('builder',{}).get('commit')!=os.environ['GITHUB_SHA']:
-              raise SystemExit('Release source does not match the current main build')
-          if manifest.get('certificate_sha256')!=release.PERMANENT_CERTIFICATE or manifest.get('permanent_signing_identity') is not True or manifest.get('updates_legacy_owner_installation') is not False:
-              raise SystemExit('Permanent signing identity or compatibility declaration mismatch')
-          apk=Path('build')/manifest['apk']
-          sdk=Path(os.environ['ANDROID_SDK_ROOT'])
-          release.write_verification(apk,sdk,manifest)
-          tag=f"v{manifest['version_name']}-build{manifest['version_code']}"
-          notes=Path(os.environ['RUNNER_TEMP'])/'permanent-release-notes.md'
-          notes.write_text('MysticRun Android development build from main.\n\n'+release.signing_note(manifest)+'\n\nSource commit: '+manifest['git_commit']+'\n')
-          existing=subprocess.run(['gh','release','view',tag,'--repo',release.REPOSITORY],capture_output=True,text=True,timeout=60)
-          if existing.returncode:
-              if 'release not found' not in existing.stderr.lower():
-                  raise SystemExit('Unable to inspect the release status')
-              release.command(['gh','release','create',tag,'--repo',release.REPOSITORY,'--target',manifest['git_commit'],'--title',f"Mystic Run {manifest['version_name']} - permanent Android build {manifest['version_code']}",'--notes-file',notes,'--prerelease',apk,apk.with_suffix('.manifest.json'),apk.parent/'APK-SIGNATURE.txt',apk.parent/'SHA256SUMS'])
-          with tempfile.TemporaryDirectory(prefix='verify-published-') as temporary:
-              destination=Path(temporary)
-              release.command(['gh','release','download',tag,'--repo',release.REPOSITORY,'--pattern',apk.name,'--dir',destination])
-              published=destination/apk.name
-              release.write_verification(published,sdk,manifest)
-          print(release.command(['gh','release','view',tag,'--repo',release.REPOSITORY,'--json','url,assets']))
-          PY
+          echo 'Verified replacement-key APK only; no GitHub Release was published. Updates require the same replacement certificate and a higher version code. This cannot update legacy-key installations. Do not uninstall or modify the existing phone game.' >> "$GITHUB_STEP_SUMMARY"
       - name: Remove runner signing material
         if: always()
         run: |
-          rm -f "${RUNNER_TEMP}/owner-development.keystore" "${RUNNER_TEMP}/signing-cert.der"
+          rm -f "${RUNNER_TEMP}/mysticrun.keystore" "${RUNNER_TEMP}/signing-cert.der"
           rm -f "${HOME}/.config/godot/editor_settings-4.7.tres"
-

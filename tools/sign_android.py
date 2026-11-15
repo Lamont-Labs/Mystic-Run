@@ -6,6 +6,7 @@ import json
 import os
 from pathlib import Path
 import re
+import shutil
 import struct
 import subprocess
 import tempfile
@@ -13,14 +14,16 @@ import zipfile
 
 from build_android import run
 from android_policy import inspect_package
+from android_verification import PACKAGE, SIGNING_ALIAS, PERMANENT_CERTIFICATE, verify_signature, verify_resources
 
-PACKAGE='com.lamontlabs.knightgargoylewitch.dev'
-OWNER_CERTIFICATE='f5ee5d42ec692e402b52c0457be35c24fe1f92229005002155f675040dddb9c9'
-PERMANENT_CERTIFICATE='6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf'
 
 
 def validate_input(apk, manifest, expected_commit, expected_run_id=None):
-    if not manifest.get('requires_owner_signing') or manifest.get('signature_verified'):
+    if type(manifest.get('version_code')) is not int or not 0 < manifest['version_code'] <= 2100000000:
+        raise ValueError('Invalid Android version code')
+    if not re.fullmatch(r'[0-9]+\.[0-9]+\.[0-9]+', manifest.get('version_name', '')):
+        raise ValueError('Invalid Android version name')
+    if manifest.get('requires_owner_signing') is not True or manifest.get('signature_verified') is not False:
         raise ValueError('Only explicitly unsigned compilation output is accepted')
     if manifest.get('package_id')!=PACKAGE:
         raise ValueError('Unexpected application identity')
@@ -65,30 +68,40 @@ def main():
     parser.add_argument('--output',type=Path,required=True)
     parser.add_argument('--expected-commit',required=True)
     parser.add_argument('--expected-run-id')
-    parser.add_argument('--permanent-identity',action='store_true',help='Use the existing permanent backup; this cannot update legacy-owner installations')
+    parser.add_argument('--permanent-identity',action='store_true',help='Compatibility flag; replacement permanent identity is always required')
     args=parser.parse_args()
-    expected_certificate=PERMANENT_CERTIFICATE if args.permanent_identity else OWNER_CERTIFICATE
+    expected_certificate=PERMANENT_CERTIFICATE
     source=args.apk.resolve();output=args.output.resolve()
-    if source==output or not args.keystore.is_file():
-        raise SystemExit('A separate output path and the preserved keystore are required')
+    destinations=[output, output.with_suffix('.manifest.json'), output.with_suffix('.signature.txt'), output.with_suffix('.package.txt')]
+    if source in destinations or args.manifest.resolve() in destinations or args.keystore.resolve() in destinations or not args.keystore.is_file() or any(p.exists() for p in destinations):
+        raise SystemExit('Unused separate output paths and the preserved keystore are required')
+    if not os.environ.get('MYSTICRUN_STORE_PASSWORD') or not os.environ.get('MYSTICRUN_KEY_PASSWORD'):
+        raise SystemExit('Configure MYSTICRUN_STORE_PASSWORD and MYSTICRUN_KEY_PASSWORD securely; no password fallback is permitted')
     manifest=json.loads(args.manifest.read_text())
     validate_input(source,manifest,args.expected_commit,args.expected_run_id)
     sdk=args.sdk.resolve()/'build-tools/35.0.1'
     env=os.environ.copy()
-    env['MYSTIC_SIGN_PASSWORD']=os.environ.get('RELAY_KEY_PASSWORD') or 'android'
     java=Path(os.environ.get('JAVA_HOME_17_X64') or os.environ.get('JAVA_HOME') or '/usr/lib/jvm/java-17-openjdk-amd64')
-    certificate=subprocess.run([str(java/'bin/keytool'),'-exportcert','-alias','androiddebugkey','-keystore',str(args.keystore.resolve()),'-storepass:env','MYSTIC_SIGN_PASSWORD'],capture_output=True,env=env,timeout=30)
+    certificate=subprocess.run([str(java/'bin/keytool'),'-exportcert','-alias',SIGNING_ALIAS,'-keystore',str(args.keystore.resolve()),'-storepass:env','MYSTICRUN_STORE_PASSWORD'],capture_output=True,env=env,timeout=30)
     if certificate.returncode or hashlib.sha256(certificate.stdout).hexdigest()!=expected_certificate:
         raise SystemExit('Keystore does not match the preserved Mystic Run signing identity')
-    output.parent.mkdir(parents=True,exist_ok=True)
+    with tempfile.TemporaryDirectory(prefix='mystic-verified-') as temporary:
+        staged=Path(temporary)/output.name
+        sign_and_verify(source, staged, sdk, args.keystore.resolve(), env, manifest, expected_certificate)
+        output.parent.mkdir(parents=True,exist_ok=True)
+        # The workflow uploads only this directory, after all checks succeed.
+        for path in Path(temporary).iterdir():
+            shutil.copyfile(path, output.parent/path.name)
+
+
+def sign_and_verify(source, output, sdk, keystore, env, manifest, expected_certificate):
     with tempfile.TemporaryDirectory(prefix='mystic-sign-') as temporary:
         aligned=Path(temporary)/'aligned.apk'
         run([sdk/'zipalign','-f','-P','16','4',source,aligned],timeout=60)
-        run([sdk/'apksigner','sign','--ks',args.keystore.resolve(),'--ks-key-alias','androiddebugkey','--ks-pass','env:MYSTIC_SIGN_PASSWORD','--key-pass','env:MYSTIC_SIGN_PASSWORD','--v1-signing-enabled','false','--v2-signing-enabled','true','--v3-signing-enabled','true','--v4-signing-enabled','false','--out',output,aligned],env=env,timeout=60)
+        run([sdk/'apksigner','sign','--ks',keystore,'--ks-key-alias',SIGNING_ALIAS,'--ks-pass','env:MYSTICRUN_STORE_PASSWORD','--key-pass','env:MYSTICRUN_KEY_PASSWORD','--v1-signing-enabled','false','--v2-signing-enabled','true','--v3-signing-enabled','true','--v4-signing-enabled','false','--out',output,aligned],env=env,timeout=60)
     signature=run([sdk/'apksigner','verify','--verbose','--print-certs',output],timeout=30)
-    fingerprint=re.search(r'certificate SHA-256 digest: ([0-9a-fA-F]+)',signature)
-    if not fingerprint or fingerprint.group(1).lower()!=expected_certificate:
-        raise RuntimeError('Signed APK certificate did not match the preserved identity')
+    verify_signature(signature, expected_certificate)
+    resources=verify_resources(output, sdk, run)
     run([sdk/'zipalign','-c','-P','16','4',output],timeout=30)
     metadata=run([sdk/'aapt','dump','badging',output],timeout=30)
     android_policy=inspect_package(metadata)
@@ -100,8 +113,8 @@ def main():
     with zipfile.ZipFile(source) as before,zipfile.ZipFile(output) as after:
         if after.testzip() is not None:
             raise RuntimeError('Signed ZIP integrity check failed')
-        before_files={f.filename:(f.CRC,f.file_size) for f in before.infolist()}
-        after_files={f.filename:(f.CRC,f.file_size) for f in after.infolist()}
+        before_files={f.filename:hashlib.sha256(before.read(f)).hexdigest() for f in before.infolist()}
+        after_files={f.filename:hashlib.sha256(after.read(f)).hexdigest() for f in after.infolist()}
         if before_files!=after_files:
             raise RuntimeError('Signing unexpectedly changed packaged game files')
         libraries=verify_native(after)
@@ -111,15 +124,17 @@ def main():
     signed=dict(manifest)
     signed.update({
         **android_policy,
+        **resources,
         'apk':output.name,'bytes':output.stat().st_size,'sha256':hashlib.sha256(output.read_bytes()).hexdigest(),
         'unsigned_apk_sha256':manifest['sha256'],'certificate_sha256':expected_certificate,
         'signature_verified':True,'requires_owner_signing':False,'preserved_keystore_matched':True,
-        'owner_game_update_compatible':not args.permanent_identity,
-        'permanent_signing_identity':args.permanent_identity,
-        'updates_legacy_owner_installation':not args.permanent_identity,
-        'updates_permanent_identity_installation':args.permanent_identity,
+        'owner_game_update_compatible':False,
+        'permanent_signing_identity':True,
+        'updates_legacy_owner_installation':False,
+        'updates_permanent_identity_installation':True,
+        'signature_v2_verified':True,'signature_v3_verified':True,'signing_alias':SIGNING_ALIAS,
         'alignment_16k_verified':True,'native_16k_alignment_verified':True,'zip_integrity_verified':True,
-        'packaged_game_files_unchanged_by_signing':True,'signing_service':'local-preserved-owner-key',
+        'packaged_game_files_unchanged_by_signing':True,'signing_service':'preserved-replacement-key',
         'native_libraries':libraries,
     })
     output.with_suffix('.manifest.json').write_text(json.dumps(signed,indent=2)+'\n')

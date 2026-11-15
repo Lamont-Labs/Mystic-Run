@@ -13,7 +13,6 @@ import zipfile
 from android_policy import inspect_package
 from asset_foundry import verify as verify_assets
 
-OWNER_CERTIFICATE='6cae555cdc35ea335e5ca6f29252bfad9ebc1cbc9a12c83e18c7eb1038a6a8cf'
 ART_PREVIEW_CERTIFICATE='cced8d8dca20fd35d169f546802953375c76fad3559cdbcbe896271c61f26f5e'
 
 
@@ -83,6 +82,8 @@ def main():
     parser.add_argument('--output',type=Path)
     parser.add_argument('--art-preview',action='store_true',help='Build a separately installed art preview; never an update to the owner-signed game')
     args=parser.parse_args()
+    if not args.unsigned and not args.art_preview:
+        raise SystemExit('Normal APKs must be compiled with --unsigned, then signed and verified by tools/sign_android.py with the replacement permanent key')
     package_id='com.lamontlabs.knightgargoylewitch.artpreview' if args.art_preview else 'com.lamontlabs.knightgargoylewitch.dev'
     app_name='Mystic Run Art Preview' if args.art_preview else 'Mystic Run'
     root=Path(__file__).resolve().parents[1]
@@ -116,8 +117,10 @@ def main():
     java=Path(java_home)
     if not (java/'bin/keytool').is_file():
         raise SystemExit('The configured Java SDK has no keytool')
-    password=os.environ.get('RELAY_KEY_PASSWORD') or 'android'
-    expected_certificate=ART_PREVIEW_CERTIFICATE if args.art_preview else OWNER_CERTIFICATE
+    password=os.environ.get('RELAY_KEY_PASSWORD')
+    if not args.unsigned and not password:
+        raise SystemExit('The preserved Art Preview key password must be configured securely')
+    expected_certificate=ART_PREVIEW_CERTIFICATE
     if not args.unsigned and signing_certificate(args.keystore,java,password)!=expected_certificate:
         raise SystemExit('Signing identity does not match the selected build variant; the owner game and Art Preview use separate preserved keys')
     replacements={
