@@ -8,6 +8,8 @@ engine-tools/
 tests/results.json
 __pycache__/
 *.pyc
+/generated-artifacts/
+/.pythonlibs/
 .signing/
 art/**/*.blend
 art/**/*.blend1

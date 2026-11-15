@@ -1,0 +1,98 @@
+{
+  "source": "references/01-character-concept.png",
+  "source_sha256": "07e7541d8d5a91d1733186930d5d4ed759400021c8af3391f068ade217f01e71",
+  "method": "source crop with edge-connected pale-backdrop transparency",
+  "generated_art": false,
+  "sprites": {
+    "knight_front": {
+      "path": "assets/characters/concept-sprites/knight_front.png",
+      "source_region": [
+        42,
+        50,
+        455,
+        592
+      ],
+      "dimensions": [
+        413,
+        526
+      ],
+      "sha256": "ef4cf8b977f2ca622ba8aeabe2e443f18a28d478e7481e6282f2b3cce1ec6f0a",
+      "alpha_pixels": 82463
+    },
+    "knight_rear": {
+      "path": "assets/characters/concept-sprites/knight_rear.png",
+      "source_region": [
+        115,
+        630,
+        445,
+        1005
+      ],
+      "dimensions": [
+        306,
+        361
+      ],
+      "sha256": "11d02d535a213241be61ee4cdccdcbaa2420d51a6db883a49b5a99806b5f8457",
+      "alpha_pixels": 61281
+    },
+    "gargoyle_front": {
+      "path": "assets/characters/concept-sprites/gargoyle_front.png",
+      "source_region": [
+        475,
+        105,
+        977,
+        600
+      ],
+      "dimensions": [
+        501,
+        450
+      ],
+      "sha256": "c951ffb00ec55770a387ace46aa3a5db1877b812c074b33a19bb273f15466aa1",
+      "alpha_pixels": 65435
+    },
+    "gargoyle_rear": {
+      "path": "assets/characters/concept-sprites/gargoyle_rear.png",
+      "source_region": [
+        540,
+        628,
+        950,
+        1005
+      ],
+      "dimensions": [
+        371,
+        341
+      ],
+      "sha256": "ed7110818292c90f880dc1edaca8b78316a82fb824c47e88e53b6e3f17ccf81b",
+      "alpha_pixels": 49483
+    },
+    "witch_front": {
+      "path": "assets/characters/concept-sprites/witch_front.png",
+      "source_region": [
+        1048,
+        35,
+        1530,
+        610
+      ],
+      "dimensions": [
+        454,
+        539
+      ],
+      "sha256": "8f6b881e36bfec868b0274f5c1e47226b3d9c8798a039a49fbbbda317f9b8f0c",
+      "alpha_pixels": 102240
+    },
+    "witch_rear": {
+      "path": "assets/characters/concept-sprites/witch_rear.png",
+      "source_region": [
+        1088,
+        620,
+        1528,
+        1005
+      ],
+      "dimensions": [
+        298,
+        365
+      ],
+      "sha256": "87d90ecbfbfa7d7e51e8c164824a33cbc1a71b7a97fefa2be33c544fcbcaa792",
+      "alpha_pixels": 58276
+    }
+  }
+}

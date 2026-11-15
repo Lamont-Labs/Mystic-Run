@@ -1,0 +1,30 @@
+uploads = []
+generated = []
+
+[[outputs]]
+id = "HTZTBeGw80wR7_UHGMaBK"
+uri = "file://docs/previews/mr-art-038/upper-armor-comparison.jpg"
+type = "image"
+title = "Knight armor: matched Godot before and after"
+description = "Actual front, side and rear engine captures. Rebuilt source baseline versus the 23,242-triangle candidate. Technical pass; visual approval remains on hold."
+logical_id = "705b48e1-f56d-4ed4-8c45-708426302c65"
+content_hash = "sha256:c447acb9ac4f5d5bc9531a2b7fde7c434b9b52a87effaee18be8b82aa4faaaf3"
+size = 177127
+mtime_ms = 1794622601750
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/705b48e1-f56d-4ed4-8c45-708426302c65/2e2ae81e-367a-4b78-a31e-851582e9635f"
+storage_version_token = "1794622702242753"
+content_type = "image/jpeg"
+
+[[outputs]]
+id = "QHGs_YWSVhdFf5Tir1CdI"
+uri = "file://generated-artifacts/mr-art-038/MysticRun_MR_ART_038_verified_asset_and_evidence.zip"
+type = "unspecified"
+title = "Verified Knight asset and complete evidence"
+description = "Includes the candidate GLB and editable Blender asset, both baseline GLBs, original Godot captures, comparison sheets, structural reports, regression logs and reproduction notes."
+logical_id = "6d5acafa-6e62-456c-979d-9c3a62a34e59"
+content_hash = "sha256:225f046a6004f2afad4dc8aba0684c49897d623a7a232680d37c98fc022459cc"
+size = 11251556
+mtime_ms = 1794622692466
+storage_uri = "gcs://replit-rams-assets-picard/rams/assets/repl:90019c06-bb00-4786-92b7-4db28d19edbc/6d5acafa-6e62-456c-979d-9c3a62a34e59/efe620d9-59da-4888-971f-c73220f20cdf"
+storage_version_token = "1794622702997525"
+content_type = "application/octet-stream"

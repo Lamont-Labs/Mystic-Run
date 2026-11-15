@@ -25,9 +25,16 @@ jobs:
           python3 -m unittest discover -s tools -p test_asset_foundry.py
       - name: Run pinned Godot core checks
         run: python3 tools/verify_core.py --cache "${RUNNER_TEMP}/runner-godot"
+      - name: Enforce Knight exported geometry, rig and morph contracts
+        run: |
+          python3 tools/verify_knight_glb.py
+          python3 -m unittest discover -s tools -p test_verify_knight_glb.py
       - name: Import playable assets
         run: |
           "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --editor --import --quit
+      - name: Verify concept-derived gameplay characters
+        run: |
+          "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/concept_sprite_assets.gd
       - name: Verify gesture and course rules
         run: |
           "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/runner_controls.gd

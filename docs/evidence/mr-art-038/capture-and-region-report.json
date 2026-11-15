@@ -1,0 +1,292 @@
+{
+  "status": "CONCEPT-ALIGNED FRONT/REAR ART / ACTION-POSE LIMITATION",
+  "concept_binary_available": true,
+  "approved_concept_path": "references/01-character-concept.png",
+  "approved_concept_sha256": "07e7541d8d5a91d1733186930d5d4ed759400021c8af3391f068ade217f01e71",
+  "owner_confirmed_visual_authority_for": ["Knight", "Gargoyle", "Witch"],
+  "owner_said_3d_is_not_required": true,
+  "owner_selected_2d_gameplay_presentation": true,
+  "visual_approval_blocker": null,
+  "action_pose_limitation": "Approved sheet supplies front/rear stance views only; sprites use whole-figure movement and do not provide independent action poses",
+  "concept_sprite_gameplay_preview": {
+    "path": "docs/previews/mr-art-038/concept-sprites-gameplay.jpg",
+    "sha256": "5f9c641638c5fce5dcd893f9c79d266f046f5b0170a0cbde131aa527f180ecd5"
+  },
+  "before_glb_sha256": "f87a74d4d4f70a511305ebcbeb2998f7aa665e74427e010e9a2bccb623c961f3",
+  "after_glb_sha256": "0600c08ef102d93d8a15205b667ad18ea825eaf5ebd96ad97decfa0b1f39bc97",
+  "preserved_non_upper_armor_regions": {
+    "Head": {
+      "canonical_vertices": 5904,
+      "sha256": "6c9c733366341bd0758c1b98e9642936ddb9b328659a82f25fee07c52a19e99d"
+    },
+    "calf_l": {
+      "canonical_vertices": 788,
+      "sha256": "14b90d37fd6f88b386d5286b860d6da25d7526f4949b027210a67532a24d0abc"
+    },
+    "calf_r": {
+      "canonical_vertices": 788,
+      "sha256": "cdc38fa9cf3a993b138cf3d35335e9ac67bb88bacdec909db10e8292ac346af4"
+    },
+    "foot_l": {
+      "canonical_vertices": 566,
+      "sha256": "8d3a546c1017791595b6c065042ba9ed31f360030828af5f565e264a14040353"
+    },
+    "foot_r": {
+      "canonical_vertices": 566,
+      "sha256": "61ad5af98ed8b79686b7c2b0caad5e031697326abd182b0c4c7869259df1ed76"
+    },
+    "hand_l": {
+      "canonical_vertices": 605,
+      "sha256": "ba383987536bcfb13ce73f1f498681c60094013d02d54eb336d0e9736352f031"
+    },
+    "hand_r": {
+      "canonical_vertices": 1174,
+      "sha256": "adbce105befcc3ed812add2a5f735c306421fe329dbb14ae50fd04f67fd50bfe"
+    },
+    "lowerarm_l": {
+      "canonical_vertices": 658,
+      "sha256": "24903f0e7392abce9af8542be091ee2b2653a44b1926cdce402011e822f5f037"
+    },
+    "lowerarm_r": {
+      "canonical_vertices": 583,
+      "sha256": "211cb883842574c4226b49248e391fd192c2c662f99385f7c007c610dd021c63"
+    },
+    "neck_01": {
+      "canonical_vertices": 75,
+      "sha256": "ea055bf3c34fbb687d45bfad4550662d6aad6b0852d0b5a0279ed1f2a0ad0024"
+    },
+    "pelvis": {
+      "canonical_vertices": 587,
+      "sha256": "c15ee099bb044cfaeb68802bd8d7a4a8e1915c20f7d63e891be8b5ef769323ee"
+    },
+    "spine_01+spine_02": {
+      "canonical_vertices": 50,
+      "sha256": "508cf732c03699f6cd08969510459992c7c7b86c646b2bb787faea412aa41800"
+    },
+    "thigh_l": {
+      "canonical_vertices": 263,
+      "sha256": "79e2f2bc7bba40afcf7ea0c76149d29f099520e5c3a7abf5263fefeb602a7136"
+    },
+    "thigh_r": {
+      "canonical_vertices": 263,
+      "sha256": "c1c456b51e00af6b85a328cda28161e8f82a7325aecbce22f2896a4576271154"
+    }
+  },
+  "preserved_attributes": [
+    "positions",
+    "vertex paint",
+    "UV",
+    "metallic/roughness",
+    "skin weights",
+    "Blink",
+    "PlumeSway",
+    "Smile",
+    "Focus",
+    "Surprised",
+    "Hurt"
+  ],
+  "excluded_from_region_witness": [
+    "spine_03",
+    "upperarm_l",
+    "upperarm_r"
+  ],
+  "matched_benchmark": {
+    "course": "endless",
+    "damage": 0,
+    "distance_m": 62.224,
+    "frames": 100,
+    "handoffs": 0,
+    "recording_fps": 30,
+    "runner": "knight",
+    "scope": "Actual desktop render with disclosed automated controls; not human playability, on-device performance or art approval",
+    "seed": 73129,
+    "selected_character_preserved": true
+  },
+  "captures": [
+    {
+      "set": "source-baseline",
+      "path": "chase/knight-benchmark-0040.png",
+      "sha256": "9e8aaa8e0d4012b109de41a5ea907f1616cd30c1d3dc0a79bdd6e34fe39a8b82",
+      "bytes": 507713
+    },
+    {
+      "set": "source-baseline",
+      "path": "chase/knight-benchmark-0080.png",
+      "sha256": "252cfad3a1a371b1ee87e0fe6fce97542c011598f520e978ab9457dfab501f29",
+      "bytes": 530311
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-attack.png",
+      "sha256": "7b2befad1ad4df9c42639b3254ed89db0d1a283948310379d5f7c02571bbd184",
+      "bytes": 108760
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-celebrate.png",
+      "sha256": "65202b2644b13c8bd2d346b22dcdcb4d1a4ded4c7f6f96ab61f67e3a9b1431ac",
+      "bytes": 118895
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-face-determined.png",
+      "sha256": "52b97104c863ebb19b1ddc362628b8e9cc1a1d0a442f15de506fcad50b8cabf0",
+      "bytes": 189550
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-face-hurt.png",
+      "sha256": "a0660b63fefb58a5be46fb43b0ca57c227c708cd60c634babfae3089a9031024",
+      "bytes": 188893
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-face-neutral.png",
+      "sha256": "01361d4093a02583f9ac9986cc297b8beb0fea251234462b3f47fafc1e27db38",
+      "bytes": 189868
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-face-pleased.png",
+      "sha256": "e4b479eea60f9022684a0b26c987b3392ec9998c1df8cc083f684ee5da261159",
+      "bytes": 189070
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-face-surprised.png",
+      "sha256": "414a7be75f4efbe5a3f2b00b2756bbd8fc76cd445d42a8fbb71eb40b2c07ffe8",
+      "bytes": 189442
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-front.png",
+      "sha256": "d5f32bd1bdbd2090fb5e11601f761566795839131e66cdb9e484c2db9333027e",
+      "bytes": 98464
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-jump.png",
+      "sha256": "08efcee0229836b115691ebcf9e6a60e7a7625077cfc6235a05cbdb3c6c266d5",
+      "bytes": 88740
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-rear.png",
+      "sha256": "cfd563b8088220b97187239f4f5a76271fd953f1ab6b6d920d3df22de89b9d8f",
+      "bytes": 83967
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-run.png",
+      "sha256": "a4cf0c9c85d19907702838723551781ee4d0dc91d5d94deb7da039e697776bb2",
+      "bytes": 108677
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-side.png",
+      "sha256": "3d1030128a05319efd39a96866750235b320828834e4fb8199071da2e71292ff",
+      "bytes": 95327
+    },
+    {
+      "set": "source-baseline",
+      "path": "stage/knight-slide.png",
+      "sha256": "e4010a33147ad59672223e4bf138857d0977bf924c625009dcaabdb8a0586158",
+      "bytes": 102190
+    },
+    {
+      "set": "after",
+      "path": "chase/knight-benchmark-0040.png",
+      "sha256": "25d1f55f543e40dcbaaae2132e2e5652953f3e8a0f13d2be5771f167fe1b73f9",
+      "bytes": 507892
+    },
+    {
+      "set": "after",
+      "path": "chase/knight-benchmark-0080.png",
+      "sha256": "72df5bdce44fb6cdd044a24bd6679bb7052cdf41c0c04770cff66e9d37b3e6fb",
+      "bytes": 530087
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-attack.png",
+      "sha256": "f56882d9f3acb266e53a4ad4c7d7bd407e9b32b16dab3569a472953054c83dd2",
+      "bytes": 108001
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-celebrate.png",
+      "sha256": "694e489edb84a1426212c81fa18c19a28b5451ac693a9ec3236a2992fcbf9c36",
+      "bytes": 115523
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-face-determined.png",
+      "sha256": "70363ca82d5236410925eebc5e4e580166f6f524351d5f044d431f6ab6313d1d",
+      "bytes": 179445
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-face-hurt.png",
+      "sha256": "2908100a15964a1f9dcfe7591b06bdf6e4378d34ea4f8401b58d9ee90eab3d72",
+      "bytes": 178609
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-face-neutral.png",
+      "sha256": "43e8b2bde72b2091be4c844fd58254f4b5e2e862a7956bbf02d6c09ec40655b6",
+      "bytes": 180057
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-face-pleased.png",
+      "sha256": "d2171d220916bbac5536a59f62b0a693220334f5743c22285c4ce9fc8de6181b",
+      "bytes": 179267
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-face-surprised.png",
+      "sha256": "9ec37dd9fdcd70b028f893b6aa6c8bd81374d2119ba3e95eda8243e003d28c9f",
+      "bytes": 179220
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-front.png",
+      "sha256": "8746e7334343919a4c8137b6a3debcf207ce8cd0e7882b1e27531481671ba624",
+      "bytes": 96153
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-jump.png",
+      "sha256": "ddaa9266886d3856369928bbb0bbaaa0f51a2bc0c6cae5e7d31809e8150ae0fd",
+      "bytes": 85461
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-rear.png",
+      "sha256": "a8dfeafa79b89f11905eff63588600f4982303e1e21943e4c53a379b3959993d",
+      "bytes": 83152
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-run.png",
+      "sha256": "cb3c01e523423fa4ed28eb4659e1bb68a99a54b7c12177f6976958a2371a96c4",
+      "bytes": 106488
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-side.png",
+      "sha256": "0d3fb2679e1164b10cacee4de5c370df2dbac25239c5cf602900c617443ae055",
+      "bytes": 94705
+    },
+    {
+      "set": "after",
+      "path": "stage/knight-slide.png",
+      "sha256": "e81ef3c20f08fdad28a94ac75123f154964c7c75804aeaf9f96c81bd0a161dea",
+      "bytes": 99965
+    }
+  ],
+  "limitations": [
+    "No approved-concept side-by-side certification",
+    "Sampled action stills and existing rig/slide checks are not an exhaustive self-intersection test",
+    "No physical Android performance or full-animation art approval"
+  ]
+}

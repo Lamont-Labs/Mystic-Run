@@ -42,11 +42,11 @@ python3 tools/asset_foundry.py verify --report tests/evidence/asset-inventory.js
 python3 -m unittest discover -s tools -p test_asset_foundry.py
 ```
 
-`assets/asset_registry.json` also records the existing Quaternius body/hair sources, baked animations and authored Knight derivative. It verifies the complete inventory under the three model/scenery roots, local license evidence, exact bytes, declared permissions and glTF dependencies. Unknown, NC, ND, paid and unreviewed licenses are rejected by the current admission policy. `LicenseRef-LamontLabs-Original` is reserved for owner-authored art and does not relabel the retained CC0 rig or grant third-party rights.
+`assets/asset_registry.json` also records the existing Quaternius body/hair sources, baked animations, authored Knight derivative, and owner-provided concept sprites. It verifies the complete inventory under the character, model and environment roots, local rights evidence, exact bytes, declared permissions and glTF dependencies. Unknown, third-party NC/ND, paid and unreviewed licenses remain rejected. The concept sprites have one explicit owner-authorized exception: game distribution and modification are allowed for MysticRun, commercial use is false, and in-game attribution is required. `LicenseRef-LamontLabs-Original` remains reserved for Lamont Labs-authored art and does not relabel the retained CC0 rig or grant third-party rights.
 
 The original publisher's license is retained under `assets/licenses/kaykit-medieval-CC0.txt` and shown in the game's Credits. Android export includes the notices and registry. `tools/build_android.py` runs asset verification before compilation and records its result in the build manifest. Gameplay CI runs the same inventory checks and imported-scene checks.
 
-This inventory covers runtime 3D models, baked motion and the new scenery texture. Existing fonts, synthesized audio and generated illustrations retain their separate prior provenance records. Reviewed metadata and file hashes establish traceability; they are not a legal certification or Google Play approval.
+This inventory covers runtime character images and 3D models, baked motion and the new scenery texture. Existing fonts, synthesized audio and generated illustrations retain their separate prior provenance records. Reviewed metadata and file hashes establish traceability; they are not a legal certification or Google Play approval.
 
 ## Verification
 

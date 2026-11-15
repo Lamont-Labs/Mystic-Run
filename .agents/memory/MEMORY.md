@@ -1,0 +1,1 @@
+- [Knight comparison baselines](knight-comparison-baselines.md) — compare both the stored GLB and rebuilt untouched source; do not attribute inherited generator changes to a new art pass.
