@@ -29,6 +29,7 @@ var max_width:float=0
 var captures:int=0
 var clock_frame:int=0
 var overlay:Label
+var layered:Node3D
 var events:Array[Dictionary]=[
 	{"at":.35,"action":"pad_right"},{"at":.55,"action":"pad_release"},
 	{"at":1.0,"action":"left"},{"at":1.3,"action":"left"},{"at":1.35,"action":"right"},
@@ -55,6 +56,13 @@ func _model(hero:Node) -> Node3D:
 func set_renderer(value:String) -> void:
 	renderer=value
 	var hero:Node=game.heroes[hero_name]
+	if renderer=="layered" and (variant!="prototype" or hero_name!="knight"):
+		push_error("Layered prototype supports only the prototype Knight")
+		game._quit_gracefully(2);return
+	if renderer=="layered" and not is_instance_valid(layered):
+		layered=load("res://experiments/knight_rig/rig.gd").new()
+		hero.add_child(layered);layered.configure(hero)
+	if is_instance_valid(layered):layered.visible=renderer=="layered"
 	var model:Node3D=_model(hero)
 	# Equal physical display height, rather than comparing the small cutout
 	# against an arbitrarily larger legacy mesh. Art/rig records stay untouched.
@@ -103,7 +111,8 @@ func _process(_delta:float) -> void:
 	if is_instance_valid(overlay):
 		overlay.text="%s · %s · %s\nR: renderer · arrows: lanes/jump/slide · Space: attack\nScripted review" % [variant.to_upper(),renderer.to_upper(),hero_name.to_upper()] if mode!="interactive" else "%s · %s · %s\nR: renderer · arrows: lanes/jump/slide · Space: attack\nEsc: normal pause · owner saves untouched"%[variant.to_upper(),renderer.to_upper(),hero_name.to_upper()]
 	if mode=="interactive" and Input.is_physical_key_pressed(KEY_R) and not root.has_meta("renderer_key"):
-		root.set_meta("renderer_key",true);set_renderer("skeletal" if renderer=="cutout" else "cutout")
+		root.set_meta("renderer_key",true)
+		set_renderer("layered" if renderer=="cutout" and hero_name=="knight" and variant=="prototype" else "skeletal" if renderer=="layered" or renderer=="cutout" else "cutout")
 	if not Input.is_physical_key_pressed(KEY_R) and root.has_meta("renderer_key"):root.remove_meta("renderer_key")
 
 func touch(at:Vector2,pressed:bool,id:int=11) -> void:
@@ -178,6 +187,10 @@ func _measure_bounds(hero:Node) -> void:
 	var art:Node3D=hero.motion_art
 	var scale:Vector3=art.global_transform.basis.get_scale()
 	var at:Vector3=art.global_position
+	if renderer=="layered" and is_instance_valid(layered):
+		art=layered.sprite
+		at=art.global_position
+		scale=Vector3(384.0,448.0,1.0)*layered.sprite.pixel_size*art.global_basis.get_scale()
 	var up:Vector3=game.camera.global_basis.y*absf(scale.y)*.5
 	var right:Vector3=game.camera.global_basis.x*absf(scale.x)*.5
 	var a:Vector2=game.camera.unproject_position(at-up-right)
@@ -203,6 +216,10 @@ func finish() -> void:
 	var frame:Dictionary=stats(frame_ms)
 	var report:Dictionary={"variant":variant,"renderer":renderer,"hero":hero_name,"mode":mode,"frame_interval_ms":frame,"animation_microbenchmark_us":stats(animation_us),"inputs":responses,"transitions":transitions,"air_slide_overlap_ticks":overlap_ticks,"quad_max_height_fraction":max_height,"quad_max_width_fraction":max_width,"distance_m":game.distance,"health":game.core.health,"character_height_setting":hero.concept_sprite_height,"scope":"Rendered Linux llvmpipe/Xvfb; injected input-to-simulation response, not physical touch latency. Fixed-rate captures are not FPS benchmarks. Quad bounds include transparency; not pixel occlusion. Animation CPU cost is a separate synthetic 90-call microbenchmark."}
 	if not frame.is_empty():report["mean_fps"]=1000.0/float(frame.mean)
+	if is_instance_valid(layered):
+		report["layered_rig"]=layered.metrics()
+		# hero.animate() no longer includes this separate native rig process.
+		report.erase("animation_microbenchmark_us")
 	if not out.is_empty():
 		FileAccess.open(out.path_join("report.json"),FileAccess.WRITE).store_string(JSON.stringify(report,"  "))
 	print("ARCHITECTURE_REVIEW ",JSON.stringify(report))

@@ -16,3 +16,13 @@ before/after evidence before authorizing more broad development.
 defects. A successful build or test count is not artistic or gameplay acceptance.
 Keep main and the installed Android identity intact while experiments are
 evaluated. Recommendations in an agent report do not constitute owner approval.
+
+The owner authorized one concept-faithful, rigged 2D Knight as the next bounded
+experiment. This does not authorize applying the rig to every character or
+resuming the full environment rebuild.
+
+**Why:** The owner explicitly selected the single-Knight experiment after the
+architecture comparison.
+
+**How to apply:** Keep this work experimental and present actual gameplay for
+review before expanding its scope or integrating it into a phone release.

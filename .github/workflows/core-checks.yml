@@ -44,6 +44,9 @@ jobs:
       - name: Regress actual touch ownership and responsive runner movement
         run: |
           "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/movement_controls.gd
+      - name: Verify experimental Knight joint and planted-foot invariants
+        run: |
+          "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/knight_layered_rig.gd
       - name: Verify gesture and course rules
         run: |
           "${RUNNER_TEMP}/runner-godot/Godot_v4.7.2-stable_linux.x86_64" --headless --path . --script res://tests/runner_controls.gd

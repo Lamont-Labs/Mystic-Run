@@ -14,7 +14,7 @@ def main():
     parser = argparse.ArgumentParser()
     parser.add_argument("--godot", type=Path, required=True)
     parser.add_argument("--variant", choices=["baseline", "prototype"], required=True)
-    parser.add_argument("--renderer", choices=["cutout", "skeletal"], default="cutout")
+    parser.add_argument("--renderer", choices=["cutout", "skeletal", "layered"], default="cutout")
     parser.add_argument("--hero", choices=["knight", "gargoyle", "witch"], default="knight")
     parser.add_argument("--mode", choices=["benchmark", "capture", "interactive"], default="benchmark")
     parser.add_argument("--output", type=Path, required=True)

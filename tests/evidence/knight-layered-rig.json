@@ -1,0 +1,770 @@
+{
+  "reports": {
+    "cutout-capture": {
+      "air_slide_overlap_ticks": 0,
+      "animation_microbenchmark_us": {
+        "mean": 11.1888888888889,
+        "p50": 10.0,
+        "p95": 16.0,
+        "p99": 42.0,
+        "samples": 90,
+        "worst": 60.0
+      },
+      "character_height_setting": 2.15,
+      "distance_m": 129.028,
+      "frame_interval_ms": {},
+      "health": 3,
+      "hero": "knight",
+      "inputs": [
+        {
+          "action": "pad_right",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 127.049
+        },
+        {
+          "action": "pad_release",
+          "observed": true,
+          "simulation_ms": 200.0,
+          "wall_ms": 1084.373
+        },
+        {
+          "action": "left",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 4.646
+        },
+        {
+          "action": "left",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 3.049
+        },
+        {
+          "action": "right",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 127.092
+        },
+        {
+          "action": "jump",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 237.724
+        },
+        {
+          "action": "slide",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 815.516
+        },
+        {
+          "action": "up_down",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 212.366
+        },
+        {
+          "action": "down_up",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 209.971
+        },
+        {
+          "action": "attack",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 950.657
+        },
+        {
+          "action": "jump",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 218.285
+        },
+        {
+          "action": "slide",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 695.104
+        }
+      ],
+      "mode": "capture",
+      "quad_max_height_fraction": 0.249505090713501,
+      "quad_max_width_fraction": 0.468909539116753,
+      "renderer": "cutout",
+      "scope": "Rendered Linux llvmpipe/Xvfb; injected input-to-simulation response, not physical touch latency. Fixed-rate captures are not FPS benchmarks. Quad bounds include transparency; not pixel occlusion. Animation CPU cost is a separate synthetic 90-call microbenchmark.",
+      "transitions": [
+        {
+          "seconds": 0.0166666666666667,
+          "state": "run",
+          "y": 0.0
+        },
+        {
+          "seconds": 2.03333333333333,
+          "state": "jump",
+          "y": 0.150826894406758
+        },
+        {
+          "seconds": 2.38333333333333,
+          "state": "fall",
+          "y": 1.56832730652988
+        },
+        {
+          "seconds": 2.51666666666666,
+          "state": "land",
+          "y": 0.00121140456179925
+        },
+        {
+          "seconds": 2.53333333333333,
+          "state": "slide",
+          "y": 0.00121142895040927
+        },
+        {
+          "seconds": 2.55,
+          "state": "fall",
+          "y": 0.00121143931496814
+        },
+        {
+          "seconds": 2.56666666666666,
+          "state": "slide",
+          "y": 0.0001182450275512
+        },
+        {
+          "seconds": 3.83333333333332,
+          "state": "jump",
+          "y": 0.150841977282417
+        },
+        {
+          "seconds": 4.18333333333332,
+          "state": "fall",
+          "y": 1.56834262117153
+        },
+        {
+          "seconds": 4.48333333333332,
+          "state": "land",
+          "y": 0.000515554156743647
+        },
+        {
+          "seconds": 4.71666666666666,
+          "state": "attack",
+          "y": 0.000516530884058675
+        },
+        {
+          "seconds": 5.03333333333332,
+          "state": "run",
+          "y": 0.000516439515134692
+        },
+        {
+          "seconds": 5.43333333333332,
+          "state": "jump",
+          "y": 0.150892816993345
+        },
+        {
+          "seconds": 5.73333333333332,
+          "state": "fall",
+          "y": 1.31145023171844
+        },
+        {
+          "seconds": 5.81666666666665,
+          "state": "land",
+          "y": 0.000393219200480743
+        },
+        {
+          "seconds": 5.83333333333332,
+          "state": "slide",
+          "y": 0.000393122401987966
+        },
+        {
+          "seconds": 6.56666666666665,
+          "state": "run",
+          "y": 0.000394821166992188
+        }
+      ],
+      "variant": "prototype"
+    },
+    "cutout-benchmark": {
+      "air_slide_overlap_ticks": 0,
+      "animation_microbenchmark_us": {
+        "mean": 15.2333333333333,
+        "p50": 14.0,
+        "p95": 27.0,
+        "p99": 56.0,
+        "samples": 90,
+        "worst": 65.0
+      },
+      "character_height_setting": 2.15,
+      "distance_m": 129.028,
+      "frame_interval_ms": {
+        "mean": 152.320510638298,
+        "p50": 134.905,
+        "p95": 156.427,
+        "p99": 289.996,
+        "samples": 47,
+        "worst": 711.307
+      },
+      "health": 3,
+      "hero": "knight",
+      "inputs": [
+        {
+          "action": "pad_right",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 1.885
+        },
+        {
+          "action": "pad_release",
+          "observed": true,
+          "simulation_ms": 200.0,
+          "wall_ms": 137.21
+        },
+        {
+          "action": "left",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 3.885
+        },
+        {
+          "action": "left",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 2.102
+        },
+        {
+          "action": "right",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 1.951
+        },
+        {
+          "action": "jump",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 5.764
+        },
+        {
+          "action": "slide",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 138.147
+        },
+        {
+          "action": "up_down",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 1.997
+        },
+        {
+          "action": "down_up",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 3.184
+        },
+        {
+          "action": "attack",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 141.241
+        },
+        {
+          "action": "jump",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 2.394
+        },
+        {
+          "action": "slide",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 132.446
+        }
+      ],
+      "mean_fps": 6.56510404153392,
+      "mode": "benchmark",
+      "quad_max_height_fraction": 0.249505090713501,
+      "quad_max_width_fraction": 0.468909539116753,
+      "renderer": "cutout",
+      "scope": "Rendered Linux llvmpipe/Xvfb; injected input-to-simulation response, not physical touch latency. Fixed-rate captures are not FPS benchmarks. Quad bounds include transparency; not pixel occlusion. Animation CPU cost is a separate synthetic 90-call microbenchmark.",
+      "transitions": [
+        {
+          "seconds": 0.0166666666666667,
+          "state": "run",
+          "y": 0.0
+        },
+        {
+          "seconds": 2.03333333333333,
+          "state": "jump",
+          "y": 0.150826894406758
+        },
+        {
+          "seconds": 2.38333333333333,
+          "state": "fall",
+          "y": 1.56832730652988
+        },
+        {
+          "seconds": 2.51666666666666,
+          "state": "land",
+          "y": 0.00121140456179925
+        },
+        {
+          "seconds": 2.53333333333333,
+          "state": "slide",
+          "y": 0.00121142895040927
+        },
+        {
+          "seconds": 2.55,
+          "state": "fall",
+          "y": 0.00121143931496814
+        },
+        {
+          "seconds": 2.56666666666666,
+          "state": "slide",
+          "y": 0.0001182450275512
+        },
+        {
+          "seconds": 3.83333333333332,
+          "state": "jump",
+          "y": 0.150841977282417
+        },
+        {
+          "seconds": 4.18333333333332,
+          "state": "fall",
+          "y": 1.56834262117153
+        },
+        {
+          "seconds": 4.48333333333332,
+          "state": "land",
+          "y": 0.000515554156743647
+        },
+        {
+          "seconds": 4.71666666666666,
+          "state": "attack",
+          "y": 0.000516530884058675
+        },
+        {
+          "seconds": 5.03333333333332,
+          "state": "run",
+          "y": 0.000516439515134692
+        },
+        {
+          "seconds": 5.43333333333332,
+          "state": "jump",
+          "y": 0.150892816993345
+        },
+        {
+          "seconds": 5.73333333333332,
+          "state": "fall",
+          "y": 1.31145023171844
+        },
+        {
+          "seconds": 5.81666666666665,
+          "state": "land",
+          "y": 0.000393219200480743
+        },
+        {
+          "seconds": 5.83333333333332,
+          "state": "slide",
+          "y": 0.000393122401987966
+        },
+        {
+          "seconds": 6.56666666666665,
+          "state": "run",
+          "y": 0.000394821166992188
+        }
+      ],
+      "variant": "prototype"
+    },
+    "layered-capture": {
+      "air_slide_overlap_ticks": 0,
+      "character_height_setting": 2.15,
+      "distance_m": 129.028,
+      "frame_interval_ms": {},
+      "health": 3,
+      "hero": "knight",
+      "inputs": [
+        {
+          "action": "pad_right",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 132.452
+        },
+        {
+          "action": "pad_release",
+          "observed": true,
+          "simulation_ms": 200.0,
+          "wall_ms": 1127.796
+        },
+        {
+          "action": "left",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 3.52
+        },
+        {
+          "action": "left",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 2.878
+        },
+        {
+          "action": "right",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 110.758
+        },
+        {
+          "action": "jump",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 209.011
+        },
+        {
+          "action": "slide",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 829.055
+        },
+        {
+          "action": "up_down",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 211.007
+        },
+        {
+          "action": "down_up",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 212.161
+        },
+        {
+          "action": "attack",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 890.662
+        },
+        {
+          "action": "jump",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 225.964
+        },
+        {
+          "action": "slide",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 790.564
+        }
+      ],
+      "layered_rig": {
+        "max_ik_error_px": 6.29135975032113e-05,
+        "native_skeleton": true,
+        "parts": 14,
+        "phase": 108.939557064146,
+        "scope": "Rear view only; original painted pixels; rigid layered 2D bones; no unseen surfaces invented.",
+        "state": "run",
+        "whole_image_crossfades": false
+      },
+      "mode": "capture",
+      "quad_max_height_fraction": 0.303759479522705,
+      "quad_max_width_fraction": 0.528996001349555,
+      "renderer": "layered",
+      "scope": "Rendered Linux llvmpipe/Xvfb; injected input-to-simulation response, not physical touch latency. Fixed-rate captures are not FPS benchmarks. Quad bounds include transparency; not pixel occlusion. Animation CPU cost is a separate synthetic 90-call microbenchmark.",
+      "transitions": [
+        {
+          "seconds": 0.0166666666666667,
+          "state": "run",
+          "y": 0.0
+        },
+        {
+          "seconds": 2.03333333333333,
+          "state": "jump",
+          "y": 0.150826894406758
+        },
+        {
+          "seconds": 2.38333333333333,
+          "state": "fall",
+          "y": 1.56832730652988
+        },
+        {
+          "seconds": 2.51666666666666,
+          "state": "land",
+          "y": 0.00121140456179925
+        },
+        {
+          "seconds": 2.53333333333333,
+          "state": "slide",
+          "y": 0.00121142895040927
+        },
+        {
+          "seconds": 2.55,
+          "state": "fall",
+          "y": 0.00121143931496814
+        },
+        {
+          "seconds": 2.56666666666666,
+          "state": "slide",
+          "y": 0.0001182450275512
+        },
+        {
+          "seconds": 3.83333333333332,
+          "state": "jump",
+          "y": 0.150841977282417
+        },
+        {
+          "seconds": 4.18333333333332,
+          "state": "fall",
+          "y": 1.56834262117153
+        },
+        {
+          "seconds": 4.48333333333332,
+          "state": "land",
+          "y": 0.000515554156743647
+        },
+        {
+          "seconds": 4.71666666666666,
+          "state": "attack",
+          "y": 0.000516530884058675
+        },
+        {
+          "seconds": 5.03333333333332,
+          "state": "run",
+          "y": 0.000516439515134692
+        },
+        {
+          "seconds": 5.43333333333332,
+          "state": "jump",
+          "y": 0.150892816993345
+        },
+        {
+          "seconds": 5.73333333333332,
+          "state": "fall",
+          "y": 1.31145023171844
+        },
+        {
+          "seconds": 5.81666666666665,
+          "state": "land",
+          "y": 0.000393219200480743
+        },
+        {
+          "seconds": 5.83333333333332,
+          "state": "slide",
+          "y": 0.000393122401987966
+        },
+        {
+          "seconds": 6.56666666666665,
+          "state": "run",
+          "y": 0.000394821166992188
+        }
+      ],
+      "variant": "prototype"
+    },
+    "layered-benchmark": {
+      "air_slide_overlap_ticks": 0,
+      "character_height_setting": 2.15,
+      "distance_m": 129.028,
+      "frame_interval_ms": {
+        "mean": 140.199425531915,
+        "p50": 135.683,
+        "p95": 163.427,
+        "p99": 179.445,
+        "samples": 47,
+        "worst": 291.187
+      },
+      "health": 3,
+      "hero": "knight",
+      "inputs": [
+        {
+          "action": "pad_right",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 125.701
+        },
+        {
+          "action": "pad_release",
+          "observed": true,
+          "simulation_ms": 200.0,
+          "wall_ms": 154.12
+        },
+        {
+          "action": "left",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 2.199
+        },
+        {
+          "action": "left",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 2.593
+        },
+        {
+          "action": "right",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 1.73
+        },
+        {
+          "action": "jump",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 2.193
+        },
+        {
+          "action": "slide",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 129.388
+        },
+        {
+          "action": "up_down",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 2.384
+        },
+        {
+          "action": "down_up",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 109.357
+        },
+        {
+          "action": "attack",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 140.473
+        },
+        {
+          "action": "jump",
+          "observed": true,
+          "simulation_ms": 16.6666666666667,
+          "wall_ms": 2.131
+        },
+        {
+          "action": "slide",
+          "observed": true,
+          "simulation_ms": 116.666666666667,
+          "wall_ms": 140.596
+        }
+      ],
+      "layered_rig": {
+        "max_ik_error_px": 6.29135975032113e-05,
+        "native_skeleton": true,
+        "parts": 14,
+        "phase": 108.939557064146,
+        "scope": "Rear view only; original painted pixels; rigid layered 2D bones; no unseen surfaces invented.",
+        "state": "run",
+        "whole_image_crossfades": false
+      },
+      "mean_fps": 7.13269684384235,
+      "mode": "benchmark",
+      "quad_max_height_fraction": 0.303759479522705,
+      "quad_max_width_fraction": 0.528996001349555,
+      "renderer": "layered",
+      "scope": "Rendered Linux llvmpipe/Xvfb; injected input-to-simulation response, not physical touch latency. Fixed-rate captures are not FPS benchmarks. Quad bounds include transparency; not pixel occlusion. Animation CPU cost is a separate synthetic 90-call microbenchmark.",
+      "transitions": [
+        {
+          "seconds": 0.0166666666666667,
+          "state": "run",
+          "y": 0.0
+        },
+        {
+          "seconds": 2.03333333333333,
+          "state": "jump",
+          "y": 0.150826894406758
+        },
+        {
+          "seconds": 2.38333333333333,
+          "state": "fall",
+          "y": 1.56832730652988
+        },
+        {
+          "seconds": 2.51666666666666,
+          "state": "land",
+          "y": 0.00121140456179925
+        },
+        {
+          "seconds": 2.53333333333333,
+          "state": "slide",
+          "y": 0.00121142895040927
+        },
+        {
+          "seconds": 2.55,
+          "state": "fall",
+          "y": 0.00121143931496814
+        },
+        {
+          "seconds": 2.56666666666666,
+          "state": "slide",
+          "y": 0.0001182450275512
+        },
+        {
+          "seconds": 3.83333333333332,
+          "state": "jump",
+          "y": 0.150841977282417
+        },
+        {
+          "seconds": 4.18333333333332,
+          "state": "fall",
+          "y": 1.56834262117153
+        },
+        {
+          "seconds": 4.48333333333332,
+          "state": "land",
+          "y": 0.000515554156743647
+        },
+        {
+          "seconds": 4.71666666666666,
+          "state": "attack",
+          "y": 0.000516530884058675
+        },
+        {
+          "seconds": 5.03333333333332,
+          "state": "run",
+          "y": 0.000516439515134692
+        },
+        {
+          "seconds": 5.43333333333332,
+          "state": "jump",
+          "y": 0.150892816993345
+        },
+        {
+          "seconds": 5.73333333333332,
+          "state": "fall",
+          "y": 1.31145023171844
+        },
+        {
+          "seconds": 5.81666666666665,
+          "state": "land",
+          "y": 0.000393219200480743
+        },
+        {
+          "seconds": 5.83333333333332,
+          "state": "slide",
+          "y": 0.000393122401987966
+        },
+        {
+          "seconds": 6.56666666666665,
+          "state": "run",
+          "y": 0.000394821166992188
+        }
+      ],
+      "variant": "prototype"
+    }
+  },
+  "source_sha256": {
+    "experiments/knight_rig/rig.gd": "35bc866fe3a1d1f3dfe5400a9e261b9098f11cc2849c11ac8244735f5b0010ea",
+    "experiments/knight_rig/motion.gd": "c0024bb2579e567fe0bca6541241c62495d336d6d8e9b7620a67fd0df0110178",
+    "experiments/knight_rig/art/knight_layers.png": "833841e4b27144f0b3c4ec329cc84abff0f5e7eb39fbabd3a4298519a52fb24a",
+    "experiments/knight_rig/art/rig.json": "be61448a72ace5f1d86fdf586d196bb26925df9e6a7d6fc2b9856b2f18146b9a",
+    "experiments/architecture_validation/lab.gd": "c491030c9b7640ac15d8ccfc46dd111e33e57836a27186159dceb51111b5a225",
+    "tools/build_knight_layers.py": "5c75658d8ec535488182ce226408ff9e9456bd7332f89bcdf99d47b1ec43705b"
+  },
+  "limits": "One descriptive Linux llvmpipe sample per renderer, no phone test; pose previews are not gameplay action verification.",
+  "tests": {
+    "native_joint_and_foot_checks": 468,
+    "movement_controls": 238,
+    "concept_assets": 156,
+    "legacy_rig": 29,
+    "runner_controls": 38
+  }
+}
