@@ -1,0 +1,5 @@
+  type mipmap id=0a entryCount=5
+    resource 0x7f0a0000 mipmap/icon
+      (anydpi-v26) (file) res/mipmap-anydpi-v26/icon.xml type=XML
+    resource 0x7f0a0004 mipmap/themed_icon
+      (anydpi-v26) (file) res/mipmap-anydpi-v26/themed_icon.xml type=XML

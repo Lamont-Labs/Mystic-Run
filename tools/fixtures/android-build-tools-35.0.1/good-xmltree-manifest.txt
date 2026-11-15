@@ -1,0 +1,3 @@
+N: android=http://schemas.android.com/apk/res/android (line=2)
+  E: manifest (line=2)
+    A: http://schemas.android.com/apk/res/android:versionCode(0x0101021b)=1034
