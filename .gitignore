@@ -21,3 +21,4 @@ art/asset_batch_01/review/assets/
 **/obj/
 node_modules/
 .npm/
+.cache/

@@ -9,4 +9,28 @@ expertMode = true
 
 [[ports]]
 localPort = 5000
-externalPort = 5000
+externalPort = 80
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Defold Knight trial"
+
+[[workflows.workflow]]
+name = "Defold Knight trial"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python tools/serve_defold_knight.py"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"

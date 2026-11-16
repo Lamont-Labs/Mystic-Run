@@ -28,16 +28,20 @@ def main(url):
             page.goto(url,wait_until="networkidle",timeout=90000)
             frame=page.frame_locator("#game")
             child=page.locator("#game").element_handle().content_frame()
-            child.wait_for_function("window.__MYSTICRUN_STATE",timeout=60000)
+            child.wait_for_function("window.__MYSTICRUN_STATE && window.__MYSTICRUN_STATE.frames>5",timeout=60000)
             state=lambda:child.evaluate("window.__MYSTICRUN_STATE")
             results["initial"]=state()
             assert state()["state"]=="ready"
             page.screenshot(path=str(OUT/"01-ready.jpg"))
             canvas=frame.locator("#canvas")
             rect=canvas.bounding_box()
+            touch=ctx.new_cdp_session(page)
             def tap(x,y):
-                page.touchscreen.tap(rect["x"]+rect["width"]*x/720,
-                    rect["y"]+rect["height"]*(1280-y)/1280)
+                point={"x":rect["x"]+rect["width"]*x/720,
+                    "y":rect["y"]+rect["height"]*(1280-y)/1280}
+                touch.send("Input.dispatchTouchEvent",{"type":"touchStart","touchPoints":[point]})
+                page.wait_for_timeout(90)
+                touch.send("Input.dispatchTouchEvent",{"type":"touchEnd","touchPoints":[]})
             tap(360,663)
             child.wait_for_function("window.__MYSTICRUN_STATE.state==='running'")
             tap(196,104)

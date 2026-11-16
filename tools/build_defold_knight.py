@@ -158,6 +158,12 @@ def build():
     shutil.copyfile(SOURCE / "web/index.html",target / "index.html")
     # A restricted same-origin bridge. Commands are consumed by actual Lua code.
     entry=target / "game/index.html"
+    chrome="""<link rel="icon" href="/favicon.svg"><style>
+    html,body {width:100%;height:100%;margin:0;padding:0;background:#101b2b;overflow:hidden}
+    #app-container {background:#101b2b!important}
+    .buttons-background {display:none!important}
+    #canvas-container {position:absolute!important;inset:0;width:100%!important;height:100%!important;display:flex;align-items:center;justify-content:center}
+    </style>"""
     bridge="""<script>
     window.__MR_COMMANDS=[];
     addEventListener('message',function(e){
@@ -165,10 +171,21 @@ def build():
       if(['pause','resume','restart'].includes(e.data.action))window.__MR_COMMANDS.push(e.data.action);
     });
     </script>"""
-    entry.write_text(entry.read_text().replace("</body>",bridge+"</body>"))
+    entry.write_text(entry.read_text().replace("</head>",chrome+"</head>").replace("</body>",bridge+"</body>"))
     # The host's optional backdrop is a copied approved game environment, not a remote URL.
     (target / "assets").mkdir(exist_ok=True)
+    shutil.copyfile(ROOT / "assets/icon.svg",target / "favicon.svg")
     shutil.copyfile(ROOT / "assets/environment/living-world/castle_vista.jpg",target / "assets/castle_vista.jpg")
+    licenses=target / "licenses"
+    licenses.mkdir(exist_ok=True)
+    for font in ("manrope","cinzel"):
+        shutil.copyfile(ROOT / f"assets/fonts/{font}-OFL.txt",licenses / f"{font}-OFL.txt")
+    urllib.request.urlretrieve(
+        "https://raw.githubusercontent.com/defold/defold/1.14.1/LICENSE.txt",
+        licenses / "Defold.txt")
+    (licenses / "ARTWORK.txt").write_text(
+        "MysticRun approved concept-derived Knight: noncommercial game use only.\n"
+        "Existing painted pixels reused; procedural scenery fixtures are experimental.\n")
     results["linux_seconds"],_=execute(base+[
         "--platform","x86_64-linux","--output","build/linux","--archive",
         "--variant","headless","--bundle-output",str(OUT / "linux"),"build","bundle"],"linux.log")

@@ -58,7 +58,7 @@ function init(self)
     self.sky=box(360,640,1280,1280,"vista","sky")
     box(360,1080,720,400,"veil","sky",color(.15,.18,.30,.60))
     self.road={}
-    for i=1,86 do self.road[i]=box(360,0,1,1,"strip_00","road") end
+    for i=1,240 do self.road[i]=box(360,0,1,1,"strip_00","road") end
     self.rails={}
     for i=1,30 do
         self.rails[i]={box(0,0,1,1,"rail","road"),box(0,0,1,1,"rail","road")}
@@ -83,7 +83,7 @@ function init(self)
     self.action=text(360,558,"READY",18,"ui","hud",GOLD)
     self.buttons={}
     local function button(x,y,w,label,action,layer)
-        local n=box(x,y,w,65,"panel",layer or "hud",INK)
+        local n=box(x,y,w,84,"panel",layer or "hud",INK)
         local labelnode=text(x,y,label,22,"ui",layer or "hud",GOLD)
         self.buttons[#self.buttons+1]={node=n,action=action}
         return n,labelnode
@@ -110,14 +110,13 @@ function init(self)
 end
 local function draw(self)
     local s=self.s
-    local road_offset=s.distance%1.5
     for i,n in ipairs(self.road) do
-        local z=(i-8)*1.5-road_offset
-        local y,w=projection(z)
-        local y2,w2=projection(z+1.5)
-        gui.set_position(n,vmath.vector3(360,(y+y2)/2,0))
-        gui.set_size(n,vmath.vector3((w+w2)/2,math.abs(y-y2)+1.5,0))
-        local tile=(math.floor(s.distance/1.5)+i)%32
+        local y=-166+i*4
+        local p=math.max(.012,(795-y)/535)
+        local z=(1/p-1)/.06
+        gui.set_position(n,vmath.vector3(360,y,0))
+        gui.set_size(n,vmath.vector3(80+760*p,4.5,0))
+        local tile=math.floor((s.distance+z)*3)%32
         gui.play_flipbook(n,string.format("strip_%02d",tile))
         gui.set_color(n,color(.72+.28/(1+z*.02),.76+.24/(1+z*.02),.90,1))
     end
@@ -205,24 +204,37 @@ end
 function on_input(self,id,action)
     if self.smoke then return end
     if id==hash("touch") then
-        if action.pressed then
+        local function activate_button()
             for _,b in ipairs(self.buttons) do
                 if gui.is_enabled(b.node,true) and gui.pick_node(b.node,action.x,action.y) then
                     local c=b.action
                     if c=="start" then
                         c=self.s.mode=="paused" and "resume" or self.s.mode=="defeat" and "restart" or "start"
                     end
-                    command(self,c);self.touch=nil;return true
+                    command(self,c)
+                    return true
                 end
             end
-            self.touch={x=action.x,y=action.y}
-        elseif action.released and self.touch then
-            local dx,dy=action.x-self.touch.x,action.y-self.touch.y
-            if math.max(math.abs(dx),math.abs(dy))>28 then
-                command(self,math.abs(dx)>math.abs(dy) and (dx>0 and "right" or "left")
-                    or (dy>0 and "jump" or "slide"))
+            return false
+        end
+        if action.pressed then
+            self.tap_handled=activate_button()
+            self.touch=not self.tap_handled and {x=action.x,y=action.y} or nil
+        elseif action.released then
+            if not self.tap_handled then
+                if self.touch then
+                    local dx,dy=action.x-self.touch.x,action.y-self.touch.y
+                    if math.max(math.abs(dx),math.abs(dy))>28 then
+                        command(self,math.abs(dx)>math.abs(dy) and (dx>0 and "right" or "left")
+                            or (dy>0 and "jump" or "slide"))
+                    end
+                else
+                    -- Very short taps may arrive as released-only in one
+                    -- browser frame. Do not lose the button action.
+                    activate_button()
+                end
             end
-            self.touch=nil
+            self.touch=nil;self.tap_handled=false
         end
         return true
     end
