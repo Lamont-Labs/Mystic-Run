@@ -81,3 +81,12 @@ resource compile does not catch this kind of Lua API error.
 
 **How to apply:** Check the pinned engine's current API and execute a bounded
 runtime smoke test; retain timeout output so initialization failures are visible.
+
+Measure prototype frame throughput using frame-count differences divided by
+wall-clock time, not only the engine-reported `dt` averages.
+
+**Why:** Defold reported a capped frame delta even when observed browser update
+throughput was lower. Engine-time statistics overstated real playback speed.
+
+**How to apply:** Label software-rendered browser results explicitly; do not
+equate passing controls or apparently stable `dt` with Android frame stability.
