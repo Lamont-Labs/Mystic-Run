@@ -2,6 +2,7 @@ script: "/main/game.gui_script"
 fonts { name: "ui" font: "/art/ui.font" }
 fonts { name: "title" font: "/art/title.font" }
 textures { name: "art" texture: "/art/game.atlas" }
+textures { name: "environment" texture: "/art/environment.atlas" }
 layers { name: "sky" }
 layers { name: "road" }
 layers { name: "objects" }

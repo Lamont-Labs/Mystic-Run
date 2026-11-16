@@ -8,7 +8,7 @@ local function box(x,y,w,h,texture,layer,tint)
     local n=gui.new_box_node(vmath.vector3(x,y,0),vmath.vector3(w,h,0))
     gui.set_layer(n,layer or "hud")
     if texture then
-        gui.set_texture(n,"art");gui.play_flipbook(n,texture)
+        gui.set_texture(n,texture=="vista" and "environment" or "art");gui.play_flipbook(n,texture)
         gui.set_size_mode(n,gui.SIZE_MODE_MANUAL)
         gui.set_size(n,vmath.vector3(w,h,0))
     end
@@ -45,7 +45,7 @@ local function command(self,c)
     bridge(self)
 end
 function init(self)
-    if sys.get_config("prototype.smoke")=="1" then
+    if sys.get_config_int("prototype.smoke",0)==1 then
         self.smoke=true
         require("tests.runner_checks").run()
         timer.delay(.1,false,function() sys.exit(0) end)

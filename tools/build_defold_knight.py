@@ -39,7 +39,7 @@ def prepare():
         sheet.crop((x, y, x+w, y+h)).save(art / f'p_{p["name"]}.png')
     (art / "rig.lua").write_text("return " + lua(rig) + "\n")
     vista = Image.open(ROOT / "assets/environment/living-world/castle_vista.jpg")
-    vista.resize((1024, 1024)).save(art / "vista.png")
+    vista.resize((1000, 1000)).save(art / "vista.png")
     stone = Image.open(ROOT / "assets/environment/living-world/castle_stone.jpg").convert("RGBA")
     stone = stone.resize((512, 512))
     draw = ImageDraw.Draw(stone)
@@ -100,9 +100,11 @@ def prepare():
             'characters: " !\\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\\\]^_`abcdefghijklmnopqrstuvwxyz{|}~•"\n'
         )
     (art / "game.atlas").write_text(
-        "".join(f'images {{ image: "/art/{p.name}" }}\n' for p in sorted(art.glob("*.png")))
+        "".join(f'images {{ image: "/art/{p.name}" }}\n' for p in sorted(art.glob("*.png")) if p.name!="vista.png")
         + "margin: 0\ninner_padding: 0\nextrude_borders: 2\n"
     )
+    (art / "environment.atlas").write_text(
+        'images { image: "/art/vista.png" }\nmargin: 0\nextrude_borders: 2\n')
     provenance = {
         "restriction": "Noncommercial concept use only. No AI repaint or new character poses.",
         "knight_source": rig["source"], "source_sha256": rig["source_sha256"],
