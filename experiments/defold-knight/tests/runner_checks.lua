@@ -43,6 +43,23 @@ function M.run()
     runner.command(d,"jump")
     while d.distance<44 do runner.step(d,1/120) end
     check(d.hp==3,"jump did not clear first hurdle")
+    for _,kind in ipairs({"arch","ward"}) do
+        local trial=runner.new();runner.command(trial,"start")
+        trial.next_row=1000
+        trial.objects={{z=.2,lane=0,kind=kind,done=false}}
+        runner.command(trial,kind=="arch" and "slide" or "attack")
+        advance(trial,.1,1/120)
+        check(trial.hp==3,"action did not clear "..kind)
+    end
+    local hit=runner.new();runner.command(hit,"start");hit.next_row=1000
+    hit.objects={{z=.2,lane=0,kind="ward"},{z=.4,lane=0,kind="ward"}}
+    advance(hit,.1,1/120)
+    check(hit.hp==2,"one contact cluster bypassed recovery invulnerability")
+    for i,o in ipairs(a.objects) do
+        local other=b.objects[i]
+        check(o.kind==other.kind and o.lane==other.lane and o.z==other.z,
+            "seeded encounter sequence diverged")
+    end
     print("DEFOLD_KNIGHT_CHECKS_PASSED",count)
     return count
 end

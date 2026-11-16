@@ -5,6 +5,7 @@ import json
 import os
 from pathlib import Path
 import shutil
+import time
 from playwright.sync_api import sync_playwright
 
 ROOT=Path(__file__).resolve().parents[1]
@@ -47,6 +48,18 @@ def main(url):
             tap(196,104)
             child.wait_for_function("window.__MYSTICRUN_STATE.x>.90")
             results["touch_lane"]=state()
+            # Real touch drag across the game canvas, not a command injection.
+            sx=rect["x"]+rect["width"]*.60
+            sy=rect["y"]+rect["height"]*.57
+            touch.send("Input.dispatchTouchEvent",{"type":"touchStart","touchPoints":[{"x":sx,"y":sy}]})
+            page.wait_for_timeout(60)
+            touch.send("Input.dispatchTouchEvent",{"type":"touchMove","touchPoints":[{"x":sx-100,"y":sy}]})
+            page.wait_for_timeout(70)
+            touch.send("Input.dispatchTouchEvent",{"type":"touchEnd","touchPoints":[]})
+            child.wait_for_function("window.__MYSTICRUN_STATE.lane===0")
+            results["swipe"]=state()
+            tap(196,104)
+            child.wait_for_function("window.__MYSTICRUN_STATE.x>.90")
             tap(357,104)
             child.wait_for_function("window.__MYSTICRUN_STATE.height>.6")
             page.screenshot(path=str(OUT/"02-jump.jpg"))
@@ -65,22 +78,35 @@ def main(url):
             results["paused_distance"]=before
             tap(360,663)
             child.wait_for_function("window.__MYSTICRUN_STATE.state==='running'")
+            child.wait_for_function("window.__MYSTICRUN_STATE.coins>0",timeout=6000)
+            results["collectible"]=state()
             # Keyboard receives actual browser events, not state injection.
             canvas.focus()
-            page.keyboard.press("ArrowLeft")
+            def key(name):
+                page.keyboard.press(name,delay=90)
+                page.wait_for_timeout(45)
+            key("ArrowLeft")
             child.wait_for_function("window.__MYSTICRUN_STATE.lane===0")
-            page.keyboard.press("ArrowLeft")
+            key("ArrowLeft")
             child.wait_for_function("window.__MYSTICRUN_STATE.lane===-1")
-            page.keyboard.press("ArrowUp")
+            key("ArrowUp")
             child.wait_for_function("window.__MYSTICRUN_STATE.jumps>=2")
             page.wait_for_timeout(450)
             page.screenshot(path=str(OUT/"04-running.jpg"))
             # Restart through real input, then allow the three centre-lane
             # teaching obstacles to hit. Exercise defeat and touch recovery.
-            page.keyboard.press("r")
+            key("r")
             child.wait_for_function("window.__MYSTICRUN_STATE.distance<5")
+            measured_start=time.monotonic()
+            frames_start=state()["frames"]
             child.wait_for_function("window.__MYSTICRUN_STATE.state==='defeat'",timeout=24000)
             results["defeat"]=state()
+            elapsed=time.monotonic()-measured_start
+            results["browser_measurement"]={
+                "wall_seconds":round(elapsed,3),
+                "observed_defold_updates_per_second":round((state()["frames"]-frames_start)/elapsed,2),
+                "renderer":"Headless Chromium software WebGL; not Android performance",
+            }
             page.screenshot(path=str(OUT/"05-defeat.jpg"))
             tap(360,663)
             child.wait_for_function("window.__MYSTICRUN_STATE.state==='running' && window.__MYSTICRUN_STATE.hp===3")

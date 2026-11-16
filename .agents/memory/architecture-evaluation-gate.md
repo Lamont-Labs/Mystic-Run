@@ -62,3 +62,22 @@ Android execution and update compatibility. Defold's Android `bundle` command
 automatically generates a debug keystore when none is supplied; do not invoke it
 in unsigned probes. Android resource compilation and non-Android headless builds
 avoid that path. Any later APK must use the existing trusted signing pipeline.
+
+After the compilation proof, the owner approved **one playable Defold Knight
+prototype**. This supersedes the earlier compilation-only scope, but not the
+requirement to evaluate a bounded prototype before a full engine migration.
+
+**Why:** The owner selected "Build one Knight prototype."
+
+**How to apply:** Deliver actual rendered movement and controls for review.
+Do not expand to every hero, rebuild all biomes, merge a full port into main or
+publish a signed Android experiment under this approval.
+
+Defold 1.14 uses typed configuration getters such as `sys.get_config_int`;
+the historical `sys.get_config` API is absent at runtime. A successful Bob
+resource compile does not catch this kind of Lua API error.
+
+**Why:** A compiled prototype failed initialization until tested in the engine.
+
+**How to apply:** Check the pinned engine's current API and execute a bounded
+runtime smoke test; retain timeout output so initialization failures are visible.
