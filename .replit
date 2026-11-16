@@ -1,12 +1,36 @@
-modules = ["python-3.12", "dotnet-8.0"]
+modules = ["python-3.12", "dotnet-8.0", "nodejs-24"]
 
 [nix]
 channel = "stable-25_05"
-packages = ["blender", "freetype", "lcms2", "libglvnd", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "mesa", "openjpeg", "tcl", "tk", "xorg.libX11", "xorg.libXcursor", "xorg.libXi", "xorg.libXinerama", "xorg.libXrandr", "xorg.libXxf86vm", "xorg.xorgserver", "zlib"]
+packages = ["blender", "freetype", "gitFull", "lcms2", "libglvnd", "libimagequant", "libjpeg", "libtiff", "libwebp", "libxcrypt", "mesa", "openjpeg", "playwright-driver", "tcl", "tk", "xorg.libX11", "xorg.libXcursor", "xorg.libXi", "xorg.libXinerama", "xorg.libXrandr", "xorg.libXxf86vm", "xorg.xorgserver", "zlib", "chromium"]
 
 [agent]
 expertMode = true
 
 [[ports]]
 localPort = 5000
-externalPort = 5000
+externalPort = 80
+
+[workflows]
+runButton = "Project"
+
+[[workflows.workflow]]
+name = "Project"
+mode = "parallel"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "workflow.run"
+args = "Defold Knight trial"
+
+[[workflows.workflow]]
+name = "Defold Knight trial"
+author = "agent"
+
+[[workflows.workflow.tasks]]
+task = "shell.exec"
+args = "python tools/serve_defold_knight.py"
+waitForPort = 5000
+
+[workflows.workflow.metadata]
+outputType = "webview"

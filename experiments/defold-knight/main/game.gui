@@ -1,0 +1,14 @@
+script: "/main/game.gui_script"
+fonts { name: "ui" font: "/art/ui.font" }
+fonts { name: "title" font: "/art/title.font" }
+textures { name: "art" texture: "/art/game.atlas" }
+textures { name: "environment" texture: "/art/environment.atlas" }
+layers { name: "sky" }
+layers { name: "road" }
+layers { name: "objects" }
+layers { name: "hero" }
+layers { name: "fx" }
+layers { name: "hud" }
+layers { name: "overlay" }
+material: "/builtins/materials/gui.material"
+max_nodes: 512

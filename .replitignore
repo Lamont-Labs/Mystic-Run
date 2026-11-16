@@ -3,3 +3,4 @@
 /.godot/
 /tests/unity-intent/bin/
 /tests/unity-intent/obj/
+/.cache/
