@@ -9,7 +9,7 @@ key_trigger { input: KEY_DOWN action: "slide" }
 key_trigger { input: KEY_S action: "slide" }
 key_trigger { input: KEY_J action: "attack" }
 key_trigger { input: KEY_P action: "pause" }
-key_trigger { input: KEY_ESCAPE action: "pause" }
+key_trigger { input: KEY_ESC action: "pause" }
 key_trigger { input: KEY_ENTER action: "start" }
 key_trigger { input: KEY_R action: "restart" }
 mouse_trigger { input: MOUSE_BUTTON_1 action: "touch" }
