@@ -26,6 +26,7 @@ jobs:
           sudo apt-get install -y --no-install-recommends libopenal1
       - run: python tools/build_defold_knight.py
       - name: Retain the actual playable WebAssembly bundle
+        if: always()
         uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02
         with:
           name: defold-knight-playable-web

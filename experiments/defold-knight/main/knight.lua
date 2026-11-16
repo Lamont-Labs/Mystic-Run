@@ -21,7 +21,7 @@ function M.new()
     return actor
 end
 function M.update(actor,s,x,feet)
-    local moving=s.mode=="running"
+    local moving=s.mode=="running" or s.mode=="paused"
     local phase=s.phase
     local strength=moving and 1 or .08
     local crouch=s.crouch

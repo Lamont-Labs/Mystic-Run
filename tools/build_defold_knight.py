@@ -116,9 +116,17 @@ def prepare():
     return project
 
 
-def execute(args, name, cwd=None):
+def execute(args, name, cwd=None, timeout=180):
     start=time.monotonic()
-    r=subprocess.run(args,cwd=cwd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=360)
+    try:
+        r=subprocess.run(args,cwd=cwd,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True,timeout=timeout)
+    except subprocess.TimeoutExpired as error:
+        output=error.stdout or b""
+        if isinstance(output,bytes):
+            output=output.decode(errors="replace")
+        (OUT / name).write_text(output)
+        print(output,flush=True)
+        raise
     (OUT / name).write_text(r.stdout)
     print(r.stdout,flush=True)
     if r.returncode:
@@ -164,7 +172,7 @@ def build():
         "--variant","headless","--bundle-output",str(OUT / "linux"),"build","bundle"],"linux.log")
     executable=next((OUT / "linux").rglob("*.x86_64"))
     results["smoke_seconds"],logs=execute(
-        [str(executable),"--config=prototype.smoke=1"],"runtime.log",executable.parent)
+        [str(executable),"--config=prototype.smoke=1"],"runtime.log",executable.parent,timeout=20)
     if "DEFOLD_KNIGHT_CHECKS_PASSED" not in logs:
         raise RuntimeError("Lua regression checks never executed")
     (OUT / "evidence.json").write_text(json.dumps(results,indent=2)+"\n")
